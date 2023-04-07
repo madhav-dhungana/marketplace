@@ -1,6 +1,7 @@
 from django.template.loader import render_to_string
 from .tasks import background_email_send
 
+""" Mixin for API"""
 class SendEmailMixin:
     email_template_name = None
     mail_subject = None
