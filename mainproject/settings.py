@@ -241,7 +241,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 #stripe
 # STRIPE_PUBLIC_KEY = config("STRIPE_PUBLIC")
-STRIPE_SECRET_KEY = "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"
+STRIPE_SECRET_KEY = " stripe secret key "
 
 # CKEDITOR_CONFIGS = {
 #     'default': {
@@ -273,8 +273,8 @@ SOCIALACCOUNT_PROVIDERS = {
             "access_type": "online",
         },
         # "APP": {
-        #     'client_id': "576783577037-mjh0rn04f9t859oe39eckvj9haf1rfnq.apps.googleusercontent.com",
-        #     'client_secret': "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"
+        #     'client_id': "ioioioioi-mjh0rn04f9t859oe39eckvj9haf1rfnq.apps.googleusercontent.com",
+        #     'client_secret': "client secret key"
         # }
     },
     "facebook": {
