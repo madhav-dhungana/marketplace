@@ -1,0 +1,213 @@
+{% extends 'admin/adminbase.html' %}
+{% load extras %}
+{% load static %}
+{% block title %}Tax List{% endblock title %}
+{% block content %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+                    {% include 'components/message.html' %}
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Taxes</h3>
+							
+							</div>
+							<div class="col-auto">
+								<a href="#" class="btn add-button me-2" data-bs-toggle="modal" data-bs-target="#add_tax_modal">
+									<i class="fas fa-plus"></i>
+								</a>
+							
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive">
+										<div class="table-responsive">
+										<table class="table table-center table-hover mb-0 datatable">
+											<thead>
+												<tr>
+													<th>S.No</th>
+													<th> Name</th>	
+                                                    <th>Percentage (%)</th> 
+													<th class="text-end">Actions</th>
+												</tr>
+											</thead>
+											<tbody id="table_list">
+													{% for list in page_obj %}
+                                                    <tr id="tr_{{list.id}}">
+                                                        <td>
+                                                            {{forloop.counter}}
+                                                        </td>
+                                                        <td id="name_{{list.id}}">{{list.name}}</td>
+                                                        <td id="per_{{list.id}}">{{list.percentage}}%</td>
+                                                        <td class="text-end">
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#edit-tax{{list.id}}"><i class="far fa-edit"></i></a> 
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_tax{{list.id}}"><i class="far fa-trash-alt"></i></a>
+                                                        </td>
+                                                    </tr>	
+                                                    		<!-- Edit Modal -->
+                                                                <div class="modal fade custom-modal" id="edit-tax{{list.id}}">
+                                                                    <div class="modal-dialog modal-dialog-centered">
+                                                                        <div class="modal-content">
+
+                                                                            <!-- Modal Header -->
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title">Edit Tax</h4>
+                                                                                <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                                                                            </div>
+                                                                            <!-- Modal body -->
+                                                                            <div class="modal-body">
+                                                                                <form hx-put="{{get_full_domain}}/api/payments/taxes/{{list.id}}/" hx-trigger='submit' hx-swap="none">
+                                                                                    <input type="hidden" name="category_id" value="{{list.id}}">
+                                                                                    <div class="form-group">
+                                                                                        <label>Tax Name</label>
+                                                                                        <input type="text"  name="name" class="form-control" value="{{list.name}}">
+                                                                                    </div>
+                                                                                    <div class="form-group">
+                                                                                        <label>Percentage</label>
+                                                                                        <input type="number" max='100' min='0' step="any"  value="{{list.percentage}}" class="form-control" name="percentage" placeholder="Enter Percentage" required>
+                                                                                    </div>
+                                                                                    <div class="mt-4">
+                                                                                        <input type="submit" name="edit_category" class="btn btn-primary btn-block" value="Edit"/>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <!-- /Edit Modal -->
+
+
+                                                            <!--Deelte modal-->
+
+                                                            <div class="modal custom-modal fade" id="delete_tax{{list.id}}" role="dialog">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <form hx-delete="{{get_full_domain}}/api/payments/taxes/{{list.id}}/" hx-trigger='submit' hx-swap="none">
+                                                                            {% csrf_token %}
+                                                                            <div class="form-header">
+                                                                                <h3>Delete</h3>
+                                                                                <p>Are you sure want to delete tax {{list.name}}?</p>
+                                                                            </div>
+                                                                            <div class="modal-btn delete-action">
+                                                                                <div class="row p-4 justify-center">
+                                                                                        <input type="submit" name="delete_fee" id="delete_btn{{list.id}}" class="btn btn-primary " value="Delete" style="display:none;" />
+
+
+                                                                                <div class="col-6">
+                                                                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn" onclick="submitDeleteForm('{{list.id}}')">Delete</a>
+                                                                                </div>
+                                                                                <div class="col-6">
+                                                                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                                                </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                                                    {% endfor %}								
+                                                                                                                                    
+                                                                                    
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                 
+                                                                                      
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>			
+                                                                </div>
+                                                                
+                                                            </div>			
+                                                        </div>
+                                                       
+                                                        <!-- /Page Wrapper -->
+                                                    </div>
+                                                    </div>
+                                                    <!-- /Main Wrapper -->
+		
+                                            <!-- The Modal -->
+                                            <div class="modal fade custom-modal" id="add_tax_modal">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Add Tax</h4>
+                                                            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body">
+                                                            
+                                                            {% comment %} "{% url 'payments'%}basename/query_parameter" {% endcomment %}
+                                                            <form id='add_form' hx-post="{{get_full_domain}}/api/payments/taxes/" hx-trigger="submit" hx-swap="none">
+                                                                <div class="form-group">
+                                                                    <label>Tax Name</label>
+                                                                    <input type="text" class="form-control" name="name" placeholder="Enter Tax Name" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Percentage</label>
+                                                                    <input type="number" max='100' min='0' step="any" class="form-control" name="percentage" placeholder="Enter Percentage" required>
+                                                                </div>
+                                                                <div class="mt-4">
+                                                                    <input name="add_tax_btn" type="submit" class="btn btn-primary btn-block" value="Add Tax"/>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /The Modal -->
+		
+
+{% endblock content %}
+{% block js %}
+<script type="text/javascript">
+    
+    function submitDeleteForm(idss){
+        let formId = 'delete_btn'+idss
+
+
+        document.getElementById(formId).click()
+    }
+</script>
+<script>
+    htmx.on("htmx:afterRequest", (e) => {
+        
+        const status = e.detail.xhr.status
+        let data = JSON.parse(e.detail.xhr.response)
+
+        if(e.detail.successful){
+            if(status === 201){
+                window.location.reload()
+            }
+            if(status === 200){
+                if (data.type){
+                    console.log('deleted')
+                    $(`#delete_tax${data.id}`).modal('hide')
+                    $(`#tr_${data.id}`).fadeOut()
+                    toastr.success(`Successfully Deleted Tax!`)
+                }else{
+                    $(`#edit-tax${data.id}`).modal('hide')
+                    $(`#name_${data.id}`).text(data.name)
+                    $(`#per_${data.id}`).text(data.percentage)
+                    toastr.success(`Successfully Edited Tax!`)
+                }
+            }
+        }
+        else{
+         toastr.error(data.name[0])
+        }
+     });
+</script>
+{% endblock js %}

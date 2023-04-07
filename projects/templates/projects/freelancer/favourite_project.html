@@ -1,0 +1,87 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+Favourite Projects
+{% endblock title %}
+
+{% block content %}
+
+<div class="content bookmark">					
+    <div class="container-fluid">					
+        <div class="row">
+            {% include 'components/freelancer_sidebar.html' %}
+            <div class="col-xl-9 col-md-8">
+                <nav class="user-tabs mb-4">
+                    <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'fav_project_view' %}">Bookmarked Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'free_invite_list' %}">Invitations</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- project list -->
+                <div class="my-projects-view">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="pro-post mb-4">
+                                <div class="project-table">
+                                    <div class="table-responsive">
+                                        <h5 class="m-3">BOOKMARKED PROJECTS</h5>
+                                        <table class="table table-hover table-center mb-0 datatable">
+                                            <thead class="thead-pink">
+                                                <tr>
+                                                    <th>Project name</th>
+                                                    <th>Client Detail</th>
+                                                    <th>Location</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="fav_list">
+                                                {% for list in projects %}
+                                              
+                                                <tr>
+                                                    <td>{{list.title}}</td>
+                                                    <td>
+                                                        <h2 class="table-avatar">
+                                                            <a href="project-details.html" class="avatar avatar-md tab-imgcircle me-2">
+                                                                <img class="avatar-img rounded-circle" src="{{list.posted_by.avatar.url}}" alt="Client Image">
+                                                            </a>
+                                                            <a href="project-details.html"><span class="profile-name">{{list.posted_by.display_name}}</span><span>Photographer</span>
+                                                            <span class="rating mt-2">
+                                                                <i class="fas fa-star filled"></i>
+                                                                <i class="fas fa-star filled"></i>
+                                                                <i class="fas fa-star filled"></i>
+                                                                <i class="fas fa-star filled"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </span>
+                                                            </a>
+                                                        </h2>
+                                                    </td>
+                                                    <td><h2 class="table-avatar"><img src="{% static 'assets/flag/' %}{{list.location}}.svg"  class="me-2" alt="" height="16">{{list.address}}</h2></td>
+                                                    <td><a role="button" hx-post="{% url 'remove_fav_project' list.id %}" hx-target="#fav_list" class="fav">Remove</a></td>
+                                                </tr>
+                                                {% empty %}
+                                                <td><div class="row justify-content-center">No Projects Bookmarked Yet </div></td>
+                                                {% endfor %}
+                                              
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>	
+                        </div>
+                    </div>								
+                </div>
+                <!-- project list -->
+                
+            </div>
+        </div>
+    </div>
+</div>	
+            
+{% endblock content %}

@@ -1,0 +1,136 @@
+{% extends 'admin/adminbase.html' %}
+{% load extras %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Reviews List{% endblock title %}
+{% block content %}
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <div class="page-header">
+         <div class="row align-items-center">
+            <div class="col">
+               <h3 class="page-title">Reviews</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+               </ul>
+            </div>
+            <div class="col-auto">
+               <a class="btn filter-btn" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+               <i class="fas fa-filter"></i>
+               </a>
+            </div>
+         </div>
+      </div>
+      <div class="card-body collapse" id="collapseExample">
+         <form method="get" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;" class="">
+            {{searchForm.form|crispy}}
+            <button type="submit" class="btn btn-primary">Search</button>
+         </form>
+      </div>
+      {% include 'components/message.html' %}
+      <div class="table-responsive">
+         <table class="table table-hover table-center mb-0 ">
+            <thead>
+               <tr>
+                  <th>ID</th>
+                  <th>Review</th>
+                  <th>Review By</th>
+                  <th>Review To</th>
+                  <th>Stars</th>
+                  <th class="text-end">Actions</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for list in page_obj %}
+               <!-- Delete Modal -->
+               <div class="modal custom-modal fade" id="delete_review{{list.id}}" role="dialog">
+                  <div class="modal-dialog modal-dialog-centered">
+                     <div class="modal-content">
+                        <div class="modal-body">
+                           <div class="form-header">
+                              <h3>Delete Review</h3>
+                              <p>Are you sure want to delete this review?</p>
+                           </div>
+                           <div class="modal-btn delete-action">
+                              <form  hx-delete="{% url 'review_api_detail' list.id %}" hx-trigger="submit" hx-swap="none" >
+                                 <div class="row">
+                                    <div class="col-6">
+                                       <input type="submit" name="delete_user" class="btn btn-primary continue-btn w-100" value="Delete" />
+                                    </div>
+                                    <div class="col-6">
+                                       <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                    </div>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Delete Modal -->
+               <tr id="review{{list.id}}">
+                  <td>
+                     {{list.id}}
+                  </td>
+                  <td>
+                     <div class="desc-info">
+                        {{list.review|truncatechars:'27'}}
+                     </div>
+                  </td>
+                  <td>
+                     <h2 class="table-avatar">
+                        <a href="{% url 'admin_user_detail' list.review_by.id %}"><img class="avatar-img rounded-circle me-2 object-cover" src="{{ list.review_by.avatar.url }}" alt="User Image">
+                        {{list.review_by.display_name}}
+                        </a>
+                     </h2>
+                  </td>
+                  <td>
+                     <h2 class="table-avatar">
+                        <a href="{% url 'admin_user_detail' list.review_to.id %}"><img class="avatar-img rounded-circle me-2 object-cover" src="{{ list.review_to.avatar.url }}" alt="User Image">
+                        {{list.review_to.display_name}}
+                        </a>
+                     </h2>
+                  </td>
+                  <td>
+                     <div class="rating" data-score="{{list.rating}}"></div>
+                  </td>
+                  <td class="text-end text-nowrap">
+                     <a href="javascript:void(0);" class="btn btn-disable" data-bs-toggle="modal" data-bs-target="#delete_review{{list.id}}">Delete</a>
+                  </td>
+               </tr>
+               {% empty %}
+               <td>No Reviews Yet</td>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+      <div class="float-right mt-3">
+         {% include 'components/pagination.html' %}
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.css">
+<script src="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.js"> </script>
+<script>
+   $('.rating').raty({
+   	starOff: '{% static 'assets/star-off.png' %}',
+    		starOn: '{% static 'assets/star-on.png' %}',
+   	readOnly: function() {
+   	  return true;
+   	}
+     });
+   
+   
+        htmx.on("htmx:afterRequest", (e) => {
+          if(e.detail.successful){
+              let data = JSON.parse(e.detail.xhr.response)
+              $(`#delete_review${data.id}`).modal('hide')
+              $(`#review${data.id}`).fadeOut()
+              toastr.success(data.msg)
+          }
+       });
+     
+</script>
+{% endblock js %}

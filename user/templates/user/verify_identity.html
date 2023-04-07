@@ -1,0 +1,110 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+Verify Identity
+{% endblock title %}
+{% block content %}
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <!-- sidebar -->
+         {% if request.user.role == "Freelancer" %}
+         {% include 'components/freelancer_sidebar.html' %}
+         {% else %}
+         {% include 'components/sidebar.html' %}
+         {% endif %}
+         <!-- /sidebar -->
+         <!-- Verification Details -->
+         <div class="col-xl-9 col-md-8">
+            <div class="card">
+               <div class="payment-list wallet card-body">
+                  <h3>Verification Details</h3>
+                  {% if myform %}
+                  {% if myform.status == "On Review" %}
+                  <div class="row">
+                     <div class="col-12">
+                        <div class="warning-card bg-green">
+                           <p>Waiting for admin Approval.</p>
+                        </div>
+                     </div>
+                  </div>
+                  {% else %}
+                  <div class='m-3'>Your Identiy Form is {{myform.status}}. </div>
+                  {% endif %}
+                  {% endif %}
+                  {% include 'components/message.html' %}
+                  <form method="post" enctype="multipart/form-data" >
+                     {% csrf_token %}
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              {{form.full_name|as_crispy_field}}
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              {{form.contact_number|as_crispy_field}}
+                           </div>
+                        </div>
+                        <div class="col-md-12">
+                           <div class="form-group">
+                              {{form.identiy_num|as_crispy_field}}
+                           </div>
+                        </div>
+                        <div class="col-md-12">
+                           <div class="form-group">
+                              <label>Document</label>
+                              {% if myform.document %}
+                              <div class="d-flex align-items-center">		
+                                 <input type="file"  id="input_file" name="input_file" data-max-file-size="3M"  class="dropify" data-default-file="{{myform.document.url}}"/>		
+                              </div>
+                              {% else %}
+                              <div class="d-flex align-items-center">		
+                                 <input type="file"  id="input_file" name="input_file" data-max-file-size="3M"  class="dropify"/>		
+                              </div>
+                              {% endif %}
+                           </div>
+                        </div>
+                        <div class="col-md-12">
+                           <div class="form-group">
+                              {{form.address|as_crispy_field}}
+                              <p class="mt-2">Your account information should match with the document that you are providing.</p>
+                           </div>
+                        </div>
+                        <div class="col-md-12 text-end">
+                           {% if myform %}
+                           {% if myform.status == "Accepted" %}
+                           <button 
+                              disabled
+                              type="submit" class="btn btn-primary click-btn">Submit verification</button>
+                           {% else %}
+                           <button type="submit" class="btn btn-primary click-btn">Edit verification</button>
+                           {% endif %}
+                           {% else %}
+                           <button type="submit" class="btn btn-primary click-btn">Submit verification</button>
+                           {% endif %}
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+         <!-- /Verification Details -->
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify({
+       messages: {
+           'default': 'file here',
+          
+       }
+   });
+   
+</script>
+{% endblock js %}

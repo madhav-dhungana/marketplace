@@ -1,0 +1,226 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% block title %}FreeLancer Dashboard{% endblock title %}
+{% block content %}
+<!-- Page Content -->
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         {% include 'components/freelancer_sidebar.html' %}
+         <div class="col-xl-9 col-md-8">
+            {% include 'components/message.html' %}
+            <div class="dashboard-sec">
+               <div class="row">
+                  <div class="col-md-6 col-lg-4">
+                     <div class="dash-widget">
+                        <div class="dash-info">
+                           <div class="dash-widget-info">Completed Jobs</div>
+                           <div class="dash-widget-count">{{completed_projects}}</div>
+                        </div>
+                        <div class="dash-widget-more">
+                           <a href="{% url 'free_completed_projects' %}" class="d-flex">View Details <i class="fas fa-arrow-right ms-auto"></i></a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-6 col-lg-4">
+                     <div class="dash-widget">
+                        <div class="dash-info">
+                           <div class="dash-widget-info">Ongoing Projects</div>
+                           <div class="dash-widget-count">{{ongoing_projects}}</div>
+                        </div>
+                        <div class="dash-widget-more">
+                           <a href="{% url 'free_ongoing_projects' %}" class="d-flex">View Details <i class="fas fa-arrow-right ms-auto"></i></a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-6 col-lg-4">
+                     <div class="dash-widget">
+                        <div class="dash-info">
+                           <div class="dash-widget-info">Reviews</div>
+                           <div class="dash-widget-count">{{reviews_count}}</div>
+                        </div>
+                        <div class="dash-widget-more">
+                           <a href="{% url 'reviews' %}" class="d-flex">View Details <i class="fas fa-arrow-right ms-auto"></i></a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- Chart Content -->
+               <div class="row">
+                  <div class="col-xl-8 d-flex">
+                     <div class="card flex-fill">
+                        <div class="pro-head">
+                           <h5 class="card-title mb-0">Your Project analytics</h5>
+                        </div>
+                        <div class="pro-body">
+                           <div data-chart-data="{{project_chart_data}}" id="chartprofile"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xl-4 d-flex">
+                     <div class="flex-fill card">
+                        <div class="pro-head b-0">
+                           <h5 class="card-title mb-0">Recent Reviews</h5>
+                        </div>
+                        <hr>
+                        <div class="pro-body">
+                           {% for list in reviews %}
+                           <div class="review-content no-padding">
+                              <a href="{% url 'free_project_detail' list.for_project.id %}">
+                                 <h4>{{list.for_project.title}}</h4>
+                              </a>
+                              By <a href="{% url 'user_detail' list.review_by.id %}">{{list.review_by.display_name}}</a>
+                              <div data-score="{{list.rating}}" id="rating" class="rating" >							
+                              </div>
+                              <p class="mb-0">{{list.review}}</p>
+                           </div>
+                           {% empty %}
+                           <div class="text-center">No Reviews Got Yet </div>
+                           {% endfor %}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Chart Content -->
+               <div class="row">
+                  <!-- Plan  Details-->
+                  <div class="col-xl-6 d-flex">
+                     <div class="card flex-fill">
+                        <div class="pro-head">
+                           <h2>Membership Plan Details</h2>
+                           <div><i class="fas fa-check-circle verified orange-text fa-2x"></i></div>
+                        </div>
+                        <div class="pro-body">
+                           <div class="row">
+                              <div class="col-md-6 col-sm-6">
+                                 <div class="plan-details">
+                                    <h4>The Geeky Traveller</h4>
+                                    <div class="yr-amt">Anually Price</div>
+                                    <h3>$1200</h3>
+                                    <div class="yr-duration">Duration: One Year</div>
+                                    <div class="expiry">Expiry: 24 JAN 2023</div>
+                                    <a href="freelancer-membership.html" class="btn btn-primary btn-plan">Change Plan</a>
+                                 </div>
+                              </div>
+                              <div class="col-md-6 col-sm-6">
+                                 <div class="plan-feature">
+                                    <ul>
+                                       <li>12 Gig Credits</li>
+                                       <li>10 Allowed Services</li>
+                                       <li>20 Days visibility</li>
+                                       <li>5 Featured Services</li>
+                                       <li>20 Days visibility</li>
+                                       <li>30 Days Package Expiry</li>
+                                       <li>Profile Featured</li>
+                                    </ul>
+                                    <a href="freelancer-membership.html">View Details</a>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /Plan  Details -->
+                  <!-- Ongoing Projects -->
+                  <div class="col-xl-6 d-flex">
+                     <div class="card flex-fill">
+                        <div class="pro-head">
+                           <h2>Ongoing Projects</h2>
+                           <a href="{% url 'free_ongoing_projects' %}" class="btn fund-btn">View All</a>
+                        </div>
+                        <div class="pro-body p-0">
+                           {% for list in on_projects %}
+                           <div class="on-project">
+                              <h5>{{list.title}}</h5>
+                              <p>{{list.detail|truncatechars:20 }}</p>
+                              <div class="pro-info">
+                                 <ul class="list-details">
+                                    <li>
+                                       <div class="slot">
+                                          <p>Job Type</p>
+                                          <h5>{{list.pricing_type}}</h5>
+                                       </div>
+                                    </li>
+                                    <li>
+                                       <div class="slot">
+                                          <p>Project Price</p>
+                                          <h5>${{list.price}}</h5>
+                                       </div>
+                                    </li>
+                                    <li>
+                                       <div class="slot">
+                                          <p>Location</p>
+                                          <h5>{{list.location}}</h5>
+                                       </div>
+                                    </li>
+                                    <li>
+                                       <div class="slot">
+                                          <p>Expiry</p>
+                                          <h5>4 Days Left</h5>
+                                       </div>
+                                    </li>
+                                 </ul>
+                              </div>
+                           </div>
+                           {% empty %}
+                           <div class="on-project">
+                              <p>You don't have any ongoing projects</p>
+                           </div>
+                           {% endfor %}
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /Ongoing Projects -->
+               </div>
+               <!-- Past Earnings -->
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="card mb-4">
+                        <div class="pro-head">
+                           <h2>Past Earnings</h2>
+                           {% comment %} <a href="freelancer-payment.html" class="btn fund-btn">View All</a> {% endcomment %}
+                        </div>
+                        <div class="pro-body p-0">
+                           {% for list in comp_projects %}
+                           <div class="earn-feature">
+                              <div class="row align-items-center">
+                                 <div class="col-lg-7 col-md-6">
+                                    <div class="earn-info">
+                                       <p>{{list.detail|safe|truncatechars:20 }}</p>
+                                       <div class="date">{{list.start_date}}</div>
+                                    </div>
+                                 </div>
+                                 <div class="col-lg-5 col-md-6">
+                                    <div class="earn-img">
+                                       <span><img src="{{list.posted_by.avatar.url }}" alt="logo" class="img-fluid avatar-md object-cover rounded-circle">
+                                       {{list.posted_by.display_name}}
+                                       </span>
+                                       <div class="price">${{list.price}}</div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           {% empty %}
+                           <div class="on-project">
+                              <p>You don't have any completed projects</p>
+                           </div>
+                           {% endfor %}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Past Earnings -->
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<!-- Chart JS -->
+<script src="{% static 'assets/plugins/apexchart/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/js/custom/freelancer_chart.js' %}"></script>
+<script src="{% static 'assets/plugins/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+<script src="{% static 'assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+{% endblock js %}

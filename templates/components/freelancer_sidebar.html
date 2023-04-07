@@ -1,0 +1,124 @@
+{% load static %}
+<!-- sidebar -->
+<div class="col-xl-3 col-md-4 theiaStickySidebar">
+   <div class="settings-widget">
+      <div
+         class="settings-header d-sm-flex flex-row flex-wrap text-center text-sm-start align-items-center"
+         >
+         <a href="{% url 'user_detail' request.user.id %}"
+            ><img
+            alt="profile image"
+            src="{{request.user.avatar.url}}"
+            style="object-fit: cover"
+            class="avatar-lg rounded-circle"
+            /></a>
+         <div class="ms-sm-3 ms-md-0 ms-lg-3 mt-2 mt-sm-0 mt-md-2 mt-lg-0">
+            <p class="mb-2">Welcome,</p>
+            <a href="{% url 'user_detail' request.user.id %}"
+               >
+               <h3 class="mb-0">{{request.user.display_name}}</h3>
+            </a
+               >
+         </div>
+      </div>
+      <div class="settings-menu">
+         <ul>
+            <li class="nav-item">
+               <a id="dashboard" href="{% url 'dashboard' %}" class="nav-link">
+               <i class="material-icons">verified_user</i> Dashboard
+               </a>
+            </li>
+            <li class="nav-item">
+               <a
+                  id="project-proposal"
+                  href="{% url 'proposals' %}"
+                  class="nav-link"
+                  >
+               <i class="material-icons">business_center</i> Projects
+               </a>
+            </li>
+            <li class="nav-item">
+               <a
+                  id="favourite-project"
+                  href="{% url 'fav_project_view' %}"
+                  class="nav-link"
+                  >
+               <i class="material-icons">local_play</i> Favourites
+               </a>
+            </li>
+            <li class="nav-item">
+               <a
+                  id="invite-list"
+                  href="{% url 'free_invite_list' %}"
+                  class="nav-link"
+                  >
+               <i class="fa fa-user-plus"></i> Invitations
+               </a>
+            </li>
+            <li class="nav-item">
+               <a id="reviews" href="{% url 'reviews' %}" class="nav-link">
+               <i class="material-icons">record_voice_over</i> Reviews
+               </a>
+            </li>
+            <li class="nav-item">
+               <a href="{% url 'freelancer_portfolio' %}" class="nav-link">
+                  <i class="material-icons">pie_chart</i> Portfolio
+               </a>
+            </li>
+            <li class="nav-item">
+               <a id="reviews" href="{% url 'home_chat' %}" class="nav-link">
+               <i class="fab fa-telegram-plane"></i> Messages
+               </a>
+            </li>
+            <li class="nav-item">
+               <a href="{% url 'membership_plans' %}" class="nav-link">
+                  <i class="material-icons">person_add</i> Membership
+               </a>
+            </li>
+            <li class="nav-item">
+               <a id="notifications" href="{% url 'my_notifications' %}" class="nav-link">
+               <i class="fa fa-bell"></i> Notification
+               </a>
+            </li>
+            <li class="nav-item">
+               <a
+                  id="verify-identity"
+                  href="{% url 'verify_identity' %}"
+                  class="nav-link"
+                  >
+               <i class="material-icons">person_pin</i> Verify Identity
+               </a>
+            </li>
+            <li class="nav-item">
+               <a href="{% url 'freelancer_payment' %}" class="nav-link">
+                  <i class="material-icons">wifi_tethering</i> Payments
+               </a>
+            </li>
+            <li class="nav-item">
+               <a
+                  id="profile-settings"
+                  href="{% url 'profile_settings' %}"
+                  class="nav-link"
+                  >
+               <i class="material-icons">settings</i> Settings
+               </a>
+            </li>
+            <li class="nav-item">
+               <a href="{% url 'logout' %}" class="nav-link">
+               <i class="material-icons">power_settings_new</i> Logout
+               </a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</div>
+<!-- /sidebar -->
+{% block js %}
+<script>
+   let currentPageId = window.location.pathname.split("/")[2];
+   let ids = document.getElementById(`${currentPageId}`);
+   if (ids) {
+     ids.classList.add("active");
+   }
+</script>
+{% endblock js %}

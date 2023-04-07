@@ -1,0 +1,108 @@
+{% extends 'projects/freelancer/base_project.html' %}
+{% load static %}
+
+{% block title %}
+Proposal List
+{% endblock title %}
+
+{% block project %}
+<!-- Page Content -->			
+<div class="proposals-section">
+	<nav class="user-tabs mb-4">
+		<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+			<li class="nav-item">
+				<a class="nav-link active" href="{% url 'proposals' %}">My Proposals</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'free_ongoing_projects' %}">Ongoing Projects</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'free_completed_projects' %}">Completed Projects</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'free_cancelled_projects' %}">Cancelled Projects</a>
+			</li>
+		</ul>
+	</nav> 
+	<div id="proposal_list">
+	<!-- Proposals -->
+	{% for list in page_obj %}
+	<div class="freelancer-proposals">
+		<div class="project-proposals align-items-center freelancer">
+			<div class="proposals-info">
+				<div class="proposals-detail">
+					<h3 class="proposals-title">{{list.project.title}}</h3>
+					<div class="proposals-content">
+						<div class="proposal-img">
+							<div class="text-md-center">
+								<img src="{{list.project.posted_by.avatar.url}}" alt="" class="img-fluid object-cover">
+								<h4>{{list.project.posted_by.display_name}}</h4>
+								<span class="info-btn">client</span>
+							</div>
+						</div>
+						<div class="proposal-client">
+							<h4 class="title-info">Client Price</h4>
+							<h2 class="client-price">${{list.project.price}}</h2>
+						</div>
+						<div class="proposal-type">
+							<h4 class="title-info">Job Type</h4>
+							<h3>{{list.project.get_pricing_type_display}} </h3>
+						</div>
+					</div>
+				</div>
+				<div class="project-hire-info">
+					<div class="content-divider-1"></div>
+					<div class="projects-amount">
+						<p>Your Price</p>
+						<h3>${{list.price}}</h3>
+					</div>
+					<div class="content-divider-1"></div>
+					<div class="projects-action text-center">
+						{% comment %} <a data-bs-toggle="modal" href="#file" class="projects-btn">Edit Proposals </a> {% endcomment %}
+						<a href="{% url 'free_project_detail' list.project.id %}" class="projects-btn">View Project</a>
+						{% comment %} <a hx-confirm="Are you sure you wish to delete your Proposal?" hx-post="{% url 'delete_proposal' list.id %}" hx-target="#proposal_list" class=" proposal-delete" role="button">Delete Proposal</a> {% endcomment %}
+					</div>
+				</div> 
+			</div>
+			<div class="description-proposal">
+				<h5 class="desc-title">Description</h5>
+				<p>{{list.detail|safe|truncatechars:"30"}}</p>
+			</div>
+		</div>
+	</div>
+	{% empty %}
+
+	<h4 class="text-center">No Proposal Yet!</h4>
+	{% endfor %}
+	<!-- Proposals --> 
+</div>
+	
+	
+	
+</div>
+<!-- /Proposals list -->
+
+<!-- pagination -->
+<div class="row">
+		<div class="pagination mt-3">
+            {% include 'components/pagination.html' %}
+        </div>
+          
+</div>
+<!-- /pagination -->
+                
+ 
+<!-- /Page Content -->
+{% endblock project %}
+
+{% block js %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+	htmx.on("htmx:afterSwap", (e) => {
+		toastr.success('Successfully Deleted Your Proposal !')
+
+	  });
+</script> 
+{% endblock js %}
+						

@@ -1,0 +1,194 @@
+{% load static %} {% load temp_utils %}
+<!-- Header -->
+<header class="header">
+   <nav class="navbar navbar-expand-lg header-nav">
+      <div class="navbar-header">
+         <a id="mobile_btn" href="javascript:void(0);">
+         <span class="bar-icon">
+         <span></span>
+         <span></span>
+         <span></span>
+         </span>
+         </a>
+         <a href="{% url 'index' %}" class="navbar-brand logo">
+         {% if site.logo_image %}
+         <img src="{{site.logo_image.url}}" class="img-fluid" alt="Logo" />
+         {% else %}
+         <img src="{% static 'assets/img/logo.png' %}" class="img-fluid" alt="Logo" />
+         {% endif %}
+         </a>
+      </div>
+      <div class="main-menu-wrapper">
+         <div class="menu-header">
+            <a href="{% url 'index' %}" class="menu-logo">
+            {% if site.logo_image %}
+            <img src="{{site.logo_image.url}}" class="img-fluid" alt="Logo" />
+            {% else %}
+            <img src="{% static 'assets/img/logo.png' %}" class="img-fluid" alt="Logo" />
+            {% endif %}
+            </a>
+            <a id="menu_close" class="menu-close" href="javascript:void(0);">
+            <i class="fas fa-times"></i>
+            </a>
+         </div>
+         <ul class="main-nav">
+            <li class="active">
+               <a href="{% url 'index' %}">Home</a>
+            </li>
+            {% if request.user.is_authenticated %}
+            {% if request.user.role == "Employer" %}
+            <li class="has-submenu">
+               <a href="">For Batuwa<i class="fas fa-chevron-down"></i></a>
+               <ul class="submenu">
+                  <li><a href="{% url 'freelancer_list' %}">Find Freelancer</a></li>
+                  <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                  <li><a href="{% url 'all_projects' 'all' %}">Projects</a></li>
+                  <li><a href="{% url 'favourite' %}">Favourites</a></li>
+                  <li><a href="{% url 'invite_list' %}">Invites</a></li>
+                  <li><a href="{% url 'reviews' %}">Reviews</a></li>
+                  <li><a  href="{% url 'home_chat' %}">Messages</a></li>
+                  <li><a  href="{% url 'my_notifications' %}">Notification</a></li>
+                  <li><a href="{% url 'verify_identity' %}">Verify Identity</a></li>
+                  <li><a href="{% url 'profile_settings' %}">Settings</a></li>
+               </ul>
+            </li>
+            {% endif %} {% if request.user.role == "Freelancer" %}
+            <li class="has-submenu">
+               <a href="">For Freelancer<i class="fas fa-chevron-down"></i></a>
+               <ul class="submenu">
+                  <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                  <li><a href="{% url 'find_projects' %}">Find Project</a></li>
+                  <li><a href="{% url 'proposals' %}">Projects</a></li>
+                  <li><a href="{% url 'fav_project_view' %}">Favourites</a></li>
+                  <li><a href="{% url 'free_invite_list' %}">Invitations</a></li>
+                  <li><a href="{% url 'reviews' %}">Review</a></li>
+                  <li><a  href="{% url 'home_chat' %}">Messages</a></li>
+                  <li><a  href="{% url 'my_notifications' %}">Notification</a></li>
+                  <li><a href="{% url 'verify_identity' %}">Verify Identity</a></li>
+                  <li><a href="{% url 'profile_settings' %}">Settings</a></li>
+               </ul>
+            </li>
+            {% endif %} {% endif %}
+            <li class="has-submenu">
+               <a href="">Blog <i class="fas fa-chevron-down"></i></a>
+               <ul class="submenu">
+                  <li><a href="{% url 'blog_list_page' %}">Blog List</a></li>
+                  <li><a href="{% url 'blog_grid_page' %}">Blog Grid</a></li>
+               </ul>
+            </li>
+         </ul>
+      </div>
+      <ul class="nav header-navbar-rht">
+         {% if request.user.is_authenticated %}
+         <!-- Notifications -->
+         <li class="nav-item dropdown">
+            <a id="#noti_span"
+               {% if unread_notification > 0  %} hx-get="{% url 'read_unread_notification' %}" hx-swap="none"
+            {% endif %} href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+            <span id="noti_num" class="noti_num {% if unread_notification > 0 %} bg-reds{% endif %}">{{unread_notification}}</span>
+            <i class="fa fa-bell" style="font-size: 22px"></i>
+            </a>
+            <div class="dropdown-menu notifications">
+               <div class="topnav-dropdown-header">
+                  <span class="notification-title">Notifications</span>
+                  <a href="javascript:void(0)" class="clear-noti"> Clear All</a>
+               </div>
+               <div id="nav_noti_content" class="noti-content p-3" style="height: auto; width:auto">
+                  {% if latest_unread_notification is not None %}
+                     {% for list in latest_unread_notification %}
+                     <div class="d-flex py-2">
+                        {% if list.action_by %}
+                        <span class="avatar avatar-sm flex-shrink-0">
+                        <img class="avatar-img rounded-circle" alt="" src="{% static 'assets/img/profiles/avatar-02.jpg' %}"/>
+                        </span>
+                        {% endif %}
+                        <div style="margin-left: 10px">
+                           {% if list.content_object|to_class_name in check_arrs %}
+                           {% if request.user.role == "Employer" %}
+                           <a href="{{ list.content_object.get_absolute_url }}">
+                           {{list.title}}
+                           </a>
+                           {% else %}
+                           <a href="{{ list.content_object.get_absolute_for_freelancer }}">
+                           {{list.title}}
+                           </a>
+                           {% endif %} {% else %}
+                           <a href="{{ list.content_object.get_absolute_url }}">
+                           {{list.title}}
+                           </a>
+                           {% endif %}<br />
+                           <small style="color: gray">{{list.date_created}}</small>
+                        </div>
+                     </div>
+                     {% endfor %}
+                  {% else %}
+                     No new notifications
+                  {% endif %}
+               </div>
+               <div class="topnav-dropdown-footer">
+                  <a href="{% url 'my_notifications' %}">View all Notifications</a>
+               </div>
+            </div>
+         </li>
+         <!-- /Notifications -->
+         {% endif %} {% if not request.user.is_authenticated %}
+         <li>
+            <a href="{% url 'register' %}" class="reg-btn"
+               ><i class="fas fa-user"></i> Register</a
+               >
+         </li>
+         <li>
+            <a href="{% url 'login' %}" class="log-btn"
+               ><i class="fas fa-lock"></i> Login</a
+               >
+         </li>
+         {% else %}
+         <li class="nav-item dropdown has-arrow main-drop account-item">
+            <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+            <span class="user-img">
+               {% if 'default.png' in request.user.avatar.url %}
+                  <i class="fas fa-user"></i>
+               {% else %}
+                  <img src="{{request.user.avatar.url}}" alt="" />
+               {% endif %}
+            </span>
+            <span>{{request.user.username}}</span>
+            </a>
+            <div class="dropdown-menu emp">
+               <div class="drop-head">Project Settings</div>
+               <a class="dropdown-item" href="{% url 'project_list' 'all' %}"><i class="material-icons">business_center</i> Projects</a>
+               <a class="dropdown-item" href="{% url 'favourite' %}"><i class="material-icons">local_play</i> Bookmarks</a>
+               <a class="dropdown-item" href="{% url 'reviews' %}"><i class="material-icons">pie_chart</i> Reviews</a>
+               {%if request.user.role == 'Freelancer'%}
+               <div class="drop-head">Financial Settings</div>
+               <a class="dropdown-item bal" href="#">Balance <span class="amt">₹0.00 INR</span></a>
+               <a class="dropdown-item" href="freelancer-withdraw-money.html"><i class="material-icons">wifi_tethering</i> Withdraw funds</a>
+               <div class="drop-head">User Availability</div>
+                <a class="dropdown-item" href="{% url 'set_availability'  %}">
+                <i class="fas fa-clock  "></i> Set Availability</a>
+                {%endif%}
+               <div class="drop-head">Account Details</div>
+                <a class="dropdown-item" href="{% url 'user_detail' request.user.id %}"><i class="fas fa-user"></i> View Profile</a>
+                <a class="dropdown-item" href="{% url 'profile_settings' %}"><i class="material-icons">settings</i> Profile Settings</a>
+                <a class="dropdown-item" href="{% url 'logout' %}"><i class="material-icons">power_settings_new</i> Logout</a>
+              </div>
+         </li>
+         {% endif %} 
+         {% if request.user.is_authenticated and request.user.role == "Employer" %}
+         <li>
+           <a href="{% url 'create_project' %}" class="login-btn">Post Project </a>
+         </li>
+         {% endif %}
+      </ul>
+   </nav>
+</header>
+<!-- /Header -->
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+{% endblock css %} {% block js %}
+<!-- <script>
+   htmx.on("htmx:afterRequest", (e) => {
+     $("#noti_num").hide();
+   });
+</script> -->
+{% endblock js %}

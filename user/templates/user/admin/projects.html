@@ -1,0 +1,258 @@
+{% extends 'admin/adminbase.html' %}
+{% load extras %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Project List{% endblock title %}
+{% block content %}
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <!-- Page Header -->
+      <div class="page-header">
+         <div class="row align-items-center">
+            <div class="col">
+               <h3 class="page-title">Projects</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item active">Projects</li>
+               </ul>
+            </div>
+            <div class="col-auto">
+               <a class="btn filter-btn" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+               <i class="fas fa-filter"></i>
+               </a>
+            </div>
+         </div>
+      </div>
+      <div class="card-body collapse" id="collapseExample">
+         <form method="get" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;" class="">
+            {{searchForm.form|crispy}}
+            <button type="submit" class="btn btn-primary">Search</button>
+         </form>
+      </div>
+      {% include 'components/message.html' %}
+      <!-- /Page Header -->
+      <div class="card bg-white projects-card">
+         <div class="card-body pt-0">
+            <div class="card-header">
+               <h5 class="card-title">Projects views</h5>
+            </div>
+            <div class="reviews-menu-links">
+               <ul role="tablist" class="nav nav-pills card-header-pills nav-justified">
+                  <li class="nav-item">
+                     <a href="{% url 'project_list' 'all' %}"  class="nav-link {% if project_type == "all" %}active{% endif %} ">All ({{all_count}})</a>
+                  </li>
+                  <li class="nav-item">
+                     <a href="{% url 'project_list' 'pending' %}"  class="nav-link {% if project_type == "pending" %}active{% endif %} ">Pending ({{pen_count}})</a>
+                  </li>
+                  <li class="nav-item">
+                     <a href="{% url 'project_list' 'ongoing' %}"  class="nav-link {% if project_type == "ongoing" %}active{% endif %} ">Ongoing ({{on_count}})</a>
+                  </li>
+                  <li class="nav-item">
+                     <a href="{% url 'project_list' 'completed' %}"  class="nav-link {% if project_type == "completed" %}active{% endif %} "> Completed ({{com_count}})
+                     </a>
+                  </li>
+                  <li class="nav-item">
+                     <a href="{% url 'project_list' 'cancelled' %}"  class="nav-link {% if project_type == "cancelled" %}active{% endif %} ">Cancelled ({{can_count}})</a>
+                  </li>
+               </ul>
+            </div>
+            <div class="tab-content pt-0">
+               <div role="tabpanel" id="tab-4" class="tab-pane fade active show">
+                  <div class="table-responsive">
+                     <table class="table table-center table-hover mb-0 datatable">
+                        <thead>
+                           <tr>
+                              <!-- <th></th> -->
+                              <th>Posted By</th>
+                              <th>Title</th>
+                              <th>Budget</th>
+                              <th>Progress</th>
+                              <th>Technology</th>
+                              <th>Company</th>
+                              <th>Start date</th>
+                              <th>Due date</th>
+                              <th class="text-end">Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody id="table-body" data-project="{{project_type}}">
+                           {% for list in page_obj %}
+                           <!-- Delete Modal -->
+                           <div class="modal custom-modal fade" id="delete_project{{list.id}}" role="dialog">
+                              <div class="modal-dialog modal-dialog-centered">
+                                 <div class="modal-content">
+                                    <div class="modal-body">
+                                       <div class="form-header">
+                                          <h3>Delete</h3>
+                                          <p>Are you sure want to delete  project {{list.id}}?</p>
+                                       </div>
+                                       <form method="POST" class="modal-btn delete-action">
+                                          {% csrf_token %}
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <input type="hidden" name="project_id" value="{{list.id}}">
+                                                <input type="submit" name="delete_project" class="btn btn-primary continue-btn w-100" value="Delete"/>
+                                             </div>
+                                             <div class="col-6">
+                                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn bg-red">Cancel</a>
+                                             </div>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /Delete Modal -->
+                           <!-- Appprove Modal -->
+                           <div class="modal custom-modal fade" id="approve_project{{list.id}}" role="dialog">
+                              <div class="modal-dialog modal-dialog-centered">
+                                 <div class="modal-content">
+                                    <div class="modal-body">
+                                       <div class="form-header">
+                                          <h3>Approve</h3>
+                                          <p>Are you sure want to approve  {{list.title|title}}?</p>
+                                       </div>
+                                       <form 
+                                          hx-get="{% url 'approve_project' list.id %}" 
+                                          hx-trigger="submit" 
+                                          hx-swap="none"
+                                          class="modal-btn delete-action">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <input type="submit" name="approve_project" class="btn btn-primary continue-btn w-100" value="Approve"/>
+                                             </div>
+                                             <div class="col-6">
+                                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn bg-red">Cancel</a>
+                                             </div>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /approve Modal -->
+                           <tr id="project-{{list.id}}">
+                              <!-- <td>
+                                 {{list.id}}
+                              </td> -->
+                              <td>
+                                 <h2 class="table-avatar">
+                                    <a href="{% url 'admin_user_detail' list.posted_by.id %}">
+                                       <img class="me-2 object-cover" src="{{list.posted_by.avatar.url}}"
+                                           alt="User Image">{% if list.posted_by.display_name is not None or 'None' not in list.posted_by.display_name %}{{list.posted_by.display_name}}{% else %}{{list.posted_by.username}}{%  endif %}</a>
+                                 </h2>
+                              </td>
+                              <td>{{list.title|truncatechars:'50'}}</td>
+                              <td>
+                                 ${{list.price}}
+                              </td>
+                              <td id="status_{{list.id}}">
+                                    <div class="progress rounded-pill">
+                                      <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: 75%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="10"></div>
+                                    </div>
+                              </td>
+                              <td id="technology_{{list.id}}">Python</td>
+                              <td id="company_{{list.id}}">Kush Tech Nepal</td>
+                              <td>{{list.start_date}}</td>
+                              <td>{{list.end_date}}</td>
+                              <td class="text-end">
+                                 {% if list.status == "PEN" %}
+                                 <a id="approve_btn{{list.id}}" href="javascript:void(0);" class="btn btn-approve text-white me-2" data-bs-toggle="modal" data-bs-target="#approve_project{{list.id}}">Approve</a>
+                                 {% endif %}
+                                 {% comment %} <a href="{% url 'free_project_detail' list.id %}" class="btn btn-sm btn-info text-white me-2"><i class="far fa-eye"></i></a>  {% endcomment %}
+                                 <a href="{% url 'admin_edit_project' list.id %}" class="btn btn-sm btn-secondary me-2"><i class="far fa-edit"></i></a> 
+                                 <a href="javascript:void(0);" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_project{{list.id}}"><i class="far fa-trash-alt"></i></a>
+                              </td>
+                           </tr>
+                           {% empty %}
+                           <tr>
+                              {% if project_type == "all" %}
+                              <td>Not Found Any Projects</td>
+                              {% else %}
+                              <td>Not found any {{project_type}} projects</td>
+                              {% endif %}
+                           </tr>
+                           {% endfor %}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="float-right mt-3">
+         {% include 'components/pagination.html' %}
+      </div>
+   </div>
+   <!-- /Page Wrapper -->
+</div>
+</div>
+<!-- /Main Wrapper -->
+<!-- Category Modal -->
+<div class="modal fade custom-modal" id="add-category">
+   <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">Projects</h4>
+            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+         </div>
+         <div class="modal-body">
+            <form>
+               <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" class="form-control" value="Website Designer Required For Directory Theme">
+               </div>
+               <div class="form-group">
+                  <label>Budget</label>
+                  <input type="text" class="form-control" value="$2222">
+               </div>
+               <div class="form-group">
+                  <label>Technology</label>
+                  <input type="text" class="form-control" value="Angler">
+               </div>
+               <div class="form-group">
+                  <label>Technology</label>
+                  <input type="text" class="form-control" value="AMAZE TECH">
+               </div>
+               <div class="form-group">
+                  <label>From Date</label>
+                  <div class="cal-icon">
+                     <input class="form-control datetimepicker" type="text"  value="20-01-2022">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label>To Date</label>
+                  <div class="cal-icon">
+                     <input class="form-control datetimepicker" type="text"  value="20-02-2022">
+                  </div>
+               </div>
+               <div class="mt-4">
+                  <button type="submit" class="btn btn-primary btn-block">Submit</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Category Modal -->
+{% endblock content %}
+{% block js %}
+<script>
+   let project_type = $("#table-body").data('project') 
+      
+   htmx.on("htmx:afterRequest", (e) => {
+       if(e.detail.successful){
+           let data = JSON.parse(e.detail.xhr.response)
+           console.log(data)
+   
+           $(`#approve_btn${data.id}`).hide()
+           $(`#status_${data.id}`).text('Active')
+           if(project_type==="pending"){
+               $(`#project-${data.id}`).fadeOut()
+           }
+           $(`#approve_project${data.id}`).modal('hide')
+           toastr.success(data.msg)
+       }
+   
+    });
+</script>
+{% endblock js %}

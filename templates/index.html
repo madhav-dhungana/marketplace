@@ -1,0 +1,364 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Index {% endblock %}
+{% block content %}
+
+<body class="home-page">
+    <div class="main-wrapper">
+
+
+    <section class="section home-banner row-middle">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8 col-lg-7">
+                    <div class="banner-content">
+                        <div class="rating d-flex">
+                            <i class="fas fa-star checked"></i>
+                            <i class="fas fa-star checked"></i>
+                            <i class="fas fa-star checked"></i>
+                            <i class="fas fa-star checked"></i>
+                            <i class="fas fa-star checked"></i>
+                            <h5>Trused by over 2M+ users</h5>
+                        </div>
+                        <h1>Get the perfect <span class="orange-text">Batuwassss & Gigs</span></h1>
+                        <p>With the world's #1 Travellers Gig marketplace</p>
+                        <form class="form" method="get"  action="{% url 'find_all' %}">
+                            <div class="form-inner">
+                                <div class="input-group">
+                                    <span class="drop-detail">
+                                        <select class="form-control select" id="selectedQuery" name="query">
+                                            <option value="Batuwa">Batuwa</option>
+                                            <option value="Traveller">Travellers</option>
+                                        </select>
+                                    </span>
+                                    <input type="text" class="form-control" name="title" placeholder="Search here">
+                                    <button class="btn btn-primary sub-btn" type="submit">Search Now</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-5">
+                    <div class="banner-img">
+                        <img src="{% static 'assets/img/banner-img.png' %}" class="img-fluid" alt="banner">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /Home Banner -->
+
+    <!-- Our Feature -->
+    <section class="section feature">
+        <div class="container">
+            <div class="row">
+
+                <!-- Feature Item -->
+                <div class="col-md-4">
+                    <div class="feature-item freelance-count">
+                        <div class="feature-icon">
+                            <img src={% static 'assets/img/icon/icon-01.png' %}" class="img-fluid" alt="">
+                        </div>
+                        <div class="feature-content">
+                            <h3>{{total_batuwa}}</h3>
+                            <p>Batuwa Available</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Feature Item -->
+
+                <!-- Feature Item -->
+                <div class="col-md-4">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <img src="assets/img/icon/icon-02.png" class="img-fluid" alt="">
+                        </div>
+                        <div class="feature-content">
+                            <h3>{{minJobCount}} - {{maxJobCount}}+</h3>
+                            <p>Batuwa per project</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Feature Item -->
+
+                <!-- Feature Item -->
+                <div class="col-md-4">
+                    <div class="feature-item comp-project">
+                        <div class="feature-icon">
+                            <img src="{% static 'assets/img/icon/icon-03.png' %}" class="img-fluid" alt="">
+                        </div>
+                        <div class="feature-content">
+                            <h3>{{completed_task}}</h3>
+                            <p>completed Tasks</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Feature Item -->
+
+            </div>
+        </div>
+    </section>
+    <!-- /Our Feature -->
+
+    <!--- Developed Project  -->
+    <section class="section work">
+        <div class="container-fluid">
+            <div class="row">
+
+                <!-- Feature Item -->
+                <div class="col-md-6 work-box bg1">
+                    <div class="work-content">
+                        <h2>I need Someones <span>Company</span></h2>
+                        <p>Get the perfect Batwua available for your budget from our top-notch community.</p>
+                        <a href="{% url 'all_projects' 'all' %}"><i class="fas fa-long-arrow-alt-right long-arrow"></i></a>
+                    </div>
+                </div>
+                <!-- /Feature Item -->
+
+                <div class="col-md-6 work-box bg2">
+                    <div class="work-content">
+                        <h2>I want to <span>work</span></h2>
+                        <p>Do you want to earn money, find unlimited travellers and build your Travelers Network?</p>
+                        <a href="developer.html"><i class="fas fa-long-arrow-alt-right long-arrow"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--- /Developed Project  -->
+
+    <!-- Projects -->
+    <section class="section projects">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-12 mx-auto">
+                    <div class="section-header text-center">
+                        <div class="section-line"></div>
+                        <h2 class="header-title">Get Inspired<br> By Travel Projects</h2>
+                        <p>High Performing Company and Guide To Your Journey</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                {% for item in projects %}
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="project-item">
+						<div class="project-img">
+							<a href="{% url 'all_projects' 'all' %}"><img src="{% static 'assets/img/project/project-04.jpg' %}" alt="" class="img-fluid"></a>
+						</div>
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="project-content">
+								<i class="fas fa-map-marker-alt me-1 orange-text"></i><h4>{{item.location.name}}</h4>
+								<h5>${{item.address}}</h5>
+							</div>
+							<div class="pro-icon">
+								<div class="project-icon">
+								</div>
+							</div>
+							<div class="project-content">
+								<i class="fas fa-check-circle orange-text"></i>
+								<h4>{{item.title}}</h4>
+								<h5>${{item.price}}</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="see-all">
+                        <a href="{% url 'all_projects' 'all' %}" class="btn all-btn">SEE ALL PROJECT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /Projects -->
+
+    <!-- Subscribe -->
+    <section class="section subscribe">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <img src="{% static 'assets/img/subscribe.png' %}" class="img-fluid" alt="subscribe">
+                </div>
+                <div class="col-md-6">
+                    <h3>Subscribe To Get Guides, Updates & More</h3>
+                    <p>Monthly product guides, industry news and more!</p>
+                    <form action="subscribe" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-inner">
+                            <div class="input-group">
+                                <input type="email" class="form-control" name="email" placeholder="Enter Email Address"
+                                    required>
+                                <button class="btn btn-primary sub-btn" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+    <!-- End Subscribe -->
+
+    <!-- Top Instructor -->
+    <section class="section developer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 col-sm-12 col-12 mx-auto">
+                    <div class="section-header text-center">
+                        <div class="section-line"></div>
+                        <h2 class="header-title">Most Hired Batuwa</h2>
+                        <p>Work with loving people at the most affordable price</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="developers-slider" class="owl-carousel owl-theme developers-slider">
+                {% for item in mosthired %}
+                <div class="freelance-widget">
+                    <div class="freelance-content">
+                        <a data-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+                        <div class="freelance-img">
+                            <a href="#">
+                                <img src="{{item.avatar.url}}" alt="User Image">
+                                {% if item.verified %}
+                                    <span class="verified"><i class="fas fa-check-circle"></i></span>
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="freelance-info">
+                            <h3><a href="#">{{item.display_name}}</a></h3>
+                            <div class="freelance-specific">Any Company</div>
+                            <div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>{{item.state}}, {{item.country.name}}
+                            </div>
+                            <div class="rating">
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="average-rating">{{item.get_rating}}</span>
+                            </div>
+                            <div class="freelance-tags">
+                                {% for skill in item.skills.all %}
+                                <a href="javascript:void(0);"><span
+                                        class="badge badge-pill badge-design">{{skill.skill_name}}</span></a>
+                                {% endfor %}
+                            </div>
+                            <div class="freelancers-price">${{item.hourly_rate}}</div>
+                        </div>
+                    </div>
+                    <div class="cart-hover">
+                        <a href="developer-details.html" class="btn-cart" tabindex="-1">View Profile</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- End Developer -->
+
+    <!-- Review -->
+    <section class="section testimonial-section review">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-header text-center">
+                        <div class="section-line"></div>
+                        <h2 class="header-title">Top Reviews</h2>
+                        <p>High Performing Batuwas To Your</p>
+                    </div>
+                </div>
+            </div>
+            <div id="testimonial-slider" class="owl-carousel owl-theme testimonial-slider">
+                {% if reviews %}
+                    {% for item in reviews %}
+                    <div class="review-blog">
+                        <div class="review-top d-flex align-items-center">
+                            <div class="review-img">
+                                <a href="review.html"><img class="img-fluid" src="{{ item.review_by.avatar.url }}"
+                                        alt="Post Image"></a>
+                            </div>
+                            <div class="review-info">
+                                <h3>{{item.review_by.display_name}}</h3>
+                                <h5>CEO</h5>
+                                <div class="rating">
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="average-rating">4.7</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <p>{{item.review}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    Nothing to Show
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+    <!-- / Review -->
+
+    <!-- News -->
+    <section class="section news">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-header text-center">
+                        <div class="section-line"></div>
+                        <h2 class="header-title">Feature Blog</h2>
+                        <p>High Performing Travellers To Your</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div>
+                <div class="row blog-grid-row">
+                    {% if blog %}
+                        {% for item in blog %}
+                        <div class="col-md-4">
+                            <div class="blog grid-blog">
+                                <div class="blog-image">
+                                    <a href="{% url 'blog_detail' slug=item.slug %}"><img class="img-fluid"
+                                            src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/img-02.jpg' %}{% endif %}"
+                                            alt="Post Image"></a>
+                                </div>
+                                <div class="blog-content">
+                                    <ul class="entry-meta meta-item">
+                                        <li>
+                                            <div class="post-author">
+                                                <a href="{% url 'blog_detail' slug=item.slug %}"><img
+                                                        src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/img-02.jpg' %}{% endif %}"
+                                                        alt="Post Author"> <span>{{item.author}}</span></a>
+                                            </div>
+                                        </li>
+                                        <li><i class="far fa-clock"></i>{{item.created_at | date:"M d, Y"}}</li>
+                                    </ul>
+                                    <h3 class="blog-title"><a href="{% url 'blog_detail' slug=item.slug %}">{{item.title|truncatechars:30}}</a></h3>
+                                    <a href="{% url 'blog_detail' slug=item.slug %}"> <p class="mb-0">{{item.description | truncatechars:100}}</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <strong>There are no blogs at this moment</strong>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+{% endblock %}

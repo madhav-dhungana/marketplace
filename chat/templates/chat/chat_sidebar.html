@@ -1,0 +1,97 @@
+{% load static %}
+<!-- Chat Left -->
+<div class="chat-cont-left">
+   <div class="chat-header">
+      <form class="chat-search">
+         <div class="input-group">
+            <div class="input-group-prepend">
+               <i class="fas fa-search icon-circle"></i>
+            </div>
+            <input
+               type="text"
+               class="form-control rounded-pill"
+               placeholder="Search"
+               />
+         </div>
+      </form>
+   </div>
+   <div class="">
+      <div class="chat-scroll">
+         {% for list in recent_rooms %}
+         <a
+         {% if list.user1 == request.user %} 
+         href="{% url 'project_chat' list.user2.username  %}"
+         {% else %} 
+         href="{% url 'project_chat' list.user1.username  %}"
+         {% endif %}
+         class="d-flex chat-dial"
+         >
+         <div class="media-img-wrap flex-shrink-0">
+            <div class="avatar avatar-away">
+               <div class="user-name">
+                  {% if list.user1 == request.user %}
+                  <img
+                     src="{{list.user2.avatar.url}}"
+                     width="40"
+                     height="40"
+                     alt="User Image"
+                     class="avatar-img rounded-circle object-cover"
+                     />
+                  {% else %}
+                  <img
+                     src="{{list.user1.avatar.url}}"
+                     width="40"
+                     height="40"
+                     alt="User Image"
+                     class="avatar-img rounded-circle object-cover"
+                     />
+                  {% endif %}
+               </div>
+            </div>
+         </div>
+         <div class="media-body flex-grow-1">
+            <div>
+               <div class="user-name text-primary">
+                  {% if list.user1 == request.user %} {{list.user2.display_name}} 
+                  {% else %} {{list.user1.display_name}} {% endif %}
+               </div>
+               <div class="user-last-chat">
+                  {{list.last_msg.text|truncatechars:'30'}}
+               </div>
+            </div>
+            <div>
+               <div class="last-chat-time block">
+                  {{list.last_msg.date_created|timesince}}
+               </div>
+               {% comment %}
+               <div class="badge bgg-yellow badge-pill">11</div>
+               {% endcomment %}
+            </div>
+         </div>
+         </a>
+         {% empty %}
+         <div class="card m-3">
+            <div class="card-body">
+               <strong>Unavailable Chat</strong>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+</div>
+<!-- /Chat Left -->
+{% block css %}
+<style>
+   .chat-dial {
+      background: #fff;
+      box-shadow: 0px 4px 4px #f5f8ff;
+      margin: 10px;
+      padding: 10px 15px;
+      transition: all 0.2s ease 0s;
+   }
+   .chat-dial:hover{
+      color:black !important;
+      background:#f9f9f9;
+   }
+</style>
+{% endblock css %}

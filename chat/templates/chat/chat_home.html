@@ -1,0 +1,50 @@
+{% extends 'nonadmin/base_nofooter.html' %} {% load static %} 
+{% block title %}Chat Home {% endblock title %} {% block content %}
+<!-- Content -->
+<audio id="popSound">
+   <source src="{% static 'assets/pop.mp3' %}" type="audio/mpeg" />
+</audio>
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12 back-text">
+            <a href="{% url 'dashboard' %}" class="btn btn-primary back-btn mt-3"
+               ><i class="fa fa-chevron-left"></i> Back
+            </a>
+         </div>
+         <div class="col-md-12">
+            <div class="chat-window">
+               {% include 'chat/chat_sidebar.html' %}
+               <div class="chat-cont-right">
+                  <div class="chat-header d-flex">
+                     <div class="media d-flex">
+                        <div class="media-img-wrap flex-shrink-0">
+                           <div class="avatar avatar-online">
+                              <img src="{{request.user.avatar.url}}"  alt="User Image" class="avatar-img rounded-circle">
+                           </div>
+                        </div>
+                        <div class="media-body flex-grow-1">
+                           <div class="user-name">Chat With User</div>
+                           {% comment %} 
+                           <div class="user-status">online</div>
+                           {% endcomment %}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- /Page Content -->
+   {% endblock content %} {% block js %}
+   <style>
+      @media only screen and (max-width: 992px) {
+         .chat-cont-right{
+            display: none !important;
+         }
+      }
+   </style>
+   <script src="{% static 'assets/js/custom/chat_socket.js' %}"></script>
+   {% endblock js %}
+</div>

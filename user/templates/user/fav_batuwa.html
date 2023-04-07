@@ -1,0 +1,92 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Favourite Batuwa{% endblock title %}
+{% block content %}
+<!-- Page Content -->
+<div class="content bookmark">
+   <div class="container-fluid">
+      <div class="row">
+         {% include 'components/sidebar.html' %}
+         <div class="col-xl-9 col-md-8">
+            <nav class="user-tabs mb-4">
+               <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                  <li class="nav-item">
+                     <a class="nav-link active" href="{% url 'favourite' %}">Bookmarked User</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'invite_list' %}">Invited User</a>
+                  </li>
+               </ul>
+            </nav>
+            <!-- project list -->
+            <div class="my-projects-view">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="card">
+                        <div class="card-header">
+                           <h5 class="card-title">Bookmarked Batuwas</h5>
+                        </div>
+                        <div class="card-body">
+                           <div class="table-responsive table-box">
+                              <table class="table table-hover table-center mb-0 datatable">
+                                 <thead class="thead-pink">
+                                    <tr>
+                                       <th>Batuwa Detail</th>
+                                       <th>Hourly Rate</th>
+                                       <th>Projects Completed</th>
+                                       <th>Location</th>
+                                       <th>Action</th>
+                                       <th></th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    {% for list in request.user.get_bookmarked_users %}
+                                    <tr>
+                                       <td>
+                                          <h2 class="table-avatar">
+                                             <a href="{% url 'user_detail' list.id %}" class="avatar avatar-md tab-imgcircle me-2">
+                                             <img class="avatar-img rounded-circle" src="{{list.avatar.url}}" alt="User Image">
+                                             </a>
+                                             <a href="{% url 'user_detail' list.id %}"><span class="profile-name">{{list.display_name}}</span><span>{{list.title}}</span>
+                                             <span class="rating mt-2">
+                                             </span>
+                                             </a>
+                                          </h2>
+                                       </td>
+                                       <td>{{list.hourly_rate}} /Hr</td>
+                                       <td>{{list.get_finished_jobs}}</td>
+                                       <td>
+                                          <h2 class="table-avatar">
+                                             <img src="{% static 'assets/flag/' %}{{list.country}}.svg"  
+                                                class="me-2" alt="" height="16"> {{list.country.name}}
+                                          </h2>
+                                       </td>
+                                       <td role="button">Remove</td>
+                                       <td class="text-end">
+                                          <div class="table-action">
+                                             <a href="{% url 'invite_user_page' %}?invite_user={{list.id}}" class="btn btn-primary btn-invite">Invite User
+                                             </a>
+                                          </div>
+                                       </td>
+                                    </tr>
+                                    {% empty %}
+                                    <td>
+                                       <h4>No User Bookmarked Yet !</h4>
+                                    </td>
+                                    {% endfor %}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- project list -->
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}

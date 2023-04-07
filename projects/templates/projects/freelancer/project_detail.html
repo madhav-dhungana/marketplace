@@ -1,0 +1,518 @@
+
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+Project Detail - {{project.id}}
+{% endblock title %}
+
+{% block content %}
+		<!-- Breadcrumb -->
+        <div class="breadcrumb-bar"></div>
+        <!-- /Breadcrumb -->
+        {% include 'components/message.html' %}
+        <!-- Page Content -->
+        <div class="content">
+            <div class="container">	
+                <div class="row">	
+                    <div class="col-md-12">	
+         
+                        <div class="profile">			
+                            <div class="profile-box">			
+                                <div class="provider-widget row">
+                                    <div class="pro-info-left col-md-8">
+                                        <div class="profile-info">
+                                            <h2 class="profile-title">{{project.title}}</h2>
+                                            <p class="profile-position">Traveller/Trek</p>
+                                            <div></div>							
+                                            <ul class="profile-preword align-items-center">
+                                                <li><i class="fas fa-clock"></i> Posted {{project.posted_on}}</li>
+                                             
+                                                {% if request.user == project.hired %}<li><div class="badge badge-success">You were hired</div></li>{% endif %}
+                                                
+                                                {% comment %} <li><a href="#" class="btn full-btn">Full time</a></li> {% endcomment %}
+                                            </ul>
+                                            <div class="badge badge-primary">{{project.get_status_display}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="pro-info-right profile-inf col-md-4">
+                                        <ul class="profile-right">
+                                            <li><div class="amt-hr">${{project.price}} <p>(  {{project.get_price_status_display}} )</p>
+                                            <p>{% if project.hired %}
+                                                Hired {% else %}Not Hired Yet
+                                                {% endif %}</p>
+                                            </div></li>
+                                        
+                                        </ul>
+                                        <div class="d-flex align-items-center justify-content-md-end justify-content-center">
+                                            {% comment %} <a href="javascript:void(0)"><i class="fas fa-heart heart fa-2x me-2 orange-text"></i></a>  {% endcomment %}
+                                            <span>
+
+                                                {% if project in request.user.get_bookmarked_projects %}
+                                                <a id="{{project.id}}-project" hx-post="{% url 'fav_project' project.id %}" hx-swap="none" onclick="toggle({{project.id}})" class="favourite favourite-add"><i class="fas fa-bookmark"></i></a>
+                                                {% else %}
+                                                <a id="{{project.id}}-project"hx-post="{% url 'fav_project' project.id %}" hx-swap="none" onclick="toggle({{project.id}})" class="favourite"><i class="fas fa-bookmark "></i></a>
+                                                {% endif %}
+                                                </span>
+                                                {% if request.user == project.hired %}
+                                                <a href="#" class="btn bid-btn"> Got Hired  </a> 
+
+
+                                                {% else %}
+                                                    {% if  project.get_expiry_days < 0%}
+                                                    <a href="#" class="btn bid-btn"> Project Expired  </a> 
+                                                   
+                                                    {% else %}
+                                                        {% if not has_applied %}
+                                                        <form >
+                                                            <input type="hidden" name="id" value="{{project.id}}">
+                                                            <a hx-post="{% url 'check_my_availability_api' %}" hx-trigger="click" hx-swap="none" data-bs-toggle="modal" href="#file" class="btn bid-btn">Send Proposal <i class="fas fa-long-arrow-alt-right"></i></a>
+                                                        </form>   
+                                                        {% else %}
+                                                            <a  data-bs-toggle="modal" href="#file" class="btn bid-btn">Already Applied <i class="fas fa-long-arrow-alt-right"></i></a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {% endif %}
+                                        </div>
+                                    </div>
+                                </div>						
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-8 col-md-12">					
+                        <div class="pro-view">		
+                            <!-- Job Detail -->
+                            <div class="post-widget">
+                                <div class="pro-content">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 col-md-3">
+                                            <div class="pro-post job-type">
+                                                <p>Job Expiry </p>
+                                                {% if project.get_expiry_days < 0 %}
+                                                
+                                                <h6>Project Expired</h6>
+                                                {% else %}
+                                                <h6>{{project.get_expiry_days}} Days Left</h6>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-3">
+                                            <div class="pro-post job-type">
+                                                <p>Location</p>
+                                                <h6><img src="{% static 'assets/flag/' %}{{project.location}}.svg"  alt="" height="16"> {{project.location.name}}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-3">
+                                            <div class="pro-post job-type">
+                                                <p>Proposals</p>
+                                                <h6>{{project.no_of_proposals}} Received</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-3">
+                                            <div class="pro-post job-type">
+                                                <p>Price type</p>
+                                                <h6>{{project.get_pricing_type_display}}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Job Detail -->
+                            
+                            <div class="pro-post widget-box exp-widget pb-0">
+                                <div class="pro-content pt-0">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="exp-detail">
+                                                <img class="img-fluid" alt="" src="assets/img/icon/exp-icon-01.png">
+                                            <div class="exp-info">
+                                                <p>Traveller/Trek Type</p>
+                                                <h5>{{project.category}}</h5>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="exp-detail">
+                                                <img class="img-fluid" alt="" src="assets/img/icon/exp-icon-03.png">
+                                            <div class="exp-info">
+                                                <p>Estimated Start Date </p>
+                                                <h5>{{project.start_date|default_if_none:"Not Specified"}}</h5>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="exp-detail">
+                                                <img class="img-fluid" alt="" src="assets/img/icon/exp-icon-02.png">
+                                            <div class="exp-info">
+                                                <p>Estimated End Date</p>
+                                                <h5>{{project.end_date|default_if_none:"Not Specified"}}</h5>
+                                            </div>
+                                            </div>
+                                        </div>
+                                       
+                                   
+                                        <div class="col-md-4">
+                                            <div class="exp-detail">
+                                                <img class="img-fluid" alt="" src="assets/img/icon/exp-icon-05.png">
+                                            <div class="exp-info">
+                                                <p>Experience</p>
+                                                <h5>{{project.experience_needed}} years</h5>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="exp-detail">
+                                                <img class="img-fluid" alt="" src="assets/img/icon/exp-icon-06.png">
+                                            <div class="exp-info">
+                                                <p>Address</p>
+                                                <h5>{{project.address}}</h5>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Senior Animator  -->
+                            <div class="pro-post widget-box">
+                                <h3 class="pro-title">Project Detail</h3>
+                                <div class="pro-content">
+                                    {% if project.overview %}
+                                    <p>{{project.overview|safe}}
+                                        {% else %}
+                                        Not added overview
+                                        {% endif %}
+                                </div>
+                            </div>	
+                            <!-- /Senior Animator  -->
+                            
+                            <!-- Job Activity  -->
+                            <div class="pro-post project-widget widget-box">
+                                <h3 class="pro-title">Activity of the Job</h3>
+                                <div class="pro-content">
+                                    <div class="mb-0">
+                                        <ul class="activity-list clearfix">
+                                            <li>Proposals : <span>{{project.no_of_proposals}} <i class="fas fa-question-circle" data-bs-toggle="tooltip" title="Proposals sent for this project"></i></span></li>
+                                            <li>Interviewing: <span>{{project.no_of_interviewing}}</span></li>
+                                            <li>Invites sent: <span>{{project.total_invites}}</span></li>
+                                            <li>Unanswered invites: <span>{{project.total_answered_invites}}</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Job Activity  -->
+                            
+                            <!-- Skills Required  -->
+                            <div class="pro-post project-widget widget-box">
+                                <h3 class="pro-title">Skills Required</h3>
+                                <div class="pro-content">
+                                    <div class="tags">
+                                        {% for li in project.get_skills %}
+                                         <a href="javascript:void(0);"><span class="badge badge-pill badge-design">{{li.skill_name}}</span></a>
+                                        {% endfor %}
+                                 
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Skills Required  -->
+
+                        
+                            
+                        </div>
+                    </div>
+                
+                    <!-- Blog Sidebar -->
+                    <div class="col-lg-4 col-md-12 sidebar-right theiaStickySidebar">	
+
+                        <div class="freelance-widget widget-author mt-2 pro-post">
+                            <div class="freelance-content">
+                            <a data-bs-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+                            <div class="author-heading">
+                                {% comment %} <div class="profile-img"> {% endcomment %}
+                                    <a href="{% url 'user_detail' project.posted_by.id %}">
+                                        <img  class="profile-img"style="object-fit:cover;height:12rem;width:12rem;border-radius:50%;" src="{{project.posted_by.avatar.url}}" alt="author">
+                                    </a>
+                                {% comment %} </div> {% endcomment %}
+                                <div class="profile-name">
+                                    <div class="author-location">{{project.posted_by.display_name}} <i class="fas fa-check-circle text-success verified"></i></div>
+                                </div>
+                                <div class="freelance-info">
+                                    <div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>{{project.posted_by.address}} </div>
+                                    
+                                </div>
+                                {% comment %} <button type="button" class="btn btn-lg btn-primary rounded-pill"><i class="fab fa-whatsapp me-2"></i>Follow</button> {% endcomment %}
+                                {% comment %} <div class="follow-details">
+                                <div class="row">
+                                      <div class="col-6 py-4 text-center">
+
+                                    <!-- Heading -->
+                                    <h6 class="text-uppercase text-muted">
+                                          Following
+                                    </h6>
+
+                                    <!-- Value -->
+                                    <h4 class="mb-0">49</h4>
+
+                                  </div>
+                                  <div class="col-6 py-4 text-center border-start">
+
+                                    <!-- Heading -->
+                                    <h6 class="text-uppercase text-muted">
+                                      Followers
+                                    </h6>
+
+                                    <!-- Value -->
+                                    <h4 class="mb-0">422</h4>
+
+                                  </div>
+                                </div>
+                            </div> {% endcomment %}
+                                
+                                <div class="">
+                                      <div class="row align-items-center">
+                                        <div class="col">
+                                              <h6 class="text-sm text-start mb-0">
+                                                Joined Since 
+                                              </h6>
+                                        </div>
+                                        <div class="col-auto">
+                                              <span class="text-sm">{{project.posted_by.date_joined}}</span>
+                                        </div>
+                                      </div>
+                                      <hr class="my-3">
+                                      <div class="row align-items-center">
+                                        <div class="col">
+                                              <h6 class="text-sm text-start mb-0">
+                                                Total Jobs
+                                              </h6>
+                                        </div>
+                                        <div class="col-auto">
+                                              <span class="text-sm">{{project.posted_by.get_project_posted}}</span>
+                                        </div>
+                                      </div>
+                                      <hr class="my-3">
+                                    {% comment %} <div class="row align-items-center">
+                                        <div class="col">
+                                              <h6 class="text-sm text-start mb-0">
+                                                <i class="fab fa-instagram me-2"></i>Instagram
+                                              </h6>
+                                        </div>
+                                        <div class="col-auto">
+                                              <span class="text-sm">@johnthedon</span>
+                                        </div>
+                                    </div>
+                                      <hr class="my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                              <h6 class="text-sm text-start mb-0">
+                                                <i class="fab fa-linkedin me-2"></i>LinkedIn
+                                              </h6>
+                                        </div>
+                                        <div class="col-auto">
+                                              <span class="text-sm">johnsullivan</span>
+                                        </div>
+                                    </div> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                       </div>
+{% comment %}                                             
+                        <!-- Link Widget -->	
+                        <div class="pro-post widget-box post-widget">
+                            <h3 class="pro-title">Profile Link</h3>
+                            <div class="pro-content pt-0">
+                                <div class="form-group profile-group mb-0">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="https://www.kofejob.com/developer/daren/12454687">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-success sub-btn" type="submit"><i class="fa fa-clone"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Link Widget -->	 {% endcomment %}
+
+                        <!-- Attachments Widget -->	
+                        <div class="pro-post widget-box post-widget pb-0">
+                            <h3 class="pro-title">Attachments</h3>
+                            <div class="pro-content">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="pro-post client-list">
+                                            <p>Jobs Posted</p>
+                                            <h6 class="bg-red">{{project.posted_by.get_project_posted}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="pro-post client-list">
+                                            <p>Hire rate</p>
+                                            <h6 class="bg-blue">{{project.posted_by.get_hired_rate}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="pro-post client-list">
+                                            <p>open jobs</p>
+                                            <h6 class="bg-violet">{{project.posted_by.get_open_job}}</h6>
+                                        </div>
+                                    </div>
+                                    {% comment %} <div class="col-6">
+                                        <div class="pro-post client-list">
+                                            <p>Total spent</p>
+                                            <h6 class="bg-yellow">22</h6>
+                                        </div>
+                                    </div> {% endcomment %}
+                                    <div class="col-6">
+                                        <div class="pro-post client-list">
+                                            <p>Hires</p>
+                                            <h6 class="bg-pink">{{project.posted_by.get_project_hired}}</h6>
+                                        </div>
+                                    </div>
+                                    {% comment %} <div class="col-6">
+                                        <div class="pro-post client-list">
+                                            <p>Active</p>
+                                            <h6 class="bg-green">22</h6>
+                                        </div>
+                                    </div> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Attachments Widget -->	
+
+                        <!-- Share Widget -->	
+                        {% comment %} <div class="pro-post widget-box post-widget">
+                            <h3 class="pro-title">Share</h3>
+                            <div class="pro-content">
+                                <a href="#" class="share-icon"><i class="fas fa-share-alt"></i> Share</a>
+                            </div>
+                        </div> {% endcomment %}
+                        <!-- /Share Widget -->
+                    
+                    </div>
+                    <!-- /Blog Sidebar -->
+                    
+                </div>
+            </div>
+        </div>		
+        <!-- The Modal -->
+	
+		<div class="modal fade" id="file">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">{% if not has_applied %}Send Proposal {% else %}Your Proposal{% endif %} </h4>
+						<span class="modal-close"><a href="#" data-bs-dismiss="modal" aria-label="Close"><i class="far fa-times-circle orange-text"></i></a></span>
+					</div>
+					<div class="modal-body">	
+						<div class="modal-info">
+                            {% if not has_applied %}
+							<form id="form_div" method="post">
+                                {% csrf_token %}
+								<div class="feedback-form">
+									<div class="row">
+										<div class="col-md-12 form-group">
+											{{form.price|as_crispy_field}}
+										</div>
+										<div class="col-md-12 form-group">
+                                            <strong>Cover Letter</strong>
+											{{form.detail}}
+                                            {{form.media}}
+										</div>
+									</div>
+								</div>
+								{% comment %} <div class="proposal-features">
+									<div class="proposal-widget proposal-success">
+										<label class="custom_check">
+											<input type="checkbox" name="select_time"><span class="checkmark"></span>
+											<span class="proposal-text">Stick this Proposal to the Top</span>
+											<span class="proposal-text float-end">$12.00</span>
+										</label>
+										<p>The sticky proposal will always be displayed on top of all the proposals.</p>
+									</div>
+									<div class="proposal-widget proposal-light">
+										<label class="custom_check">
+											<input type="checkbox" name="select_time"><span class="checkmark"></span>
+											<span class="proposal-text">$ Make Sealed Proposal</span>
+											<span class="proposal-text float-end">$7.00</span>
+										</label>
+										<p>The sealed proposal will be sent to the project author only it will not be visible publically.</p>
+									</div>
+									<div class="proposal-widget proposal-danger">
+										<label class="custom_check">
+											<input type="checkbox" name="select_time"><span class="checkmark"></span>
+											<span class="proposal-text">$ Make Sealed Proposal</span>
+											<span class="proposal-text float-end">$15.00</span>								
+										</label>
+										<p>The featured proposal will have a distinctive color and popped up between other proposals to get the author's attention.</p>
+									</div>
+								</div> {% endcomment %}
+								<div class="row">
+                                    
+									<div class="col-md-12 submit-section">
+                                        <label class="custom_check">
+											<input required type="checkbox" name="select_time">
+											<span class="checkmark"></span> I agree to the Terms And Conditions
+										</label>
+									
+									</div>
+									<div class="col-md-12 submit-section text-end">
+										<button class="btn btn-primary submit-btn" type="submit">SUBMIT PROPOSAL</button>
+									</div>
+								</div>											
+							</form>
+                            {% else %}  
+                            <h4>Your Price :</h4>  {{proposal.price}} <br>
+
+                            <h4 class='mt-4'>Your Cover Letter :</h4> 
+                            <p>{{proposal.detail|safe}}</p>
+
+                            {% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /The Modal -->
+        <!-- /Page Content -->
+
+{% endblock content %}
+
+{% block js %}
+<script>
+
+
+       
+    htmx.on("htmx:afterRequest", (e) => {
+        let data = JSON.parse(e.detail.xhr.response)
+        console.log(data)
+        
+        if(e.detail.successful){
+            if(data.can_apply === false){
+                $("#form_div").html(`
+                <h5 style="color:red;">Cannot Create Proposal</h5>
+                <small>Your Time doesnot match with given </small>
+                ${data.reason.map(li=>(
+                   `
+                   <div style="background:#ffd0e0;padding:10px;border-radius:5px;">
+                   <strong style="color:#222;"> ${li.day} - ${li.date}</strong><br/>
+                    <strong>Project Time : </strong> <span>${li.project_time}</span> </br>
+                    <strong>Your Time : </strong> <span>${li.my_time}</span>
+                   </div>
+                   `
+                ))}
+                (<small>Please update your availability to create proposal </small>)
+                `)
+            }else{
+
+            }
+        }
+        else{
+            toastr.error('Something went wrong !')
+
+        }
+     });
+</script>
+{% endblock js %}

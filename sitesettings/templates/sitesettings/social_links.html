@@ -1,0 +1,124 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Site Settings{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <div class="page-header">
+         <div class="row">
+            <div class="col-sm-6">
+               <h3 class="page-title">Settings</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'site_settings' %}">Settings</a></li>
+                  <li class="breadcrumb-item active">General Settings</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-12">
+            {% include 'components/message.html' %}
+            <!-- Settings Menu -->
+            <div class="settings-menu-links">
+               <ul class="nav nav-tabs menu-tabs">
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'site_settings' %}">General Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'localizations' %}">Localization</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'payment_settings' %}">Payment Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'email_settings' %}">Email Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_settings' %}">Socail Media Login</a>
+                  </li>
+                  <li class="nav-item active">
+                     <a class="nav-link" href="{% url 'social_links' %}">Social Links</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'seo_settings' %}">SEO Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'other_settings' %}">Others</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- Settings Menu -->
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="card">
+                     <div class="card-body pt-0">
+                        <div class="card-header">
+                           <h5 class="card-title">Social Link Settings</h5>
+                        </div>
+                        <form method="post" action="" enctype="multipart/form-data">
+                           {% csrf_token %}
+                            <div class="settings-form">
+                                <div class="links-info">
+                                    <div class="row form-row links-cont">
+                                        <div class="col-12 col-md-11">
+                                            <div class="form-group  d-flex">
+                                                <button class="btn social-icon">
+                                                    <i class="feather-facebook"></i>
+                                                </button>
+                                                <input type="text" class="form-control" name="facebook" value="{% if 'None' in data.facebook or data.facebook is None or data.facebook == '' %}{% else %}{{data.facebook}} {% endif %}" placeholder="{% if 'None' in data.facebook or data.facebook is None or data.facebook == '' %}Enter facbook URL {% else %}{% endif %}">
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="links-info">
+                                    <div class="row form-row links-cont">
+                                        <div class="col-12 col-md-11">
+                                            <div class="form-group  d-flex">
+                                                <button class="btn social-icon">
+                                                    <i class="feather-twitter"></i>
+                                                </button>
+                                                <input type="text" class="form-control" name="twitter" value="{% if 'None' in data.twitter or data.twitter is None or data.twitter == '' %}{% else %}{{data.twitter}} {% endif %}" placeholder="{% if 'None' in data.twitter or data.twitter is None or data.twitter == '' %}Enter twitter URL {% else %}{% endif %}">
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="links-info">
+                                    <div class="row form-row links-cont">
+                                        <div class="col-12 col-md-11">
+                                            <div class="form-group d-flex">
+                                                <button class="btn social-icon">
+                                                    <i class="feather-linkedin"></i>
+                                                </button>
+                                                <input type="text" class="form-control" name="linkedin" value="{% if 'None' in data.linkedin or data.linkedin is None or data.linkedin == '' %}{% else %}{{data.linkedin}} {% endif %}" placeholder="{% if 'None' in data.linkedin or data.linkedin is None or data.linkedin == '' %}Enter linkedin URL {% else %}{% endif %}">
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <div class="settings-btns">
+                                    <button type="submit" class="btn btn-orange" value="Update">Submit</button>
+                                    <button type="submit" class="btn btn-grey">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Wrapper -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify();
+</script>
+{% endblock js %}

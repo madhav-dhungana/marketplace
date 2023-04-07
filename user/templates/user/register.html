@@ -1,0 +1,153 @@
+{% extends 'nonadmin/base_nofooter.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% block title %}Register{% endblock title %}
+{% block content %}
+<!-- Page Content -->
+<br>
+<br>
+<br>
+<div class="content">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 offset-md-3">
+				<!-- Register Tab Content -->
+				<div class="account-content">
+					<div class="align-items-center justify-content-center">
+						<div class="login-right">
+							<div class="login-header text-center">
+								{% if site.logo %}
+									<a href="{% url 'index' %}"><img src="{{site.logo_image.url}}" alt="logo" class="img-fluid"></a>
+								{% else %}
+									<a href="{% url 'index' %}"><img src="{% static 'assets/img/logo.png' %}" alt="logo" class="img-fluid"></a>
+								{% endif %}
+								<h3>Join Batuwa</h3>
+								<p>Make the most of your professional life</p>
+							</div>
+							<nav class="user-tabs mb-4">
+								<ul role="tablist" class="nav nav-pills nav-justified">
+									<li class="nav-item">
+										<a href="#developer" data-bs-toggle="tab" class="nav-link active">Batuwa</a>
+									</li>
+									<li class="nav-item">
+										<a href="#company" data-bs-toggle="tab" class="nav-link">COMPANY</a>
+									</li>
+								</ul>
+							</nav>
+							<div class="tab-content pt-0">
+								<div role="tabpanel" id="developer" class="tab-pane fade active show">
+									<form method="post" action="">
+										{% csrf_token %}							
+										<div class="form-group form-focus">
+											{% comment %} <input type="email" class="form-control floating"> {% endcomment %}
+											{{form.username|as_crispy_field}}
+											<label class="focus-label">User Name</label>
+										</div>
+										<div class="form-group form-focus">
+											{{form.email|as_crispy_field}}
+											<label class="focus-label">Email </label>
+										</div>
+										<div class="form-group form-focus">
+											{{form.display_name|as_crispy_field}}
+											<label class="focus-label">Display Name </label>
+										</div>
+										<div class="form-group form-focus">
+											{{form.password1|as_crispy_field}}
+											<label class="focus-label">Password</label>
+										</div>
+										<div class="form-group form-focus mb-0">
+											{{form.password2|as_crispy_field}}
+											<label class="focus-label">Confirm Password</label>
+										</div>
+										<div class="dont-have">
+											<label class="custom_check">
+											<input type="checkbox" name="terms" required="required"/>
+											<span class="checkmark"></span> You agree to the Kofejob <a href="{%url 'user-agreement'%}"> User Agreement,</a> <a href="{%url 'privacy-policy'%}"> Privacy Policy,</a> and <a href="{%url 'cookie-policy'%}">Cookie Policy</a>.
+											</label>
+										</div>
+										<button class="btn btn-primary btn-block btn-lg login-btn" type="submit">Agree TO Join</button>
+										<div class="row">
+											<div class="col-6 text-start">
+												<a class="forgot-link" href="{% url 'forgot_password_page' %}">Forgot Password ?</a>
+											</div>
+											<div class="col-6 text-end dont-have">Already on Batuwa <a href="{% url 'login' %}">Click here</a></div>
+										</div>
+										<input type="hidden" name="Employer" value="Employer">
+									</form>
+								</div>
+								<div role="tabpanel" id="company" class="tab-pane fade">
+									<form method="post" action="">
+										{% csrf_token %}							
+										<div class="form-group form-focus">
+											{% comment %} <input type="email" class="form-control floating"> {% endcomment %}
+											{{form.username|as_crispy_field}}
+											<label class="focus-label">User Name</label>
+										</div>
+										<div class="form-group form-focus">
+											{{form.email|as_crispy_field}}
+											<label class="focus-label">Email </label>
+										</div>
+										<div class="form-group form-focus">
+											{{form.display_name|as_crispy_field}}
+											<label class="focus-label">Display Name </label>
+										</div>
+										<div class="form-group form-focus">
+											{{form.password1|as_crispy_field}}
+											<label class="focus-label">Password</label>
+										</div>
+										<div class="form-group form-focus mb-0">
+											{{form.password2|as_crispy_field}}
+											<label class="focus-label">Confirm Password</label>
+										</div>
+										<div class="dont-have">
+											<label class="custom_check">
+											<input type="checkbox" name="terms" required="required"/>
+											<span class="checkmark"></span> You agree to the Kofejob <a href="{%url 'user-agreement'%}"> User Agreement,</a> <a href="{%url 'privacy-policy'%}"> Privacy Policy,</a> and <a href="{%url 'cookie-policy'%}">Cookie Policy</a>.
+											</label>
+										</div>
+										<button class="btn btn-primary btn-block btn-lg login-btn" type="submit">Agree TO Join</button>
+										<div class="row">
+											<div class="col-6 text-start">
+												<a class="forgot-link" href="{% url 'forgot_password_page' %}">Forgot Password ?</a>
+											</div>
+											<div class="col-6 text-end dont-have">Already on Batuwa <a href="{% url 'login' %}">Click here</a></div>
+										</div>
+										<input type="hidden" name="freelancer" value="freelancer">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<div class="login-or">
+					<p>Or Signup with</p>
+				</div>
+				<div class="row social-login">
+					<div class="col-4">
+					  <form action="{% provider_login_url 'facebook' %}" method="post">
+						{% csrf_token %}
+						<button type="submit" class="btn btn-facebook btn-block {% if not facebookData or facebookData.is_active is False %} disabled {% endif %} ">Facebook</button>
+					  </form>
+					</div>
+					<div class="col-4">
+					  <form action="{% provider_login_url 'google' %}" method="post">
+						{% csrf_token %}
+						<button type="submit" class="btn btn-google btn-block {% if not googleData or googleData.is_active is False %} disabled {% endif %} ">Google</button>
+					  </form>
+					</div>
+					<div class="col-4">
+					  <form action="{% provider_login_url 'google' %}" method="post">
+						{% csrf_token %}
+						<button type="submit" class="btn btn-twitter btn-block {% if not twitterData or twitterData.is_active is False %} disabled {% endif %}">Twitter</button>
+					  </form>
+					</div>
+				  </div>
+				<!-- /Register Tab Content -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}

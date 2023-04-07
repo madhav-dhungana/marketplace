@@ -1,0 +1,179 @@
+{% extends 'nonadmin/base.html' %}
+{% load extras %}
+{% load static %}
+{% block title %}Projects{% endblock title %}
+{% block content %}
+<!-- Page Content -->			
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         {% include 'components/sidebar.html' %}
+         <div class="col-xl-9 col-md-8">
+            <div class="page-title">
+               <div class="row">
+                  <div class="col-md-6">
+                     <h3>Manage Projects</h3>
+                  </div>
+               </div>
+            </div>
+            <!--TabNav-->
+            <nav class="user-tabs project-tabs">
+               <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                  <li class="nav-item">
+                     <a class="nav-link {% if type == 'all' %}active{% endif %} " href="{% url 'all_projects' 'all' %}">All Projects</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link {% if type == 'pending' %}active{% endif %} "  href="{% url 'all_projects' 'pending' %}">Pending Projects</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link {% if type == 'ongoing' %}active{% endif %} "  href="{% url 'all_projects' 'ongoing' %}">Ongoing Projects</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link {% if type == 'completed' %}active{% endif %} "  href="{% url 'all_projects' 'completed' %}">Completed Projects</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link {% if type == 'cancelled' %}active{% endif %} "  href="{% url 'all_projects' 'cancelled' %}">Cancelled Projects</a>
+                  </li>
+               </ul>
+            </nav>
+            <!--TabNav-->
+            {% if type == 'pending' %}
+            <!-- Warning -->
+            <div class="row">
+               <div class="col-12">
+                  <div class="warning-card">
+                     <p><i class="fas fa-exclamation-triangle"></i> Pending for admin Approval.</p>
+                  </div>
+               </div>
+            </div>
+            <!-- /Warning -->
+            {% endif %}
+            <!-- project list -->
+            {% for list in project_list %}
+            <div class="my-projects-list">
+               <div class="row">
+                  <div class="col-lg-10 flex-wrap">
+                     <div class="projects-card  {% if list.status == 'CAN' %}projects-delete-details{% endif %}  flex-fill">
+                        <div class="card-body">
+                           <div class="projects-details align-items-center">
+                              <div class="project-info">
+                                 <span
+                                 {% if list.status == "PEN" %}
+                                 class="badge badge-warning text-white"
+                                 {% elif list.status == "CAN" %}
+                                 class="badge badge-danger text-white"
+                                 {% elif list.status == "ON" %}
+                                 class="badge badge-primary text-white"
+                                 {% else %}
+                                 class="badge badge-success text-white"
+                                 {% endif %}
+                                 >
+                                 {{list.get_status_display}}</span>
+                                 <h2>{{list.title}}</h2>
+                                 <div class="customer-info">
+                                    <ul class="list-details">
+                                       <li>
+                                          <div class="slot">
+                                             <p>Price type</p>
+                                             <h5>{{list.get_pricing_type_display}}</h5>
+                                          </div>
+                                       </li>
+                                       <li>
+                                          <div class="slot">
+                                             <p>Location</p>
+                                             <h5>{{list.location}}</h5>
+                                          </div>
+                                       </li>
+                                       <li>
+                                          <div class="slot">
+                                             <p>Expiry</p>
+                                             <h5>4 Days Left</h5>
+                                          </div>
+                                       </li>
+                                    </ul>
+                                 </div>
+                              </div>
+                              <div class="project-hire-info">
+                                 <div class="content-divider"></div>
+                                 <div class="projects-amount">
+                                    <h3>${{list.price}}</h3>
+                                    <h5>in 12 Days</h5>
+                                 </div>
+                                 <div class="content-divider"></div>
+                                 <div class="projects-action text-center">
+                                    <a href="{% url 'project_detail' list.id %}" class="projects-btn">View Details </a>
+                                    {% if list.status == 'PEN' %}
+                                    <a href="{% url 'edit_project' list.id %}" class="projects-btn bg-secondary">Edit Project </a>
+                                    {% endif %}
+                                    {% if list.status == "COM" %}
+                                    <h4 class="completed-badge"><span><i class="fas fa-medal me-2"></i></span>Completed</h4>
+                                    {% if list.rating %}
+                                    <div class="rating mt-2" data-score="{{list.rating}}">
+                                    </div>
+                                    {% else %}
+                                    Not Rated
+                                    {% endif %}
+                                    {% endif %}
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-2 d-flex flex-wrap">
+                     <div class="projects-card flex-fill">
+                        <div class="card-body p-2">
+                           <div>
+                              {% if not list.has_hired %}
+                              <div class="prj-proposal-count text-center hired">
+                                 <h1>
+                                 {{list.no_of_proposals }}</</h3>
+                                 <p class="mb-0">Proposal</p>
+                                 <a href="{% url 'project_detail' list.id %}" class="projects-btn mt-3">View All </a>
+                                 {% else %}
+                                 <div class="prj-proposal-count text-center hired">
+                                    <h3>Hired</h3>
+                                    <img src="{{list.hired.avatar.url}}" alt="" class="img-fluid">
+                                    <p class="mb-0">{{list.hired.display_name}}</p>
+                                 </div>
+                                 {% endif %}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% empty %}
+                  <div class="card">
+                     <div class="card-body">
+                        <h4>Not Found any Projects</h4>
+                     </div>
+                  </div>
+                  {% endfor %}
+                  <!-- /project list -->
+                  {% if is_paginated %}
+                  <div class="float-right mt-3">
+                     {% include 'components/pagination.html' %}
+                  </div>
+                  {% endif %}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.css">
+<script src="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.js"> </script>
+<script>
+   $('.rating').raty({
+   	starOff: '{% static 'assets/star-off.png' %}',
+    		starOn: '{% static 'assets/star-on.png' %}',
+   	readOnly: function() {
+   	  return true;
+   	}
+     });
+     
+</script>
+{% endblock js %}

@@ -1,0 +1,312 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Profile Settings{% endblock title %}
+{% block content %}
+<!-- Page Content -->			
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <!-- sidebar -->
+         {% if request.user.role == "Freelancer" %}
+         {% include 'components/freelancer_sidebar.html' %}
+         {% else %}
+         {% include 'components/sidebar.html' %}
+         {% endif %}
+         <!-- /sidebar -->
+         <div class="col-xl-9 col-md-8">
+            <div class="pro-pos">
+               <nav class="user-tabs mb-4">
+                  <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                     <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'profile_settings' %}">Basic Settings</a>
+                     </li>
+                     {% if not is_social_account %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'change_password' %}">Change Password</a>
+                     </li>
+                     {% endif %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'delete_account' %}">Delete Account</a>
+                     </li>
+                  </ul>
+               </nav>
+               {% if messages %} {% for message in messages%}
+               <div class="mt-3 alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                  <strong></strong> {{message}}
+               </div>
+               {% endfor %} {% endif %}
+               <form method="post" class="setting-content" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  <div class="card">
+                     <div class="pro-head">
+                        <h3 class="pro-title without-border mb-0">Profile Basics </h3>
+                     </div>
+                     <div class="pro-body p-0">
+                        <div class="form-row pro-pad">
+                           <div class="form-group col-md-6">
+                              {{form.username|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.email|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.display_name|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.title|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.contact|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.gender|as_crispy_field}}
+                           </div>
+                           {% if request.user.role == "Employer" %}
+                           <div class="form-group col-md-6">
+                              {{form.language_one|as_crispy_field}}
+                           </div>
+                           {% else %}
+                           <div class="form-group col-md-6">
+                              {{form.hourly_rate|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.availability|as_crispy_field}}
+                           </div>
+                           {% endif %}
+                        </div>
+                        <div class="form-row pro-pad pt-0">
+                           <div class="form-group col-md-6 pro-pic">
+                              <label>Profile Picture</label>
+                              <div class="d-flex align-items-center">		
+                                 <input type="file"  id="input_file" name="profile_img" class="dropify" data-default-file="{% if 'default.png' in request.user.avatar.url %}{% else %}{{request.user.avatar.url}}{% endif %}"/>		
+                              </div>
+                              <p>Image size 300*300</p>
+                           </div>
+                           {% if request.user.role == "Freelancer" %}
+                           <div class="form-group col-md-6 pro-pic">
+                              <label> Banner Image</label>
+                              <div class="d-flex align-items-center">		
+                                 <input type="file" name="banner_img" class="dropify" data-default-file="{{request.user.banner_image.url}}"/>		
+                              </div>
+                              <p>Image size 1024*100</p>
+                           </div>
+                           {% endif %}
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="pro-head">
+                        <h3 class="pro-title without-border mb-0">Location</h3>
+                     </div>
+                     <div class="pro-body">
+                        <div class="row">
+                           <div class="form-group col-md-12">
+                              {{form.address|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.state|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.zipcode|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{form.country|as_crispy_field}}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="pro-head">
+                        <h3 class="pro-title without-border mb-0">Overview</h3>
+                     </div>
+                     <div class="pro-body">
+                        <div class="row">
+                           <div class="form-group col-md-12">
+                              {{form.overview|as_crispy_field}}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% if request.user.role == "Freelancer" %}
+                  <div class="form-row">
+                     <div class="col-md-12 col-xl-4 col-sm-12 d-flex">
+                        <div class="pro-card flex-fill mb-3">
+                           <div class="pro-head">
+                              <h3 class="pro-title without-border mb-0">Skills</h3>
+                              <a href="#" class="btn fund-btn skill-add">Add More</a>
+                           </div>
+                           <div class="pro-body skill-info">
+                              {% for i in user.get_skills %}
+                              <div class="form-row align-items-center skill-cont">
+                                 <div class="form-group col-md-10">
+                                    <input type="text" name="user_skills[]" class="form-control" value="{{i.skill_name}}">
+                                 </div>
+                                 <div class="form-group col-md-2">
+                                    <a href="#" class="btn trash-icon"><i class="far fa-trash-alt"></i></a>
+                                 </div>
+                              </div>
+                              {% endfor %}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-md-12 col-xl-8">
+                        <div class="card">
+                           <div class="pro-head">
+                              <h3 class="pro-title without-border mb-0">Awards / Certificates</h3>
+                              <a href="#" class="btn fund-btn add-award">Add More</a>
+                           </div>
+                           <div class="pro-body  award-info">
+                              {% for li in user.get_awards %}
+                              <div class="form-row align-items-center award-cont">
+                                 <div class="form-group col-md-5">
+                                    <input type="text" class="form-control" name="awards_name[]" value="{{li.title}}">
+                                 </div>
+                                 <div class="form-group col-md-5">
+                                    <input type="date" class="form-control" name="awards_date[]" value="{{li.date|date:"Y-m-d"}}">
+                                 </div>
+                                 <div class="form-group col-md-2">
+                                    <a href="#" class="btn trash-icon"><i class="far fa-trash-alt"></i></a>
+                                 </div>
+                              </div>
+                              {% endfor %}
+                           </div>
+                        </div>
+                        <div class="card">
+                           <div class="pro-head">
+                              <h3 class="pro-title without-border mb-0">Languages</h3>
+                              <a href="#" class="btn fund-btn add-lang">Add More</a>
+                           </div>
+                           <div class="pro-body  lang-info">
+                              {% for li in user.get_langs %}
+                              <div class="form-row align-items-center lang-cont">
+                                 <div class="form-group col-md-7">
+                                    <input placeholder="language name" type="text" name="lang[]"class="form-control" value="{{li.name}}">
+                                 </div>
+                                 <div class="form-group col-md-3">
+                                    <input placeholder="fluency"  type="number" max="100" min="1" name="fluency[]" class="form-control" value="{{li.fluency}}">
+                                 </div>
+                                 <div class="form-group col-md-2">
+                                    <a href="#" class="btn trash-icon"><i class="far fa-trash-alt"></i></a>
+                                 </div>
+                              </div>
+                              {% endfor %}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endif %}
+                  <div class="card">
+                     <div class="pro-head">
+                        <h3 class="pro-title without-border mb-0">Experience</h3>
+                        <a href="#" class="btn fund-btn add-exp">Add More</a>
+                     </div>
+                     <div class="pro-body">
+                        <div class="exp-info">
+                           <div class="row exp-cont">
+                              <div class="form-group col-md-6">
+                                 <label>Title</label>
+                                 <input type="text" class="form-control">
+                              </div>
+                              <div class="form-group col-md-6">
+                                 <label>Company name</label>
+                                 <input type="text" class="form-control">
+                              </div>
+                              <div class="form-group col-md-6">
+                                 <label>Start date</label>
+                                 <input type="text" class="form-control datetimepicker" placeholder="Select Date">
+                              </div>
+                              <div class="form-group col-md-6">
+                                 <label>End Date</label>
+                                 <input type="text" class="form-control datetimepicker" placeholder="Select Date">
+                              </div>
+                              <div class="form-group col-md-12">
+                                 <label class="custom_check">
+                                 <input type="checkbox" name="rem_password">
+                                 <span class="checkmark"></span> I'm currently working here
+                                 </label>
+                              </div>
+                              <div class="form-group col-md-12">
+                                 <label>Summary</label>
+                                 <textarea class="form-control" rows="5"></textarea>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="pro-head">
+                        <h3 class="pro-title without-border mb-0">Educational Details</h3>
+                        <a href="#" class="btn fund-btn">Add More Skills</a>
+                     </div>
+                     <div class="pro-body">
+                        <div class="row">
+                           <div class="form-group col-md-12">
+                              <label>Degree Title</label>
+                              <input type="text" class="form-control">
+                           </div>
+                           <div class="form-group col-md-6">
+                              <label>University/College</label>
+                              <select name="price" class="form-control select">
+                                 <option value="0">Select University/College </option>
+                                 <option value="1" >University</option>
+                                 <option value="2">University</option>
+                              </select>
+                           </div>
+                           <div class="form-group col-md-6">
+                              <label>Start year</label>
+                              <input type="text" class="form-control datetimepicker">
+                           </div>
+                           <div class="form-group col-md-6">
+                              <label>End year</label>
+                              <input type="text" class="form-control datetimepicker">
+                           </div>
+                           <div class="form-group col-md-12">
+                              <label>Summary</label>
+                              <textarea class="form-control" rows="5"></textarea>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="pro-head">
+                        <h3 class="pro-title without-border mb-0">Social Links</h3>
+                     </div>
+                     <div class="pro-body">
+                        <div class="row">
+                           <div class="form-group col-md-6">
+                              {{link_form.facebook|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{link_form.linkedin|as_crispy_field}}
+                           </div>
+                           <div class="form-group col-md-6">
+                              {{link_form.twitter|as_crispy_field}}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="text-end">
+                        <div class="pro-body">
+                           <button class="btn btn-secondary click-btn btn-plan" type="button">Cancel</button>
+                           <button class="btn btn-primary click-btn btn-plan" type="submit">Update</button>
+                        </div>
+                     </div>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<script src="{% static 'assets/js/profile-settings.js' %}"></script>
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify();
+</script>
+{% endblock js %}

@@ -1,0 +1,9 @@
+{% load i18n %}{% autoescape off %}
+<p>{% blocktranslate %}Hello , {{for_user}}{% endblocktranslate %}</p>
+
+<p>{{message}} </p>
+<p>Please give response in time .</p>
+
+<p>{% blocktranslate %}The {{ site_name }} team{% endblocktranslate %}</p>
+
+{% endautoescape %}

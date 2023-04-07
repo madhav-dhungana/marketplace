@@ -1,0 +1,234 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Site Settings{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <div class="page-header">
+         <div class="row">
+            <div class="col-sm-6">
+               <h3 class="page-title">Settings</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'site_settings' %}">Settings</a></li>
+                  <li class="breadcrumb-item active">General Settings</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-12">
+            {% include 'components/message.html' %}
+            <!-- Settings Menu -->
+            <div class="settings-menu-links">
+               <ul class="nav nav-tabs menu-tabs">
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'site_settings' %}">General Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'localizations' %}">Localization</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'payment_settings' %}">Payment Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'email_settings' %}">Email Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_settings' %}">Socail Media Login</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_links' %}">Social Links</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'seo_settings' %}">SEO Settings</a>
+                  </li>
+                  <li class="nav-item active">
+                     <a class="nav-link" href="{% url 'other_settings' %}">Others</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- Settings Menu -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body pt-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Enable Google Analytics</h5>
+                                <div class="status-toggle d-flex justify-content-between align-items-center">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                    <input type="checkbox" id="status_1" class="check" name="mode" {% if 'Active' in googleAnalytics.mode %} checked {% else %}{% endif %}>
+                                    <label for="status_1" class="checktoggle" name="mode">checkbox</label>
+                                </div>
+                            </div>
+                                {% csrf_token %}
+                                <div class="settings-form">
+                                    <div class="form-group">
+                                        <label>Google Analytics <span class="star-red">*</span></label>
+                                        <textarea class="form-control" name="descriptions" placeholder="{% if 'None' in googleAnalytics.descriptions or googleAnalytics is None or googleAnalytics.descriptions == '' %} Enter Google Analytics code {% else %}{% endif %}">{% if 'None' in googleAnalytics.descriptions or googleAnalytics is None or googleAnalytics.descriptions == '' %}{% else %}{{googleAnalytics.descriptions}}{% endif %}</textarea>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="settings-btns">
+                                            <button type="submit" class="btn btn-orange" name="google_analytics">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body pt-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Enable Google Adsense Code</h5>
+                                <div class="status-toggle d-flex justify-content-between align-items-center">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                    <input type="checkbox" id="status_2" class="check" name="mode" {% if 'Active' in googleAdsense.mode %} checked {% else %} {% endif %}>
+                                    <label for="status_2" class="checktoggle">checkbox</label>
+                                </div>
+                            </div>
+                                <div class="settings-form">
+                                    <div class="form-group">
+                                        <label>Google Adsense Code <span class="star-red">*</span></label>
+                                        <textarea class="form-control" name="descriptions "placeholder="{% if 'None' in googleAdsense.descriptions or googleAdsense is None or googleAdsense.descriptions == '' %} Enter Google Adsense code {% else %}{% endif %}">{% if 'None' in googleAdsense.descriptions or googleAdsense is None or googleAdsense.descriptions == '' %}{% else %}{{googleAdsense.descriptions}}{% endif %}</textarea>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="settings-btns">
+                                            <button type="submit" class="btn btn-orange" name="google_adsense">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body pt-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Display Facebook Messenger</h5>
+                                <div class="status-toggle d-flex justify-content-between align-items-center">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                    <input type="checkbox" id="status_3" class="check" name="mode" {% if 'Active' in facebookMessenger.mode %} checked {% else %} {% endif %}>
+                                    <label for="status_3" class="checktoggle">checkbox</label>
+                                </div>
+                            </div>
+                                <div class="settings-form">
+                                    <div class="form-group">
+                                        <label>Facebook Messenger <span class="star-red">*</span></label>
+                                        <textarea class="form-control" name="descriptions" placeholder="{% if 'None' in facebookMessenger.descriptions or facebookMessenger is None or facebookMessenger.descriptions == '' %} Enter Facebook Messenger code {% else %}{% endif %}">{% if 'None' in facebookMessenger.descriptions or facebookMessenger is None or facebookMessenger.descriptions == '' %}{% else %}{{facebookMessenger.descriptions}}{% endif %}</textarea>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="settings-btns">
+                                            <button type="submit" class="btn btn-orange" name="facebook_messenger">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body pt-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Display Facebook Pixel</h5>
+                                <div class="status-toggle d-flex justify-content-between align-items-center">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                    <input type="checkbox" id="status_4" class="check" name="mode" {% if 'Active' in facebookPixel.mode %} checked {% else %} {% endif %}>
+                                    <label for="status_4" class="checktoggle">checkbox</label>
+                                </div>
+                            </div>
+                                <div class="settings-form">
+                                    <div class="form-group">
+                                        <label>Facebook Pixel<span class="star-red">*</span></label>
+                                        <textarea class="form-control" name="descriptions" placeholder="{% if 'None' in facebookPixel.descriptions or facebookPixel is None or facebookPixel.descriptions == '' %} Enter Facebook Pixel code {% else %}{% endif %}">{% if 'None' in facebookPixel.descriptions or facebookPixel is None or facebookPixel.descriptions == '' %}{% else %}{{facebookPixel.descriptions}}{% endif %}</textarea>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="settings-btns">
+                                            <button type="submit" class="btn btn-orange" name="facebook_pixel">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex">
+                    <div class="card w-100">
+                        <div class="card-body pt-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Display Google Recaptcha</h5>
+                                <div class="status-toggle d-flex justify-content-between align-items-center">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                    <input type="checkbox" id="status_5" class="check" name="mode" {% if 'Active' in googleRecaptcha.mode %} checked {% else %} {% endif %}>
+                                    <label for="status_5" class="checktoggle">checkbox</label>
+                                </div>
+                            </div>
+                                <div class="settings-form">
+                                    <div class="form-group ">
+                                        <label>Google Rechaptcha Site Key <span class="star-red">*</span></label>
+                                        <input type="text" class="form-control"  name="site_key" value="{% if 'None' in googleRecaptcha.site_key or googleRecaptcha.site_key is None or googleRecaptcha.site_key == '' %}{% else %}{{googleRecaptcha.site_key}}{% endif %}" placeholder="{% if 'None' in googleRecaptcha.site_key or googleRecaptcha.site_key is None or googleRecaptcha.site_key == '' %}Enter Google Recaptcha site key{% else %}{% endif %}">
+                                    </div>
+                                    <div class="form-group ">
+                                        <label>Google Rechaptcha Secret Key <span class="star-red">*</span></label>
+                                        <input type="text" class="form-control" name="secret_key" value="{% if 'None' in googleRecaptcha.secret_key or googleRecaptcha.secret_key is None or googleRecaptcha.secret_key == '' %}{% else %}{{googleRecaptcha.secret_key}}{% endif %}" placeholder="{% if 'None' in googleRecaptcha.secret_key or googleRecaptcha.secret_key is None or googleRecaptcha.secret_key == '' %}Enter Google Recaptcha secret key{% else %}{% endif %}">
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="settings-btns">
+                                            <button type="submit" class="btn btn-orange" name="google_rechaptcha">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex">
+                    <div class="card w-100">
+                        <div class="card-body pt-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Cookies Agreement</h5>
+                                <div class="status-toggle d-flex justify-content-between align-items-center">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                    <input type="checkbox" id="status_6" class="check" name="mode" {% if 'Active' in cookieAgreement.mode %} checked {% else %} {% endif %}>
+                                    <label for="status_6" class="checktoggle">checkbox</label>
+                                </div>
+                            </div>
+                                <div class="settings-form">
+                                    <div class="form-group">
+                                        <label>Cookies Agreement Text <span class="star-red">*</span></label>
+                                        <textarea id="editor" name="descriptions" placeholder="{% if 'None' in cookieAgreement.descriptions or cookieAgreement.descriptions is None or cookieAgreement.descriptions == '' %} Enter Description{% else %}{% endif %}">{% if 'None' in cookieAgreement.descriptions or cookieAgreement.descriptions is None or cookieAgreement.descriptions == '' %}{% else %}{{cookieAgreement.descriptions}}{% endif %}</textarea>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="settings-btns">
+                                            <button type="submit" class="btn btn-orange" name="cookie_aggrement">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Wrapper -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify();
+</script>
+{% endblock js %}

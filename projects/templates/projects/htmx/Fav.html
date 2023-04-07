@@ -1,0 +1,29 @@
+{% load static %}
+{% for list in projects %}
+                                              
+<tr>
+    <td>{{list.title}}</td>
+    <td>
+        <h2 class="table-avatar">
+            <a href="project-details.html" class="avatar avatar-md tab-imgcircle me-2">
+                <img class="avatar-img rounded-circle" src="{{list.posted_by.avatar.url}}" alt="Client Image">
+            </a>
+            <a href="project-details.html"><span class="profile-name">{{list.posted_by.display_name}}</span><span>Photographer</span>
+            <span class="rating mt-2">
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star"></i>
+            </span>
+            </a>
+        </h2>
+    </td>
+    <td><h2 class="table-avatar"><img src="{% static 'assets/flag/' %}{{list.location}}.svg"  class="me-2" alt="" height="16">{{list.address}}</h2></td>
+    <td><a href="javascript:void(0);" class="fav">Remove</a></td>
+</tr>
+{% empty %}
+
+<h4 class="text-center">No Favourite Project Added Yet!</h4>
+{% endfor %}
+

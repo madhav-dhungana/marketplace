@@ -1,0 +1,149 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% block title %}Portfolio{% endblock title %}
+{% block content %}
+
+<div class="content">
+	<div class="container-fluid">
+		
+		<div class="row">
+			{% include 'components/freelancer_sidebar.html' %}
+								
+			<div class="col-xl-9 col-md-8">
+				<div class="portfolio-item">
+					<div class="pro-head p-0 pb-4">
+						<h3 class="mb-0">Portfolio</h3>
+						<a class="btn btn-primary back-btn br-0" data-bs-toggle="modal" href="#portfolio">+ Add Portfolio</a>
+					</div>
+					<div class="pro-content pt-4 pb-4">
+						<div class="row">
+							{% for item in portfolio %}
+							<div class="col-sm-6 col-lg-4">
+								<div class="project-widget">
+									<div class="portfolio-img">
+										{% for file in item.file.all %}
+												{% if file.is_banner is True %}
+													<img class="img-fluid" alt="User Image" src="{{file.file.url}}">
+													<div class="portfolio-live">
+														<div class="portfolio-content">
+															<a data-bs-toggle="modal" href="#portfolio-edit_{{item.id}}" class="port-icon"><i class="fas fa-pen"></i></a>
+															<a href="#" class="port-icon"><i class="fas fa-trash-alt"></i></a>
+														</div>
+													</div>
+												{% endif %}
+											{% endfor %}
+									</div>
+									<div class="portfolio-detail">
+										<h3 class="pro-name">{{item.title}}</h3>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="portfolio">
+								<div class="modal-dialog modal-dialog-centered modal-lg">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4>Add Portfolio</h4>
+											<span class="modal-close"><a href="#" data-bs-dismiss="modal" aria-label="Close"><i
+														class="far fa-times-circle orange-text"></i></a></span>
+										</div>
+										<div class="modal-body">
+											<div class="port-title">
+												<h3>Simple & Best Way To Showcase Your Work</h3>
+											</div>
+											<form method="post" enctype="multipart/form-data">
+												{% csrf_token %}
+												<div class="modal-info">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="form-group">
+																<label>Title</label>
+																<input type="text" class="form-control" name="title" placeholder="Enter Title">
+															</div>
+															<div class="form-group">
+																<label>Link</label>
+																<input type="text" name="url" class="form-control" placeholder="Enter URL">
+															</div>
+															<label class="br-0 file-upload image-upbtn">
+																upload Files 
+															<input type="file" name="files" multiple>
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="submit-section text-right">
+													<a data-bs-dismiss="modal" class="btn btn-primary black-btn submit-btn">Cancel</a>
+													<button  type="submit" href="freelancer-portfolio.html" name="create" class="btn btn-primary submit-btn">Submit</a>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- EDIT portfolio -->
+							<div class="modal fade" id="portfolio-edit_{{item.id}}">
+								<div class="modal-dialog modal-dialog-centered modal-lg">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 class="modal-title">Edit Portfolio</h4>
+											<span class="modal-close"><a href="#" data-bs-dismiss="modal" aria-label="Close"><i
+														class="far fa-times-circle orange-text"></i></a></span>
+										</div>
+										<div class="modal-body">
+											<div class="port-title">
+												<h3>Simple & Best Way To Showcase Your Work</h3>
+											</div>
+											<form method="post" enctype="multipart/form-data">
+												{% csrf_token %}
+												<div class="modal-info">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="form-group">
+																<label>Title</label>
+																<input type="text" class="form-control" name="title" value="{{item.title}}">
+															</div>
+															<div class="form-group">
+																<label>Link</label>
+																<input type="text" name="url" class="form-control" value="{{item.url}}">
+															</div>
+															<label class="br-0 file-upload image-upbtn">
+																upload Files 
+															<input type="file" name="files" multiple>
+															<input type="hidden" name="portfolio_id" value={{item.id}}>
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="submit-section text-right">
+													<a data-bs-dismiss="modal" class="btn btn-primary black-btn submit-btn">Cancel</a>
+													<button  type="submit" href="freelancer-portfolio.html" name="update" class="btn btn-primary submit-btn">Submit</a>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- end edit portfolio -->
+							{% endfor %}
+						</div>
+						<div class="col-md-12">
+							<ul class="paginations">
+								<li><a href="#"> <i class="fas fa-angle-left"></i> Previous</a></li>
+								<li><a href="#">1</a></li>
+								<li><a href="#" class="active">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">4</a></li>
+								<li><a href="#">Next <i class="fas fa-angle-right"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+
+
+
+{% endblock content %}

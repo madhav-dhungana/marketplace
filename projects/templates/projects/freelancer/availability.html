@@ -1,0 +1,57 @@
+{% extends 'nonadmin/base.html' %} {% load static %} 
+{% load crispy_forms_tags %} {% block title %} Completed Projects {% endblock title %} {% block content %}
+<div class="container p-4">
+  <div class="breadcrumb-bar">
+    <div class="container">
+      <div class="row align-items-center inner-banner">
+        <div class="col-md-12 col-12 text-center">
+          <h2 class="breadcrumb-title">Set Availability</h2>
+          <nav aria-label="breadcrumb" class="page-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item active" aria-current="page">
+                <p>Add the date and time you're available for work .</p>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="col-lg-8 col-md-8 col-sm-12  container">
+       <div class="card">
+        <div class="card-body">
+            <div class="text-center">Weekday Availability   </div>
+            {% for list in weekdays %} 
+            <form hx-post="{% url 'set_weekday_api' %}" hx-trigger="submit" hx-swap="none" class="mt-3">
+                <strong>
+                    {{list.name}}
+                </strong> 
+                <div class="d-flex gap-3 mt-2 align-items-center">
+                    <input type="hidden" name="id" value={{list.id}}>
+                     <input type="time" name="available_from" value="{{list.available_from|time:'H:i'}}"  class="form-control">
+                     <input type="time" name="available_to" value="{{list.available_to|time:'H:i'}}"  class="form-control">
+                     <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+            </form>
+              {% endfor %} 
+        </div>
+       </div>
+
+</div>
+
+{% endblock content %}
+{% block js %}
+<script>
+    htmx.on("htmx:afterRequest", (e) => {
+        let data = JSON.parse(e.detail.xhr.response)
+        if(e.detail.successful){
+            toastr.success(data.msg)
+        }
+        else{
+            toastr.error(data.msg)
+        }
+        
+     });
+</script>
+{% endblock js %}

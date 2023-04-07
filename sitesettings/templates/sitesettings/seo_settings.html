@@ -1,0 +1,99 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Site Settings{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <div class="page-header">
+         <div class="row">
+            <div class="col-sm-6">
+               <h3 class="page-title">Settings</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'site_settings' %}">Settings</a></li>
+                  <li class="breadcrumb-item active">General Settings</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-12">
+            {% include 'components/message.html' %}
+            <!-- Settings Menu -->
+            <div class="settings-menu-links">
+               <ul class="nav nav-tabs menu-tabs">
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'site_settings' %}">General Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'localizations' %}">Localization</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'payment_settings' %}">Payment Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'email_settings' %}">Email Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_settings' %}">Socail Media Login</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_links' %}">Social Links</a>
+                  </li>
+                  <li class="nav-item active">
+                     <a class="nav-link" href="{% url 'seo_settings' %}">SEO Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'other_settings' %}">Others</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- Settings Menu -->
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="card">
+                     <div class="card-body pt-0">
+                        <div class="card-header">
+                           <h5 class="card-title">Website Basic Details</h5>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label>Meta Title <span class="star-red">*</span></label>
+                                    <input type="text" class="form-control" name="title" value="{% if 'None' in seo.title or seo.title is None or seo.title == 'None' %}{% else %}{{seo.title}}{% endif %}" placeholder="{% if 'None' in seo.title or seo.title is None or seo.title == '' %} Enter SEO title {% else %}{% endif %}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Meta Keywords <span class="star-red">*</span></label>
+                                    <input type="text" data-role="taginput" data-tag-trigger="Space" class="input-tag form-control" name="keywords" value="{% if 'None' in seo.keywords or seo.keywords is None or seo.keywords == 'None' %}{% else %}{{seo.keywords}}{% endif %}" placeholder="{% if 'None' in seo.keywords or seo.keywords is None or seo.keywords == '' %} Enter SEO keywords{% endif %}">
+                                </div>
+                                <div class="form-group">
+                                 <label>Meta Description <span class="star-red">*</span></label>
+                                 <input type="text" class="form-control" name="description" value="{% if 'None' in seo.description or seo.description is None or seo.description == 'None' %}{% else %}{{seo.description}}{% endif %}" placeholder="{% if 'None' in seo.description or seo.description is None or seo.description == '' %} Enter SEO description {% else %}{% endif %}">
+                             </div>
+                                <div class="form-group mb-0">
+                                 <div class="settings-btns">
+                                    <input type="submit" class="btn btn-orange" name="seo_form" value="Update"/>
+                                 </div>
+                              </div>
+                            </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Wrapper -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify();
+</script>
+{% endblock js %}

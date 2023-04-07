@@ -1,0 +1,33 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+
+{% block title %}
+{% endblock title %}
+
+{% block content %}
+<!-- Page Content -->			
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'components/freelancer_sidebar.html' %}
+            <div class="col-xl-9 col-md-8">
+                <div class="page-title">
+                    <h3>Manage Projects</h3>
+                </div>
+              
+                
+                <!-- project list -->
+      
+                <!-- project list -->
+                    {% block project %}
+                    {% endblock project %}
+                <!-- /project list -->
+                
+               
+                
+            </div>
+        </div>
+    </div>
+</div>				
+<!-- /Page Content -->
+{% endblock content %}

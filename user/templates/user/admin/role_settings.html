@@ -1,0 +1,196 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Site Settings{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <!-- Page Header -->
+      <div class="page-header">
+         {% include 'components/message.html' %}
+         <div class="row align-items-center">
+            <div class="col">
+               <h3 class="page-title">Roles & Permission</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item active">Roles</li>
+               </ul>
+            </div>
+            <div class="col-auto">
+               <a href="#" class="btn add-button me-1" data-bs-toggle="modal" data-bs-target="#add-category">
+               <i class="fas fa-plus"></i>
+               </a>
+               <a class="btn btn-primary filter-btn" href="javascript:void(0);" id="filter_search">
+               <i class="fas fa-filter"></i>
+               </a>
+            </div>
+         </div>
+      </div>
+      <!-- /Page Header -->
+      <!-- Search Filter -->
+      <div class="card filter-card" id="filter_inputs">
+         <div class="card-body pb-0">
+            <form action="." method="get">
+               <div class="row filter-row">
+                  <div class="col-sm-6 col-md-3">
+                     <div class="form-group">
+                        <label>Role Name</label>
+                        <input class="form-control" type="text" name="role_name" required>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-md-3">
+                     <div class="form-group">
+                        <label>From Date</label>
+                        <div class="cal-icon">
+                           <input class="form-control datetimepicker" type="text">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-md-3">
+                     <div class="form-group">
+                        <label>To Date</label>
+                        <div class="cal-icon">
+                           <input class="form-control datetimepicker" type="text">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-md-3">
+                     <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                     </div>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="table table-center table-hover mb-0 datatable">
+                        <thead>
+                           <tr>
+                              <th>Role Name</th>
+                              <th class="text-end">Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {% for item in data %}
+                           <tr>
+                              <td>
+                                 {{item.name}}
+                              </td>
+                              <td class="text-end">
+                                 <a href="{% url 'permission_settings' role_id=item.id %}" class="btn btn-sm bg-pink me-2"><i class="fas fa-user-shield"></i></a>
+                                 <a class="btn btn-sm btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#edit-category_{{item.id}}"><i class="far fa-edit"></i></a>
+                                 <a class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_category_{{item.id}}"> <i class="far fa-trash-alt"></i></a>
+                              </td>
+                           </tr>
+                           <div class="modal custom-modal fade" id="delete_category_{{item.id}}" role="dialog">
+                              <div class="modal-dialog modal-dialog-centered">
+                                 <div class="modal-content">
+                                    <div class="modal-body">
+                                       <div class="form-header">
+                                          <h3>Delete</h3>
+                                          <p>Are you sure want to delete?</p>
+                                       </div>
+                                       
+                                       <form action="" method="post" enctype="multipart/form-data">
+                                       <div class="modal-btn delete-action">
+                                          <div class="row">
+                                                {% csrf_token %}
+                                             <div class="col-6">
+                                                <input type="hidden" value="{{item.id}}" name="role_id"/>
+                                                <button class="btn btn-primary continue-btn" name="delete_role">Delete</button>
+                                             </div>
+                                             <div class="col-6">
+                                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                             </div>
+                                          </div>
+                                       </form>
+                                       </div>
+                                    </div>
+                                 </div>
+                           </div>
+                           </div>
+                           <div class="modal fade custom-modal" id="edit-category_{{item.id}}">
+                              <div class="modal-dialog modal-dialog-centered">
+                                 <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                       <h4 class="modal-title">Edit Roles</h4>
+                                       <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                                    </div>
+                                    <!-- /Modal Header -->
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                       <form method="post" action="" enctype="multipart/form-data">
+                                          {% csrf_token %}
+                                          <div class="form-group">
+                                             <label>Role Name</label>
+                                             <input type="hidden" value="{{item.id}}" name="role_id"/>
+                                             <input type="text" class="form-control" value="{{item.name}}" name="role_name" required>
+                                          </div>
+                                          <div class="mt-4">
+                                             <button type="submit" name="edit_role" class="btn btn-primary btn-block">Submit</button>
+                                          </div>
+                                       </form>
+                                    </div>
+                                    <!-- /Modal body -->
+                                 </div>
+                              </div>
+                           </div>
+                           {% endfor %}
+                           
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Wrapper -->
+<!-- Add Modal -->
+<div class="modal fade custom-modal" id="add-category">
+   <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <!-- Modal Header -->
+         <div class="modal-header">
+            <h4 class="modal-title">Add Roles</h4>
+            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+         </div>
+         <!-- /Modal Header -->
+         <!-- Modal body -->
+         <div class="modal-body">
+            <form method="post" action="" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>Role Name</label>
+                  <input type="text" class="form-control" placeholder="Enter Role Name" name="name" required>
+               </div>
+               <div class="mt-4">
+                  <button type="submit" class="btn btn-primary btn-block">Submit</button>
+               </div>
+            </form>
+         </div>
+         <!-- /Modal body -->
+      </div>
+   </div>
+</div>
+<!-- /Add Modal -->
+<!-- Edit Modal -->
+
+
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify();
+</script>
+{% endblock js %}

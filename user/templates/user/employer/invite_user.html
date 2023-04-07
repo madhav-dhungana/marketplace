@@ -1,0 +1,43 @@
+{% extends 'nonadmin/base.html' %} {% load static %} 
+{% load crispy_forms_tags %} {% block title %} Invite User {% endblock title %} {% block content %}
+<!-- Page Content -->
+<div class="content">
+  <div class="container">
+    <div class="row">
+      {% include 'components/sidebar.html' %}
+      <div class="card col-md-6 col-lg-9 col-xl-8">
+        {% include 'components/message.html' %}
+        <form method="POST" action="{% url 'invite_user' %}" >
+          {% csrf_token %}
+          <div class="card-header">
+            <h5 class="card-title">Invite User</h5>
+          </div>
+          <div class="card-body">
+            <label for="">Sent To*</label>
+            {% if 'invite_user' in request.GET %}
+            <input type="hidden" name="u_id" value="{{u_id}}">
+            <input type="text" class="form-control mb-3"  readonly placeholder="{{sent_to.display_name}}">
+            {% else %}
+            <select id="id_for_user" name="u_id" class="form-control form-select mb-3" >
+              {% for list in request.user.get_bookmarked_users %}
+              <option value="{{list.id}}">{{list}}</option>
+              {% endfor %}
+            </select>
+            {% endif %}
+            {{form|crispy}} {{form.media}}
+            <input type="hidden" name="sent_to" value="{{list.id}}" />
+            <button type="submit" class="btn btn-primary btn-invite">
+              Invite {{list}}
+            </button>
+            <button type="button" data-bs-dismiss="modal" class="btn btn-danger">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block js %}
+{% endblock js %}

@@ -1,0 +1,211 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load extras %}
+{% load crispy_forms_tags %}
+{% block title %}User List{% endblock title %}
+{% block content %}
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <!-- Page Header -->
+      <div class="page-header">
+         <div class="row align-items-center">
+            <div class="col">
+               <h3 class="page-title">Users</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                  <li class="breadcrumb-item active">Users</li>
+               </ul>
+            </div>
+            <div class="col-auto">
+               <form>
+                  <select class="form-control" name="user_filter" onchange="this.form.submit()">
+                     <option value="none">All</option>
+                     <option value="f" {% if user_filter == 'f' %}selected{%endif%}>Freelancer</option>
+                     <option value="e"  {% if user_filter == 'e' %}selected{%endif%}>Employeer</option>
+                     <option value="a"  {%if user_filter == 'a' %}selected{%endif%}>Admin</option>
+                  </select>
+               </form>
+            </div>
+            <div class="col-auto">
+               <a href="#" class="btn add-button me-2" data-bs-toggle="modal" data-bs-target="#add-category">
+               <i class="fas fa-plus"></i>
+               </a>
+               <a class="btn filter-btn" href="javascript:void(0);" id="filter_search">
+               <i class="fas fa-filter"></i>
+               </a>
+            </div>
+         </div>
+      </div>
+      <!-- /Page Header -->
+      {% include 'components/message.html' %}
+      <!-- Search Filter -->
+      <div class="card filter-card" id="filter_inputs">
+         <div class="card-body pb-0">
+            <form method="get" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;" class="">
+               {{searchForm.form|crispy}}
+               <button type="submit" class="btn btn-primary mb-4">Search</button>
+            </form>
+         </div>
+      </div>
+      <!-- /Search Filter -->
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="table table-center table-hover mb-0 ">
+                        <thead>
+                           <tr>
+                              <th>User Id</th>
+                              <th>User</th>
+                              <th>Email</th>
+                              <th>User Role</th>
+                              <th>User Active</th>
+                              <th>Joined date</th>
+                              <th class="text-end">Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody id="tablediv">
+                           {% for list in page_obj %}
+                           <tr id="user-{{list.id}}">
+                              <td>
+                                 {{forloop.counter}}
+                              </td>
+                              <td>
+                                 <h2 class="table-avatar">
+                                    <a href="{% url 'admin_user_detail' list.id %}"><img class="me-2 rounded-circle object-cover" src="{{list.avatar.url}}"  alt="User Image">{{list.display_name}}</a>
+                                 </h2>
+                              </td>
+                              <td>{{list.email}}</td>
+                              <td>
+                                 {% if list.role == "Admin" %}
+                                 <div class="badge badge-primary">{{list.role}}</div>
+                                 {% elif list.role == 'Employer' %}
+                                 <div class="badge badge-success">{{list.role}}</div>
+                                 {%else%}
+                                 <div class="badge badge-info">{{list.role}}</div>
+                                 {% endif %}
+                              </td>
+                              <td class="text-center">{% if list.is_active|lower == "true" %}
+                                 <i class="fa fa-check text-green" style="color:green;"></i>
+                                 {% else %}
+                                 <i class="fa fa-close" style="color:red;"></i>
+                                 {% endif %}
+                              </td>
+                              <td>{{list.date_joined|date:"M d, Y"}}</td>
+                              <td class="text-end">
+                                 <a href="{% url 'admin_user_edit' list.id %}" class="btn btn-sm btn-secondary me-2" ><i class="far fa-edit"></i></a> 
+                                 <a href="javascript:void(0);" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_user_{{list.id}}"><i class="far fa-trash-alt"></i></a>
+                              </td>
+                           </tr>
+                           <!-- Delete Modal -->
+                           <div class="modal custom-modal fade" id="delete_user_{{list.id}}" role="dialog">
+                              <div class="modal-dialog modal-dialog-centered">
+                                 <div class="modal-content">
+                                    <div class="modal-body">
+                                       <div class="form-header">
+                                          <h3>Delete</h3>
+                                          <p>Are you sure want to delete?</p>
+                                       </div>
+                                       <div class="modal-btn delete-action">
+                                          <form method="POST"  hx-post="{% url 'user_list' %}" hx-trigger="submit" hx-swap="none" >
+                                             <div class="row">
+                                                <div class="col-6">
+                                                   <input type="hidden" name="u_id" value="{{list.id}}"/>
+                                                   <input type="hidden" name="delete_user" value="{{list.id}}"/>
+                                                   <input type="submit" name="delete_user" class="btn btn-primary continue-btn w-100" value="Delete" />
+                                                </div>
+                                                <div class="col-6">
+                                                   <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                </div>
+                                             </div>
+                                          </form>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /Delete Modal -->
+                           {% empty %}
+                           <tr>
+                              <td>Not Found Any User</td>
+                           </tr>
+                           {% endfor %}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="float-right mt-3">
+         {% include 'components/pagination.html' %}
+      </div>
+   </div>
+</div>
+<!-- Add Modal -->
+<div class="modal fade custom-modal" id="add-category">
+   <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-header flex-wrap">
+            <div class="text-center w-100 mb-3">
+               <img src="assets/img/logo-small.png" alt="">
+            </div>
+            <h4 class="modal-title">Add New User</h4>
+            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+         </div>
+         <div class="modal-body">
+            <form  method="POST" >
+               {% csrf_token %}
+               <div class="form-group">
+                  <small>Username</small>
+                  {{form.username|as_crispy_field}}
+               </div>
+               <div class="form-group">
+                  <small>Display Name</small>
+                  {{form.display_name|as_crispy_field}}
+               </div>
+               <div class="form-group">
+                  <small>Email Address</small>
+                  {{form.email|as_crispy_field}}
+               </div>
+               <div class="form-group">
+                  <small>Password</small>
+                  {{form.password1|as_crispy_field}}
+               </div>
+               <div class="form-group">
+                  <small>Confirm Password</small>
+                  {{form.password2|as_crispy_field}}
+               </div>
+               <div class="form-group">
+                  <label>User Type</label>
+                  <select name="role" class="form-control form-select">
+                     <option value="Freelancer">Freelancer</option>
+                     <option value="Admin">Admin</option>
+                     <option value="Employer">Employer</option>
+                  </select>
+               </div>
+               <div class="mt-4">
+                  <input type="submit" name="create_user" class="btn btn-primary btn-block" value="Submit"/>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Add Modal -->
+{% endblock content %}
+{% block js %}
+<script>
+   htmx.on("htmx:afterRequest", (e) => {
+       console.log(e)
+       if(e.detail.successful){
+           const user_id = e.detail.xhr.id
+           let data = JSON.parse(e.detail.xhr.response)
+           $(`#user-${data.id}`).fadeOut()
+           $(`#delete_user_${data.id}`).modal('hide')
+           toastr.success(`User ${data.id} Successfully Deleted !`)
+       }
+    });
+</script>
+{% endblock js %}

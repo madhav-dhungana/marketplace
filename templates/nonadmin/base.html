@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta
+         name="viewport"
+         content="width=device-width, initial-scale=1, user-scalable=0"
+         />
+      <title>{{site.site_name}}  - {% block title %}{% endblock title %}</title>
+      <!-- Favicon -->
+      <link rel="icon" href="{% if site.favicon %} {{site.favicon.url}} {% else %}{% static 'assets/img/favicon.png' %} {% endif %}" type="image/x-icon"/>
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+      <!-- Fontawesome CSS -->
+      <link
+         rel="stylesheet"
+         href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}"
+         />
+      <link
+         rel="stylesheet"
+         href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}"
+         />
+      <!-- Owl Carousel CSS -->
+      <link
+         rel="stylesheet"
+         href="{% static 'assets/css/owl.carousel.min.css' %}"
+         />
+      <link
+         rel="stylesheet"
+         href="{% static 'assets/css/owl.theme.default.min.css' %}"
+         />
+      <link rel="stylesheet" href="{% static 'assets/css/feather.css' %}">
+      <!-- Select2 CSS -->
+      <link
+         rel="stylesheet"
+         href="{% static 'assets/plugins/select2/css/select2.min.css' %}"
+         />
+      <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+      <!-- Main CSS -->
+      <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+      <style>
+         .alert-error{
+         background-color: #f06060;
+         color:white;
+         }
+         p strong{
+         color:red !important;
+         }
+      </style>
+      {% block css %} {% endblock css %}
+   </head>
+   <body class="dashboard-page">
+      <!-- Main Wrapper -->
+      <!-- <div class="main-wrapper"> -->
+         {% include 'components/navbar.html' %}
+         <!-- Start Navigation -->
+         {% block content %} 
+         {% endblock content %}
+         {% include 'components/footer.html' %}
+      <!-- </div> -->
+      <!-- /Main Wrapper -->
+      <!-- jQuery -->
+      <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+      <!-- Bootstrap Bundle JS -->
+      <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+      <!-- Owl Carousel -->
+      <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+      <!-- Select2 JS -->
+      <script src="{% static 'assets/plugins/select2/js/select2.min.js' %}"></script>
+      <!-- Slick JS -->
+      <script src="{% static 'assets/js/slick.js' %}"></script>
+      <script src="{% static 'assets/plugins/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+      <script src="{% static 'assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+      <!-- Custom JS -->
+      <script src="{% static 'assets/js/script.js' %}"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+      <script>
+         document.body.addEventListener('htmx:configRequest', (event) => {
+           event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+         })
+         
+         
+      </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js" integrity="sha512-B4skI5FiLurS86aioJx9VfozI1wjqrn6aTdJH+YQUmCZum/ZibPBTX55k5d9XM6EsKePDInkLVrN7vPmJxc1qA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="{% static 'assets/js/custom/notification_socket.js' %}"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.css">
+      <script src="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.js"> </script>
+      <script>
+         $('.rating').raty({
+           starOff: "{% static 'assets/star-off.png' %}",
+             starOn: "{% static 'assets/star-on.png' %}",
+           readOnly: function() {
+             return true;
+           }
+           });
+           
+      </script>
+      {% block js %} {% endblock js %}
+   </body>
+</html>

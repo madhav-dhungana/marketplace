@@ -1,0 +1,228 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+Find Projects
+{% endblock title %}
+
+{% block content %}
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+					
+			<!-- Start Navigation -->
+		
+			<!-- Breadcrumb -->
+			{% comment %} <div class="breadcrumb-bar">
+				<div class="container">
+					<div class="row align-items-center inner-banner">
+						<div class="col-md-12 col-12 text-center">
+							<h2 class="breadcrumb-title">Projects</h2>
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Projects</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb --> {% endcomment %}
+			
+			<!-- Page Content -->			
+			<div class="content">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+						
+							<div class="card search-filter p-4">
+								<div class="card-header d-flex justify-content-between">
+									<h4 class="card-title mb-0">FILTERS</h4>
+									<a href="javascript:void(0);">Clear All</a>
+								</div>
+								<div class="card-body">
+									<form method="get">
+										{{searchForm.form|crispy}}
+						
+									<div class="btn-search">
+										<button type="submit" class="btn btn-block">Search</button>
+									</div>	
+								  </form> 
+								</div>
+							
+							</div>
+							
+						</div>
+						
+						<div class="col-md-12 col-lg-8 col-xl-9">
+						
+							{% comment %} <div class="sort-tab">
+								<div class="row align-items-center">
+									<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+										<div class="d-flex align-items-center">
+										   <div class="freelance-view">
+											  <h4>Showing 1 - 12 of 455</h4>
+										   </div>
+										</div>
+									 </div>
+									 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+										<div class="d-flex justify-content-sm-end">
+										   <div class="sort-by">
+											  <select class="custom-select">
+												 <option>Relevance</option>
+												 <option>Rating</option>
+												 <option>Popular</option>
+												 <option>Latest</option>
+												 <option>Free</option>
+											  </select>
+										   </div>
+										</div>
+									</div>
+								</div>
+						   </div> {% endcomment %}
+						  
+							<div class="row">
+                                {% for list in page_obj %}
+								<div class="col-md-6 col-lg-12 col-xl-6">
+								
+									<div class="freelance-widget widget-author">
+										<div class="freelance-content" id="homeboi">
+											{% if request.user.is_authenticated %}
+												<span>
+													{% if list in request.user.get_bookmarked_projects %}
+														<a id="{{list.id}}-project" hx-post="{% url 'fav_project' list.id %}" hx-swap="none" onclick="toggle({{list.id}})" class="favourite favourite-add"><i class="fas fa-bookmark"></i></a>
+													{% else %}
+														<a id="{{list.id}}-project"hx-post="{% url 'fav_project' list.id %}" hx-swap="none" onclick="toggle({{list.id}})" class="favourite"><i class="fas fa-bookmark "></i></a>
+													{% endif %}
+												</span>
+											{% else %}
+												<a data-bs-toggle="modal" href="#rating" class="favourite"><i class="fas fa-bookmark"></i></a>
+											{% endif %}
+		                                <div class="author-heading">
+		                                    {% comment %} <div class="profile-img">
+		                                        <a href="#">
+		                                            <img src="{{list.posted_by.avatar.url}} " alt="author">
+		                                        </a>
+		                                    </div> {% endcomment %}
+		                                    
+											<div class="freelance-info">
+												<h3><a href="#">{{list.title}}</a></h3>
+												<div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>{{list.address}}, {{list.location.name}}</div>
+												<div class="freelance-location "><i class="fas fa-clock"></i> Posted {{list.posted_on}}</div>
+											</div>
+											<div class="profile-name">
+		                                        <div class="author-location">{{list.posted_by.display_name}} <i class="fas fa-check-circle text-success verified"></i></div>
+		                                    </div>
+											<div class="freelance-tags">
+                                                {% for li in list.get_skills %}
+												<a href="javascript:void(0);"><span class="badge badge-pill badge-design">{{li.skill_name}}</span></a>
+                                                {% endfor %}
+												
+											</div>
+											<div class="freelancers-price">${{list.price}}</div>
+		                                </div>
+										<div class="counter-stats">
+		                                        <ul>
+		                                            <li>
+		                                                <h3 class="counter-value">Price Type</h3>
+		                                                <h5>{{list.get_pricing_type_display}}</h5>
+		                                            </li>
+		                                            <li>
+		                                                <h5>Proposals</h5>
+		                                                <h3 class="counter-value">{{list.no_of_proposals}}</h3>
+		                                            </li>
+		                                            <li>
+		                                                <h5>Job Category</h5>
+		                                                <h3 class="counter-value"><span class="jobtype">{{list.category}}</span></h3>
+		                                            </li>
+		                                        </ul>
+		                                    </div>
+		                                </div>
+										{% if user.is_authenticated %}
+											{% if request.user.role == 'Freelancer' %}
+												<div class="cart-hover">
+													<a href="{% url 'free_project_detail' list.id %}" class="btn-cart" tabindex="-1">Bid Now</a>
+												</div>
+											{% endif %}
+										{% endif %}
+		                            </div>
+								</div>
+								{% empty %}
+								<div class="card">
+									<div class="card-body">
+										Couldnot Find Any  Projects !
+									</div>
+								</div>
+                                {% endfor %}
+							
+							
+								
+							</div>
+						</div>							
+					</div>
+				</div>
+			</div>
+			<!-- /Page Content -->
+   
+			
+		   
+		</div>
+		<!-- /Main Wrapper -->
+		
+		
+		<!-- The Modal -->
+		<div class="modal fade" id="rating">
+			<div class="modal-dialog modal-dialog-centered modal-md">
+				<div class="modal-content">
+					<div class="modal-header d-block b-0 pb-0">
+						<span class="modal-close float-end"><a href="#" data-bs-dismiss="modal" aria-label="Close"><i class="far fa-times-circle orange-text"></i></a></span>
+					</div>
+					<div class="modal-body">		
+						<form action="project.html">
+							<div class="modal-info">
+								<div class="text-center pt-0 mb-5">
+									<h3>Please login to Favourite Project</h3>
+								</div>
+								<div class="submit-section text-center">
+									<a  data-bs-dismiss="modal" href="#" class="btn btn-primary black-btn click-btn">Cancel</a>
+									<button type="submit" class="btn btn-primary click-btn">Submit</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /The Modal -->
+{% endblock content %}
+{% block js %}
+<script src="{% static 'assets/js/range.js' %}"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<style>
+	.favourite-add{
+		cursor: pointer;
+		color: #fff;
+		background: #ff5b37;
+		border: 1px solid #ff5b37;
+	}
+</style>
+<script>
+	function toggle(id){
+		const b = $(`#${id}-project`)
+		b.toggleClass('favourite-add')
+	}
+	htmx.on("htmx:afterSwap", (e) => {
+        const bookmarkAdded =e.target.classList.contains('favourite-add')
+        if(bookmarkAdded){
+            toastr.success('Added Project To Bookmark !')
+        }else{
+            toastr.success('Removed Project From Bookmark !')
+
+        }
+     });
+</script>
+{% endblock js %}

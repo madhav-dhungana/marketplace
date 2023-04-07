@@ -1,0 +1,92 @@
+{% extends 'projects/freelancer/base_project.html' %}
+{% load static %}
+{% load extras %}
+{% block title %}
+Ongoing Projects
+{% endblock title %}
+
+{% block project %}
+            <!-- Page Content -->			
+            <nav class="user-tabs mb-4">
+                <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'proposals' %}">My Proposals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'free_ongoing_projects' %}">Ongoing Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'free_completed_projects' %}">Completed Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'free_cancelled_projects' %}">Cancelled Projects</a>
+                    </li>
+                </ul>
+            </nav> 
+                <!-- project list -->
+                {% for list in page_obj %}
+                <div class="my-projects-list">
+                    <div class="row">
+                        <div class="col-lg-12 flex-wrap">
+                            <div class="projects-card flex-fill">
+                                <div class="card-body">
+                                    <div class="projects-details align-items-center">
+                                        <div class="project-info project">
+                                            {% comment %} <span>{{list.title}}</span> {% endcomment %}
+                                            <h2>{{list.title}}</h2>
+                                            <div class="proposal-client">
+                                                <h4 class="title-info">Client Price</h4>
+                                                <div class="d-flex">
+                                                    <h3 class="client-price me-2">${{list.price}}</h3>
+                                                    <p class="amnt-type">( {{list.get_pricing_type_display}} )</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="project-hire-info project">
+                                            <div class="content-divider"></div>
+                                            <div class="proposer-info project">
+                                                <div class="proposer-img">
+                                                    <img src="{{list.posted_by.avatar.url}}" alt="" class="img-fluid">
+                                                </div>
+                                                <div class="proposer-detail">
+                                                    <h4>{{list.posted_by.display_name}} </h4>
+                                                    <ul class="proposal-details">
+                                                        {% comment %} <li> October 26, 2022</li> {% endcomment %}
+                                                        <li>Rated 4 <i class="fas fa-star text-primary"></i> </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="content-divider"></div>
+                                            <div class="projects-action text-start project">
+                                                <a href="{% url 'free_project_detail' list.id %}" class="projects-btn project">View Details </a>
+                                                <p class="hired-detail">Hired on</p>
+                                                <p class="hired-date">{{list.hired_date}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+
+                <h4 class="text-center">No Ongoing Projects !</h4>
+                
+                {% endfor %}
+                <!-- /project list -->
+                
+                <!-- pagination -->
+                            <!-- pagination -->
+                <div class="row">
+                        <div class="pagination mt-3">
+                            {% include 'components/pagination.html' %}
+                        </div>
+                        
+                    </div>
+                <!-- /pagination -->
+                
+ 
+<!-- /Page Content -->
+{% endblock project %}

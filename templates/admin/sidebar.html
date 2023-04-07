@@ -1,0 +1,70 @@
+	{% load static %}
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul>
+                    <li id="dashboard">
+                        <a href="{% url 'dashboard' %}"><i data-feather="home"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li id="categories">
+                        <a href="{% url 'category_view' %}"><i data-feather="copy"></i> <span>Categories</span></a>
+                    </li>
+                    <li id="project-list">
+                        <a href="{% url 'project_list' 'all' %}"><i data-feather="database"></i> <span>Projects</span></a>
+                    </li>
+                    <li id="user-list">
+                        <a href="{% url 'user_list' %}"><i data-feather="users"></i> <span>Users</span></a>
+                    </li>
+                    <li id="reviews-list">
+                        <a href="{% url 'review_admin_list' %}"><i data-feather="star"></i> <span>Reviews</span></a>
+                    </li>
+                    <li id="deposits">
+                        <a href="{% url 'deposits' %}"><i class="fa-solid fa-money-check"></i><span>Deposits</span></a>
+                    </li>
+                    <li id="transactions">
+                        <a href="{% url 'transactions' %}"><i class="fa-solid fa-money-check"></i><span>Transaction</span></a>
+                    </li>
+                    <li id="reports">
+                        <a href="{% url 'reports' %}"><i data-feather="pie-chart"></i> <span>Reports</span></a>
+                    </li>
+                    <li id="fee-list">
+                        <a href="{% url 'fee_list' %}"><i data-feather="package"></i><span>Fees</span></a>
+                    </li>
+                    <li id="tax-list">
+                        <a href="{% url 'tax_list' %}"><i data-feather="file-text"></i> <span>Tax</span></a>
+                    </li>
+                    <li id="role-settings">
+                        <a href="{% url 'role_settings' %}"><i data-feather="clipboard"></i> <span>Roles</span></a>
+                    </li>
+                    <li id="membership-plans">
+                        <a href="{% url 'admin_membership_plans' %}"><i class="fa-solid fa-wallet"></i> <span>Membership</span></a>
+                    </li>
+                     <li id="skills-list">
+                        <a href="{% url 'skills_list' %}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg> <span>Skills</span></a>
+                    </li>
+
+                     <li id="identity-formlist">
+                        <a href="{% url 'identity_form_list' %}"><i data-feather="user"></i> <span>Verify Identity</span></a>
+                    </li>
+                    <li id="site-settings">
+                        <a class="active" href="{% url 'site_settings' %}"><i data-feather="settings"></i> <span>Settings</span></a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Sidebar -->
+
+    {% block js %}
+    	<script>
+            let currentPageId = window.location.pathname.split('/')[2]
+            console.log(currentPageId,'current page id')
+            let ids =document.getElementById(`${currentPageId}`)
+            console.log(ids,' ids only')
+            if(ids){
+                ids.classList.add('active')
+            }
+        </script>
+    {% endblock js %}

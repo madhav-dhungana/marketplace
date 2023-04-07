@@ -1,0 +1,68 @@
+{% extends 'nonadmin/base.html' %} {% load static %} {% load temp_utils %} 
+{% block title%}Notications {% endblock title %} {% block content %}
+<!-- Page Content -->
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <!-- sidebar -->
+         {% if request.user.role == "Freelancer" %}
+         {% include 'components/freelancer_sidebar.html' %}
+         {% else %}
+         {% include 'components/sidebar.html' %}
+         {% endif %}
+         <!-- /sidebar -->
+         <div class="col-xl-9 col-md-8">
+            <div class="card">
+               <div class="card-header">
+                  <h3 class="pro-title without-border">Notifications</h3>
+               </div>
+               <div class="card-body">
+                  <div class="reviews">
+                     {% for list in page_obj %}
+                     <div class="badge badge-primary" style="margin-left:15px;">{{list.action}}</div>
+                     <div style="margin:1.3em;display: flex; gap: 10px">
+                        {% if list.action_by %}
+                        <img
+                           class="avatar-img rounded-circle object-cover"
+                           height="40"
+                           width="40"
+                           src="{{list.action_by.avatar.url}}"
+                           />
+                        {% endif %}
+                        <div class="ml-3">
+                           {% comment %} Absolute user is different for different role so need to check role  first before giving absolute url {% endcomment %}
+                           {% if list.content_object|to_class_name in check_arrs %} 
+                           {% if request.user.role == "Employer" %}
+                           <a href="{{ list.content_object.get_absolute_url }}">
+                              <p class="mb-0">{{list.title}}</p>
+                           </a>
+                           {% else %}
+                           <a
+                              href="{{ list.content_object.get_absolute_for_freelancer }}"
+                              >
+                              <p class="mb-0">{{list.title}}</p>
+                           </a>
+                           {% endif %} {% else %}
+                           <a href="{{ list.content_object.get_absolute_url }}">
+                              <p class="mb-0">{{list.title}}</p>
+                           </a>
+                           {% endif %}
+                           <small>{{list.date_created|timesince}} ago</small>
+                        </div>
+                     </div>
+                     <hr>
+                     {% empty %}
+                     <div class="text-center">No notifications yet</div>
+                     {% endfor %}
+                  </div>
+                  <div class="float-right mt-3">
+                     {% include 'components/pagination.html' %}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}

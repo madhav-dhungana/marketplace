@@ -1,0 +1,143 @@
+{% extends 'nonadmin/base.html' %} {% load static %} 
+{% load crispy_forms_tags %} {% block title %} Invite User {% endblock title %} 
+{% block content %}
+<div class="content bookmark">
+   <div class="container-fluid">
+      <div class="row">
+         {% include 'components/freelancer_sidebar.html' %}
+         <div class="col-xl-9 col-md-8">
+            <nav class="user-tabs mb-4">
+               <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'fav_project_view' %}">Bookmarked Projects</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link active" href="{% url 'free_invite_list' %}">Invitations</a>
+                  </li>
+               </ul>
+            </nav>
+            <!-- project list -->
+            <div class="my-projects-view">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="card">
+                        <div class="card-header">
+                           <h5 class="card-title">Invitation For Project </h5>
+                        </div>
+                        <div class="card-body">
+                           <div class="table-responsive table-box">
+                              <table class="table table-hover table-center mb-0 datatable">
+                                 <thead class="thead-pink">
+                                    <tr>
+                                       <th>Sent By</th>
+                                       <th>For Project</th>
+                                       <th>Invite date </th>
+                                       <th>Status</th>
+                                       <th>Action</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    {% for list in invites %}
+                                    <!-- Delete Modal -->
+                                    <div class="modal custom-modal fade" id="approve_project{{list.id}}" role="dialog">
+                                       <div class="modal-dialog modal-dialog-centered">
+                                          <div class="modal-content">
+                                             <div class="modal-body">
+                                                <div class="form-header text-center">
+                                                   <h3>Answer Invitation</h3>
+                                                   <p>Please answer {{list.sent_by.display_name}}'s Invitations </p>
+                                                </div>
+                                                <div class="modal-btn delete-action">
+                                                   <div class="row">
+                                                      <form hx-post="{% url 'answer_invite_api' %}" hx-swap="none" hx-trigger="submit"  class="col-5">
+                                                         <input type="hidden" name="u_id" value="{{list.id}}">
+                                                         <input type="hidden" name="accept_invite" value="true">
+                                                         <input type="submit" class="btn btn-success  w-100" value="Accept Invite"/>
+                                                      </form>
+                                                      <form hx-post="{% url 'answer_invite_api' %}" hx-swap="none" hx-trigger="submit"  class="col-5 mt-2">
+                                                         <input type="hidden" name="u_id" value="{{list.id}}">
+                                                         <input type="hidden" name="accept_invite" value="false">
+                                                         <input type="submit" class="btn btn-danger w-100" value="Decline Invite"/>
+                                                      </form>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <!-- /Delete Modal -->
+                                    <tr>
+                                       <td>
+                                          <h2 class="table-avatar">
+                                             <a  href="{% url 'user_detail' list.sent_by.id %}" class="avatar avatar-md  me-2">
+                                             {% comment %} tab-imgcircle {% endcomment %}
+                                             <img class="avatar-img rounded-circle" src="{{list.sent_by.avatar.url}}" alt="User Image">
+                                             </a>
+                                             <a href="{% url 'user_detail' list.sent_by.id %}" >
+                                             <span class="profile-name">{{list.sent_by.display_name}} </span><span>{{list.sent_by.title|default_if_none:''}} </span>
+                                             </a>
+                                          </h2>
+                                       </td>
+                                       <td><a href="{% url 'free_project_detail' list.project.id %}"> {{list.project.title|truncatechars:'40'}}</a></td>
+                                       <td>{{list.posted_on}}</td>
+                                       <td id="invite_status{{list.id}}"> 
+                                          {% if list.answered|lower == "true" %}
+                                          {% if list.accepted|lower == "true" %}
+                                          Accepted
+                                          {% else %}
+                                          Declined
+                                          {% endif %}
+                                          {% else %}
+                                          Not Answered
+                                          {% endif %}
+                                       </td>
+                                       <td>
+                                          <div class="table-action">
+                                             {% if not list.answered|lower == "true" %}
+                                             <a id="ans_btn{{list.id}}" href="javascript:void(0);" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#approve_project{{list.id}}">Answer</a>
+                                             {% endif %}
+                                          </div>
+                                       </td>
+                                    </tr>
+                                    {% empty %}
+                                    <td>No Invites Yet</td>
+                                    {% endfor %}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- project list -->
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block js %}
+<script>
+   htmx.on("htmx:afterRequest", (e) => {
+       let data = JSON.parse(e.detail.xhr.response)
+       
+       $(`#ans_btn${data.id}`).remove()
+     console.log( $(`#ans_btn${data.id}`))
+       if(e.detail.successful){
+           console.log(data)
+           $(`#approve_project${data.id}`).modal('hide')
+           if(data.accepted){
+               toastr.success(data.msg)
+           }
+           else{
+               toastr.error(data.msg)
+           }
+           $(`#invite_status${data.id}`).text(data.status)
+       }
+       else{
+           toastr.error(data.detail)
+   
+       }
+    });
+</script>
+{% endblock js %}

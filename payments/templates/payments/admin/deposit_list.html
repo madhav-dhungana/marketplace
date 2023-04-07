@@ -1,0 +1,224 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load extras %}
+{% load crispy_forms_tags %}
+
+{% block title %}Deposit List{% endblock title %}
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="content container-fluid">
+    
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Deposit</h3>
+                </div>
+                <div class="col-auto">
+                    <a href="#" class="btn add-button me-2" data-bs-toggle="modal" data-bs-target="#add-category">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <a class="btn filter-btn" href="javascript:void(0);" id="filter_search">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        {% include 'components/message.html' %}
+
+        <!-- Search Filter -->
+        <div class="card filter-card" id="filter_inputs">
+            <div class="card-body pb-0">
+                <form method="get" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;" class="">
+                    {{searchForm.form|crispy}}
+                    <button type="submit" class="btn btn-primary mb-4">Search</button>
+              </form> 
+            </div>
+        </div>
+        <!-- /Search Filter -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-center table-hover mb-0 ">
+                                <thead>
+                                    <tr>
+                                        <th> Id</th>
+                                        <th>User</th>
+                                        <th>Details</th>	
+                                        <th> Amount</th>
+                                        <th>Status</th>	
+                                        <th class="text-end"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablediv">
+                               {% for list in page_obj %}
+                                    <tr id="user-{{list.id}}">
+                                        <td>
+                                              {{list.id}}
+                                        </td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="{% url 'admin_user_detail' list.user.id %}"><img class="me-2 rounded-circle object-cover" src="{{list.user.avatar.url}}"  alt="User Image">
+                                                    {{list.user.display_name}}</a>
+                                            </h2>
+                                        </td>
+                                        <td><div>
+                                            <strong>Deposit Funds</strong><br>
+                                            <small style="color:#777;">{{list.created_at}}</small>
+                                        </div></td>
+                                        <td id="td_price{{list.id}}">
+                                           
+                                            {% if list.status == "On Hold" %}
+                                                <span style='color:#52b366;'> +  ${{list.transaction.price}}</span>
+                                            {% elif list.status == "Released" %}
+                                                <span style='color:red;'> - ${{list.transaction.price}}</span>
+                                            {% else %}
+                                                <span style='color:#7f92eb;'> - ${{list.transaction.price}}</span>
+                                           {% endif %}
+                                            </td>
+                                        <td id="td_status{{list.id}}">
+                                            {% if list.status == "On Hold" %}
+                                                <span style='color:#52b366;'>{{list.status}}</span>
+                                            {% elif list.status == "Released" %}
+                                                <span style='color:red;'> {{list.status}}</span>
+                                           {% else %}
+                                                <span style='color:#7f92eb;'> {{list.status}}</span>
+                                            {% endif %}
+                                        </td>
+                                      
+                                      
+                                        <td class="text-end">
+                                            <td class="text-end three-dots">
+                                                <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
+                                                <div class="dropdown-menu user-menu-list">
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#transaction-category"><img class="me-2 " src="{% static 'assets/img/icon/icon-01.svg' %}" alt=""> View Details</a>
+                                               {% if list.status == "On Hold" %}
+                                                    <a class="dropdown-item my-1" data-bs-toggle="modal" data-bs-target="#release_money{{list.id}}"  href="#"><img class="me-2 " src="{% static 'assets/img/icon/icon-06.svg' %}" alt=""> Release Money</a>
+                                                    <a class="dropdown-item mb-0"  data-bs-toggle="modal" data-bs-target="#refund_money{{list.id}}"  href="#"><img class="me-2" src="{% static 'assets/img/icon/icon-07.svg' %}" alt=""> Refund Money </a>
+                                               {% endif %}
+                                                </div>
+                                                </td>
+                                            {% comment %} <a href="javascript:void(0);" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#release_money{{list.id}}"><i class="far fa-trash-alt"></i></a> {% endcomment %}
+                                        </td>
+                                    </tr>
+
+                                    <!-- Transfer Modal -->
+                                    <div class="modal custom-modal fade" id="release_money{{list.id}}" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div class="form-header">
+                                                        <h3>Release Money</h3>
+                                                        <h5>Are you sure want to release money?</h5>
+                                                        <small style="color:#999">Money will be released to the freelancer <span style='color:black;font-weight:bold;'>{{list.for_project.hired}}</span> who worked on this project .</small>
+                                                    </div>
+                                                    <div class="modal-btn release-action">
+                                                        <form  hx-post="{% url 'release_money' %}" hx-trigger="submit" hx-swap="none" >
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <input type="hidden" name="project_id" value="{{list.for_project.id}}"/>
+                                                                    <button button='submit' class='btn btn-primary continue-btn w-100'>Release ${{list.transaction.price}}</button>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                                </div>
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Transfer Modal -->
+                                    <!-- REfund Modal -->
+                                    <div class="modal custom-modal fade" id="refund_money{{list.id}}" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div class="form-header">
+                                                        <h3>Refund Money</h3>
+                                                        <h5>Are you sure want to refund money?</h5>
+                                                        <small style="color:#999">Money will be refunded back to  {{list.user}}</small>
+                                                    </div>
+                                                    <div class="modal-btn release-action">
+                                                        <form  hx-post="{% url 'refund_money' %}" hx-trigger="submit" hx-swap="none" >
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <input type="hidden" name="deposit_id" value="{{list.id}}"/>
+                                                                    <input type="hidden" name="stripe_transaction_id" value="{{list.transaction.stripe_transaction_id}}"/>
+                                                                    <button button='submit' class='btn btn-primary continue-btn w-100'>Refund ${{list.transaction.price}}</button>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                                </div>
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /REfund Modal -->
+                                    {% empty %}
+                                    <tr><td>No Deposit Information</td></tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>			
+        </div>
+        <div class="float-right mt-3">
+            {% include 'components/pagination.html' %}
+        </div>
+          
+    </div>			
+</div>
+{% endblock content %}
+{% block js %}
+<script>
+
+    htmx.on("htmx:afterRequest", (e) => {
+        let data = JSON.parse(e.detail.xhr.response)
+
+        if(e.detail.successful){
+            toastr.success(data.detail)
+            
+            if(data.type === "release"){
+                $(`#release_money${data.deposit_id}`).modal('hide')
+                $(`#td_status${data.deposit_id}`).html(`
+                <span style='color:red;'> Released </span>
+                `)
+               // $(`#td_price${data.deposit_id}`).css("color","red")
+                $(`#td_price${data.deposit_id}`).html(`
+                <span style='color:red;'> - $${data.amount}</span>
+                `)
+            }
+            if(data.type === "refund"){
+                $(`#refund_money${data.deposit_id}`).modal('hide')
+                $(`#td_status${data.deposit_id}`).html(`
+                <span style='color:#7f92eb;'> Refunded </span>
+                `)
+               // $(`#td_price${data.deposit_id}`).css("color","#7f92eb")
+                $(`#td_price${data.deposit_id}`).html(`
+                <span style='color:#7f92eb;'> - $${data.amount}</span>
+                `)
+            }
+        }
+		else{
+            toastr.error(data.detail)
+		}
+     });
+
+
+</script>
+{% endblock js %}

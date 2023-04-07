@@ -1,0 +1,147 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% block content %}
+
+			{% include 'components/navbar.html' %}
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container">
+					<div class="row align-items-center inner-banner">
+						<div class="col-md-12 col-12 text-center">
+							<h2 class="breadcrumb-title">Blog Grid</h2>
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Blog</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+				
+					<div class="row">
+						<div class="col-lg-8 col-md-12">
+							{% for item in blogData %}
+							<div class="row blog-grid-row">
+								<div class="col-md-6 col-sm-12">
+								
+									<!-- Blog Post -->
+									<div class="blog grid-blog">
+										<div class="blog-image">
+											<a href="{% url 'blog_detail' slug=item.slug  %}"><img class="img-fluid" src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/project/project-04.jpg' %}{% endif %}" alt="Post Image"></a>
+										</div>
+										<div class="blog-content">
+											<ul class="entry-meta meta-item">
+												<li>
+													<div class="post-author">
+														<a href="{% url 'blog_detail' slug=item.slug  %}"><img src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/project/project-04.jpg' %}{% endif %}" alt="Post Author"> <span>{{item.author}}</span></a>
+													</div>
+												</li>
+												<li><i class="far fa-clock"></i> {{item.created_at| date:"d M Y"}}</li>
+											</ul>
+											<h3 class="blog-title"><a href="{% url 'blog_detail' slug=item.slug  %}">{{item.title}}</a></h3>
+											<a href="{% url 'blog_detail' slug=item.slug  %}"><p class="mb-0">{{item.description | truncatechars:300}}</p></a>
+										</div>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+							
+							<!-- Blog Pagination -->
+							<div class="row pb-4">
+								<div class="col-md-12">
+									<div class="blog-pagination text-center">
+										<ul class="paginations">
+											<li><a href="#"> <i class="fas fa-angle-left"></i> Previous</a></li>
+											<li><a href="#">1</a></li>
+											<li><a href="#" class="active">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">Next <i class="fas fa-angle-right"></i></a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- /Blog Pagination -->
+							
+						</div>
+						
+						<!-- Blog Sidebar -->
+						<div class="col-lg-4 col-md-12 sidebar-right theiaStickySidebar">
+
+							<!-- Latest Posts -->
+							<div class=" pro-post widget-box post-widget">
+								<h4 class="pro-title">Latest Posts</h4>
+								<div class="pro-content pt-0">
+									<ul class="latest-posts">
+										{% for item in latestPost %}
+										<li>
+											<div class="post-thumb">
+												<a href="{% url 'blog_detail' slug=item.slug  %}">
+													<img class="img-fluid" src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/project/project-04.jpg' %}{% endif %}" alt="">
+												</a>
+											</div>
+											<div class="post-info">
+												<h4>
+													<a href="{% url 'blog_detail' slug=item.slug  %}">{{item.title}}</a>
+												</h4>
+												<a href="#" class="posts-date"><i class="far fa-calendar-alt"></i>{{item.created_at| date:"d M Y"}}</a>
+											</div>
+										</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<!-- /Latest Posts -->
+
+							<!-- Categories -->
+							<div class=" pro-post widget-box category-widget">
+								<h4 class="pro-title">Blog Categories</h4>
+								<div class="pro-content">
+									<ul class="category-link">
+										{% for item in categoryData %}
+										<li><a href="#">{{item.title}}</a></li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<!-- /Categories -->
+
+							<!-- Tags -->
+							<div class=" pro-post widget-box tags-widget">
+								<h4 class="pro-title">Tags</h4>
+								<div class="pro-content">
+									<ul class="tags">
+										{% for item in tagData %}
+										<li><a href="#" class="tag">{{item.title}}</a></li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<!-- /Tags -->
+							
+							<!-- Share Widget -->	
+							<div class="pro-post widget-box post-widget">
+								<h3 class="pro-title">Share</h3>
+								<div class="pro-content">
+									<a href="#" class="share-icon"><i class="fas fa-share-alt"></i> Share</a>
+								</div>
+							</div>
+							<!-- /Share Widget -->
+							
+						</div>
+						<!-- /Blog Sidebar -->
+						
+					</div>
+				</div>
+			</div>	
+			<!-- /Page Content -->
+   {% endblock %}

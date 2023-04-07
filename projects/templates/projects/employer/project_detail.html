@@ -1,0 +1,353 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+
+{% block title %}
+Project Detail - {{project.id}}
+{% endblock title %}
+
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            
+            <!-- sidebar -->
+            {% include 'components/sidebar.html' %}
+            <!-- /sidebar -->
+            
+            <div class="col-xl-9 col-md-8">
+                <!-- project list -->
+                <div class="my-projects">
+                <div class="my-projects-list pro-list-view">
+                    <div class="row">
+                        <div class="col-lg-10 flex-wrap">
+                            <div class="projects-card flex-fill">
+                                <div class="card-body">
+                                    <div class="projects-details align-items-center">
+                                        <div class="project-info">
+                                            <div id='project_status' class="badge badge-primary">{{project.get_status_display}}</div>
+                                            <h2>{{project.title}}</h2>
+                                            <div class="customer-info">
+                                                <ul class="list-details">
+                                                    <li>
+                                                        <div class="slot">
+                                                            <p>Price type</p>
+                                                            <h5>{{project.get_pricing_type_display}}</h5>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="slot">
+                                                            <p>Location</p>
+                                                            <h5>{{project.location}}</h5>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="slot">
+                                                            <p>Expiry</p>   
+                                                            {% if project.get_expiry_days < 0 %}
+                                                
+                                                                <h6>Project Expired</h6>
+                                                                {% else %}
+                                                                <h6>{{project.get_expiry_days}} Days Left</h6>
+                                                                {% endif %}
+                                                            
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="project-hire-info">
+                                            <div class="content-divider"></div>
+                                            <div class="projects-amount">
+                                                <p>Your Price</p>
+                                                <h3>${{project.price}}</h3>
+                                                {% comment %} <h5>in 12 Days</h5> {% endcomment %}
+                                            </div>
+                                            <div class="content-divider"></div>
+                                            <div class="projects-action text-center">
+                                                <h4 href="#" class="hired-detail">
+                                                    {% if project.has_hired %}
+                                                    
+                                                      <strong class="text-left my-2">Hired on {{project.hired_date}}</strong>
+
+                                                    {% else %}  
+                                                    Not Hired Anyone Yet
+                                                    {% endif %}
+                                                
+                                                </h4>
+                                                {% if not project.hired  %}
+                                                
+                                                <div class="pro-status">
+                                                    <div class="hire-select">
+                                                    <a href="{% url 'edit_project' project.id %}" class="btn btn-primary ">Edit Project</a>
+                                                    </div>
+                                                </div>
+                                                {% else %}
+                                               <div class="mt-4">
+                                                <select 
+                                                name="status"
+                                                hx-post="{% url 'change_status' project.id %}" 
+                                                hx-trigger="change"
+                                                hx-swap="none"
+                                                hx-confirm="Are You sure you want to change the status?"
+                                                placeholder="Status" class="form-select ">
+                                                <option {% if project.status == "ON" %}selected{% endif %} selected value="ON">Ongoing</option>
+                                                <option {% if project.status == "COM" %}selected{% endif %}  value="COM">Complete</option>
+                                                <option {% if project.status == "CAN" %}selected{% endif %}  value="CAN">Cancel</option>
+                                                </select>
+                                               </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      
+                        <div class="col-lg-2 d-flex flex-wrap">
+                            {% if project.has_hired %}
+                            <div class="projects-card flex-fill">
+                                <div class="card-body">
+                                    <div class="prj-proposal-count text-center hired">
+                                        <img src="{{project.hired.avatar.url}}" alt="" class="img-fluid"> 
+                                        <p class="mb-2">{{project.hired.display_name}}</p>
+                                        <a href="{% url 'project_chat'  project.hired.username %}" class="btn btn-chat">Chat Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="projects-card flex-fill">
+                                <div class="card-body">
+                                    <div class="prj-proposal-count text-center hired">
+                                        <h2 class="mb-2">{{project.no_of_proposals}}</h2>
+                                        <a href="#" class=" "> Proposal</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- /project list -->
+                
+                </div>
+                {% if not project.employer_payment_status == "Paid" %}
+                <a href="{% url 'project_payment' project.id %}" class="btn btn-primary"> <i class="fa fa-money-check ml-3"></i>Add Payment</a>
+                {% else %}
+                <a href="{% url 'project_payment' project.id %}" class="btn btn-success"> <i class="fa fa-money-check ml-2"></i>Payment Added</a>
+            {% endif %}
+                {% if project.start_time %}
+                <div class="card">
+                    <div class="card-body">
+                       <div class='my-3'>
+                     
+                       </div>
+                        <strong>Start Time : </strong>{{project.start_time}}<br>
+                        <strong class="ml-4">End Time : </strong>{{project.end_time}}
+                    
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!--Review-->
+                {% if project.status == "COM" %}
+                {% if has_reviewed %}
+                <div class="card">
+                    <div class="card-body">
+                        <strong>Your Review :</strong>
+                        <div data-score="{{my_review.rating}}" class="my-2 rating"></div>
+                <p>{{my_review.review}}</p>
+                    </div>
+                </div>
+                {% else %}
+                <div id="review_div" class="card">
+                    <div class="card-body">
+                    <strong> Review {{project.hired.display_name}}'s work for this project</strong>
+                       <form hx-post="{% url 'add_review' project.id %}" hx-trigger='submit' hx-target="#review_div">
+                        <div class="my-2 rating"></div>
+                        <input type="hidden" id="rating_val" name="rating_val">
+                        <textarea name="review" placeholder="Review" cols="30" rows="3" class="form-control"></textarea>
+                        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                       </form>
+                    </div>
+                </div>
+                {% endif %}
+   
+                {% endif %}
+                  <!--Review-->
+
+                <div class="pro-post widget-box">								
+                    <h3 class="pro-title">Overview</h3>
+                    <div class="pro-overview">
+                      {{project.detail|safe}}
+                    </div>	
+                </div>
+                <div class="pro-post widget-box">								
+                    <h3 class="pro-title">Documents</h3>
+                    {% for doc in project.get_documents %}
+                    <a data-fancybox="gallery" 
+                    class="badge badge-pill badge-design m-2" target ="blank" 
+                    href="{{doc.documents.url}}"
+                    
+                    >
+                    {{doc.get_file_name}}
+                </a>
+                {% empty %}
+                No Documents
+                    {% endfor %}
+                </div>
+                
+                <div class="pro-post widget-box">
+                    <h3 class="pro-title">Skills Required</h3>
+                    <div class="pro-content">
+                        <div class="tags">
+                          {% for li in project.get_skills %}
+                          <span class="badge badge-pill badge-design">{{li.skill_name}}</span>
+                          {% empty %}
+                          No skills specified
+                          {% endfor %}
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="pro-post widget-box">
+                    <h3 class="pro-title">Project Proposals</h3>
+                    <div class="average-bids mt-4">
+                        {% if project.hired %}
+                        <p><span class="text-highlight">You hired <a href="{% url 'user_detail' project.hired.id %}">{{project.hired.display_name}} </a>for this project</p>
+
+                        {% else %}
+                        <p><span class="text-highlight">{{project.no_of_proposals}} Batuwa</span>  bidding   this job</p>
+                        {% endif %}
+                    </div>
+                    <div class="proposal-cards">
+                    
+                        <!-- project proposal  -->
+                        {% for list in project_proposals %}
+                       
+                        <div class="bids-card">
+                            <div class="row align-items-center">
+                                <div class="col-lg-2">
+                                    <div class="author-img-wrap">
+                                        <a href="{% url 'user_detail' list.user.id %}"><img class="img-fluid img-rounded object-cover" alt="" src="{{list.user.avatar.url}}" height='100' width='100' style="object-fit:cover;"></a>
+                                    </div>
+                                </div>
+
+                                        <!-- Hire Modal -->
+                                        <div class="modal fade custom-modal" id="hire_info{{list.id}}" >
+                                            <div class="modal-dialog modal-dialog-centered modal-md">
+                                                <div class="modal-content">
+                                                    					<!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">{{list.user}}'s Proposal</h4>
+                                                        <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="modal-body del-modal">
+                                                                <p class="d-flex align-items-center"><strong>Price : </strong> {{list.price}}</p>
+                                                                <strong>Cover Letter :</strong> <br>
+                                                                <div class="mb-0">{{list.detail|safe}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /Hire Modal -->
+                                <div class="col-lg-8">
+                                    <div class="author-detail">
+                                        <h4><a href="#">{{list.user.display_name}} </a> <img src="{% static 'assets/flag/' %}{{list.user.country}}.svg"  height="15"alt="Lang"></h4>
+                                        <div class="rating">							
+                                        </div>
+                                        <p class="mb-0">{{list.detail|safe|truncatechars:'15'}}</p>
+                                        <div class="badge badge-info " role='button' data-bs-toggle="modal" data-bs-target="#hire_info{{list.id}}">See More</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="proposal-amnt text-end">
+                                        <h3>${{list.price}}</h3>
+                                        <p class="mb-0"> {{list.created_on}}</p>
+                                        {% if project.hired == list.user %}
+                                            <div class="badge badge-success">You Hired {{list.user}}</div>
+                                        {% endif %}
+                                        {% if not project.has_hired %}
+                                     
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#hire_model{{list.id}}"><i class="fa fa-user-check mx-2"></i> Hire {{list.user}}</a>
+
+                                        <!-- Hire Modal -->
+                                            <div class="modal fade custom-modal" id="hire_model{{list.id}}" >
+                                                <div class="modal-dialog modal-dialog-centered modal-md">
+                                                    <div class="modal-content">
+                                                        <form method="POST" class="modal-body del-modal">
+                                                            {% csrf_token %}
+                                                                <div class="text-center pt-0 mb-3">
+                                                                    <i class="fa fa-exclamation-triangle fa-3x text-black"></i>
+                                                                    <h3>Are you sure you want to hire {{list.user}} ?</h3>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <p>This will notify {{list.user}} and he can send you messages </p>
+                                                                    <input type="hidden" name="hire_user" value={{list.user.id}}>
+                                                                    <input type="submit" name="hire" class="btn btn-primary click-btn btn-plan" value="Yes, Hire" />
+                                                                    <button type="button" data-bs-dismiss="modal" class="btn btn-primary black-btn click-btn btn-plan">Cancel</button>
+                                                                </div>
+                                                            
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /Hire Modal -->
+                                        {% endif %}
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        {% endfor %}
+                        <!-- /project proposal  -->
+                        
+                     
+                        
+                    
+                    </div>
+                    {% comment %} <div class="proposal-btns mt-3">
+                        <a href="view-proposals.html" class="pro-btn">View all 18 Propsals</a>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+            <!-- project list -->
+           
+        </div>							
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block js %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.css">
+<script src="https://cdn.jsdelivr.net/npm/raty-js@3.1.0/lib/jquery.raty.js"> </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css" integrity="sha512-nNlU0WK2QfKsuEmdcTwkeh+lhGs6uyOxuUs+n+0oXSYDok5qy0EI0lt01ZynHq6+p/tbgpZ7P+yUb+r71wqdXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.js" integrity="sha512-j7/1CJweOskkQiS5RD9W8zhEG9D9vpgByNGxPIqkO5KrXrwyDAroM9aQ9w8J7oRqwxGyz429hPVk/zR6IOMtSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    htmx.on("htmx:afterRequest", (e) => {
+        let data = JSON.parse(e.detail.xhr.response)
+        if(e.detail.successful){
+            $("#project_status").text(data.status)
+            toastr.success(data.msg)
+        }
+        else{
+            toastr.success(data.detail)
+        }
+        
+     });
+
+	$('.rating').raty({
+		starOff: '{% static 'assets/star-off.png' %}',
+  		starOn: '{% static 'assets/star-on.png' %}',
+          click: function(score, evt) {
+              $('#rating_val').val(score)
+          }
+        
+		
+	  });
+	  
+</script>
+{% endblock js %}

@@ -1,0 +1,166 @@
+{% extends 'admin/adminbase.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Identiy Form{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <!-- Page Header -->
+      <div class="page-header">
+         <div class="row align-items-center">
+            <div class="col">
+               <h3 class="page-title">Verify Identity Details</h3>
+               <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item active">Verify Identity Details</li>
+            </ul>
+            </div>
+         </div>
+      </div>
+      <form method="get" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;" class="">
+         {{searchForm.form|crispy}}
+         <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+      <!-- /Page Header -->
+      <div class="row">
+         <div class="col-lg-12">
+            <div id="freelancer" class="">
+               <div class="card">
+                  <div class="card-body">
+                     <div class="table-responsive">
+                        <table class="table table-center table-bordered table-hover ">
+                           <thead class="thead-light">
+                              <tr>
+                                 <th> NO.</th>
+                                 <th>Name</th>
+                                 <th>Contact Number</th>
+                                 <th>CNIC / Passport / NIN / SSN</th>
+                                 <th>Document</th>
+                                 <th>Address</th>
+                                 <th>Status</th>
+                                 <th>Action</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for list in page_obj %}
+                              <!-- Reject Modal -->
+                              <div class="modal custom-modal fade" id="reject_user{{list.id}}" role="dialog">
+                                 <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                       <div class="modal-body">
+                                          <div class="form-header">
+                                             <h3>Reject User</h3>
+                                             <p>Are you sure you want to reject {{list.user}} ?</p>
+                                          </div>
+                                          <div class="modal-btn delete-action">
+                                             <form  hx-post="{% url 'answer_identity_request' %}" hx-trigger="submit" hx-swap="none" >
+                                                <div class="row">
+                                                   <div class="col-6">
+                                                      <input type="hidden" name="form_id" value="{{list.id}}"/>
+                                                      <input type="hidden" name="user_id" value="{{list.user.id}}"/>
+                                                      <input type="hidden" name="accept" value="false"/>
+                                                      <input type="submit" name="reject_user" class="btn btn-primary continue-btn w-100" value="Reject" />
+                                                   </div>
+                                                   <div class="col-6">
+                                                      <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                   </div>
+                                                </div>
+                                             </form>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- /Reject Modal -->
+                              <!-- approve Modal -->
+                              <div class="modal custom-modal fade" id="accept_user{{list.id}}" role="dialog">
+                                 <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                       <div class="modal-body">
+                                          <div class="form-header">
+                                             <h3>Approve User</h3>
+                                             <p>Are you sure you want to accept {{list.user}} ?</p>
+                                          </div>
+                                          <div class="modal-btn accept-action">
+                                             <form  hx-post="{% url 'answer_identity_request' %}" hx-trigger="submit" hx-swap="none" >
+                                                <div class="row">
+                                                   <div class="col-6">
+                                                      <input type="hidden" name="form_id" value="{{list.id}}"/>
+                                                      <input type="hidden" name="user_id" value="{{list.user.id}}"/>
+                                                      <input type="hidden" name="accept" value="true"/>
+                                                      <input type="submit" name="accept_user" class="btn btn-primary continue-btn w-100" value="Verify User" />
+                                                   </div>
+                                                   <div class="col-6">
+                                                      <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                   </div>
+                                                </div>
+                                             </form>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- /approve Modal -->
+                              <tr>
+                                 <td>{{forloop.counter}}</td>
+                                 <!-- <td><a href="{% url 'admin_user_detail' list.user.id %}">{{list.user.display_name}}</a> </td> -->
+                                 <td>{{list.full_name}}</td>
+                                 <td>{{list.contact_number}}</td>
+                                 <td>{{list.identiy_num}}</td>
+                                 <td>
+                                    <a data-fancybox="gallery" href="{{list.document.url}}" role='button' class="badge badge-primary"> document (click)</a>
+                                 </td>
+                                 <td> {{list.address}}</td>
+                                 <td>
+                                    <div id="status_{{list.id}}" class="badge 
+                                    {% if list.status == "Accepted" %}
+                                    badge-success
+                                    {% elif list.status == "Rejected" %}
+                                    badge-danger 
+                                    {% else %}
+                                    badge-info
+                                    {% endif %}
+                                    ">
+                                    {{list.status}}
+                     </div>
+                     </td>
+                     <td>
+                     <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#accept_user{{list.id}}" class="btn btn-success btn-disable">Approve</a>
+                     <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#reject_user{{list.id}}" class="btn btn-disable">Reject</a>
+                     </td>
+                     </tr>	
+                     {% endfor %}																
+                     </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+<!-- /Page Wrapper -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css" integrity="sha512-nNlU0WK2QfKsuEmdcTwkeh+lhGs6uyOxuUs+n+0oXSYDok5qy0EI0lt01ZynHq6+p/tbgpZ7P+yUb+r71wqdXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.js" integrity="sha512-j7/1CJweOskkQiS5RD9W8zhEG9D9vpgByNGxPIqkO5KrXrwyDAroM9aQ9w8J7oRqwxGyz429hPVk/zR6IOMtSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+   htmx.on("htmx:afterRequest", (e) => {
+       if(e.detail.successful){
+           const user_id = e.detail.xhr.id
+           let data = JSON.parse(e.detail.xhr.response)
+           $(`#status_${data.id}`).text(data.status)
+           if(data.status==="accepted"){
+               $(`#accept_user${data.id}`).modal('hide')
+           }
+           else{
+               $(`#reject_user${data.id}`).modal('hide')
+           }
+           toastr.success(data.msg)
+       
+       }
+    });
+</script>
+{% endblock js %}

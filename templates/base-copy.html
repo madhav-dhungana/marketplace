@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+		<title>Batuwa - {% block title %}{% endblock title %}</title>
+		
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}" type="image/x-icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+				
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+		
+		<!-- Owl Carousel CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
+		<script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+		
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+	</head>
+    {% include 'components/navbar.html' %}
+    {% block content %}
+    {% endblock %}
+    		<!-- jQuery -->
+		<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+		
+		<!-- Bootstrap Bundle JS -->
+		<script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+		
+		<!-- Owl Carousel -->
+		
+		
+		<!-- Select2 JS -->
+		<script src="{% static 'assets/plugins/select2/js/select2.min.js' %}"></script>
+		
+		<!-- Slick JS -->
+		<script src="{% static 'assets/js/slick.js' %}"></script>
+		<script src="{% static 'assets/plugins/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+		<script src="{% static 'assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'assets/js/script.js' %}"></script>
+	
+	</body>
+</html>

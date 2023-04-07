@@ -1,0 +1,96 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+
+{% block title %}Payment{% endblock title %}
+
+{% block content %}
+
+
+					<!-- Page Content -->
+					<div class="content">
+						<div class="container-fluid">
+							<div class="row">
+								{% include 'components/freelancer_sidebar.html' %}
+								<div class="col-xl-9 col-md-8">
+									<nav class="user-tabs mb-4">
+									    <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+											<li class="nav-item">
+												<a class="nav-link active" href="{% url 'freelancer_payment' %}">Withdraw Funds</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link " href="{% url 'freelancer_invoices' %}"> Invoices</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link " href="{% url 'freelancer_transaction' %}"> Transaction History</a>
+											</li>
+										</ul>
+									</nav>	
+									<div class="col-md-6 mb-2">	
+										<div class="card">						
+											<div class="wallet-detail card-body">
+												{% if not connected_account.enabled %}
+												<a href="{% url 'connect_account' %}" class="button btn btn-primary">Connect Your Stripe Account</a>
+										{% else %}
+											<div class=" wallet-title pt-0 ps-0">
+												<h3 class="mb-0">Wallet </h3>
+											</div>
+											<div class="wallet-bal">
+												<span class="dol-circle"><i class="fa fa-dollar-sign" aria-hidden="true"></i></span>
+												<div class="wallet-amt">
+													<p>Available Balance</p>
+													<h3 class="mb-0">${{available}} </h3>
+												</div>
+											</div>
+											<div class="wallet-content">
+												<div class="wallet-pay">
+													<p>Instant Available</p>
+													<h3 class="mb-0">${{instant_available}}</h3>
+												</div>
+												<div class="wallet-pay">
+													<p>Pending</p>
+													<h3 class="mb-0">${{pending}}</h3>
+												</div>
+											</div>
+										{% endif %}
+											
+											</div>
+										</div>
+									</div>
+								
+									<div class="row">
+										<div class="col-md-12">
+											<div class="card">
+												<form  hx-post="{% url 'withdraw_money' %}" hx-swap="none"  class=" payment-list wallet card-body">
+													<h3>Withdraw To Bank</h3>
+													<input placeholder='$ amount' max="{{available}}" type="number"  class='form-control' name="withdraw_amount" id="withdraw_amount"/>
+													<button button='submit' id="withdraw_btn" class='btn btn-primary mt-2'>Withdraw Amount</button>
+												</form>
+										
+											</div>										
+										</div>	
+																	
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>	
+					
+					<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<script>
+
+    htmx.on("htmx:afterRequest", (e) => {
+        if(e.detail.successful){
+            let data = JSON.parse(e.detail.xhr.response)
+            toastr.success(`Payout Successfully Done !`)
+        }
+		else{
+            toastr.error(`Payout failed. Something went wrong !`)
+		}
+     });
+
+
+</script>
+{% endblock js %}

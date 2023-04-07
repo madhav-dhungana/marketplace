@@ -1,0 +1,164 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Site Settings{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <div class="page-header">
+         <div class="row">
+            <div class="col-sm-6">
+               <h3 class="page-title">Settings</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'site_settings' %}">Settings</a></li>
+                  <li class="breadcrumb-item active">General Settings</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-12">
+            {% include 'components/message.html' %}
+            <!-- Settings Menu -->
+            <div class="settings-menu-links">
+               <ul class="nav nav-tabs menu-tabs">
+                  <li class="nav-item active">
+                     <a class="nav-link" href="{% url 'site_settings' %}">General Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'localizations' %}">Localization</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'payment_settings' %}">Payment Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'email_settings' %}">Email Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_settings' %}">Socail Media Login</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_links' %}">Social Links</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'seo_settings' %}">SEO Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'other_settings' %}">Others</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- Settings Menu -->
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="card">
+                     <div class="card-body pt-0">
+                        <div class="card-header">
+                           <h5 class="card-title">Website Basic Details</h5>
+                        </div>
+                        <form action="" method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                           <div class="settings-form">
+                              <div class="form-group">
+                                 <label>Website Name<span class="star-red">*</span></label>
+                                 <input type="text" class="form-control" name="site_name" value="{% if 'None' in site.site_name or site.site_name == 'None' or site.site_name == '' %}{% else %}{{site.site_name}}{% endif %}" placeholder="{% if 'None' in site.site_name or site.site_name == 'None' or site.site_name == '' %}Enter site name{% else %}{% endif %}">
+                              </div>
+                              <div class="form-group">
+                                 <p class="settings-label">Logo<span class="star-red">*</span></p>
+                                 {% if site.logo_image %}
+                                    <input type="file" id="input_file logo-image" name="logo" style="object-fit:cover;" class="dropify" data-default-file="{{site.logo_image.url}}"/>		
+                                 {% else %}
+                                    <input type="file" id="input_file logo-image" name="logo" style="object-fit:cover;" class="dropify" data-default-file=""/>		
+                                 {% endif %}
+
+                                 <h6 class="settings-size">Recommended image size is <span>150px x 150px</span></h6>
+                              </div>
+                              <div class="form-group">
+                                 <p class="settings-label">Favicon<span class="star-red">*</span></p>
+                                 {% if site.favicon %}
+                                 <input type="file" id="input_file favicon-image" name="favicon" style="object-fit:cover;" class="dropify" data-default-file="{{site.favicon.url}}"/>		
+                                 {% else %}
+                                 <input type="file" id="input_file favicon-image" name="favicon" style="object-fit:cover;" class="dropify" data-default-file=""/>		
+                                 {% endif %}
+                                 <h6 class="settings-size">
+                                    Recommended image size is <span>16px x 16px or 32px x 32px</span>
+                                 </h6>
+                                 <h6 class="settings-size mt-1">Accepted formats: only png and ico</h6>
+                              </div>
+                              <div class="form-group mb-0">
+                                 <div class="settings-btns">
+                                    <input type="submit" class="btn btn-orange" name="basic_form" value="Update"/>
+                                 </div>
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <div class="card">
+                     <div class="card-body pt-0">
+                        <div class="card-header">
+                           <h5 class="card-title">Address Details</h5>
+                        </div>
+                        <form method="POST">
+                           {% csrf_token %}
+                           <div class="settings-form">
+                              {{form2|crispy}}
+                              <div class="form-group mb-0">
+                                 <div class="settings-btns">
+                                    <input name="address_form" type="submit" class="btn btn-orange" value="Update"/>
+                                 </div>
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Wrapper -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+
+function getCookie(name) {
+    var cookieArr = document.cookie.split(";");
+    for(var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+        if(name == cookiePair[0].trim()) {
+            return decodeURIComponent(cookiePair[1]);
+        }
+    } 
+    // Return null if not found
+    return null;
+}
+
+var drEvent = $('.dropify').dropify();
+
+
+
+drEvent.on('dropify.beforeClear', function(event, element){
+    var url = "remove-image/"
+    fetch (url, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'Application/Json',
+         'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({'type':event.target.id}),
+
+    })
+    .then((response) => response.json()).then((data) => {
+      console.log('success');
+    })
+});
+</script>
+{% endblock js %}

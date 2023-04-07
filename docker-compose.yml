@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    container_name: postgres
+
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    image: batuwa_image
+    container_name: batuwa
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A mainproject.celery worker -l info
+    volumes:
+      - .:/app
+    container_name: celery
+    depends_on:
+      - db
+      - redis
+      - web

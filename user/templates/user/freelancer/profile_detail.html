@@ -1,0 +1,338 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+{{user.username}}
+{% endblock title %}
+{% block content %}
+<div class="breadcrumb-bar">
+   <div class="container">
+      <div class="row align-items-center inner-banner">
+         <div class="col-md-12 col-12 text-center">
+            <h2 class="breadcrumb-title">Batuwa Details</h2>
+            <nav aria-label="breadcrumb" class="page-breadcrumb">
+               <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page"> Batuwa details</li>
+               </ol>
+            </nav>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Breadcrumb -->
+<!-- Page Content -->
+<div class="content">
+   <div class="container">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="profile">
+               <div class="profile-box">
+                  <div class="provider-widget">
+                     <div class="pro-info-left">
+                        <div class="provider-img"><img src="{{user.avatar.url}}" style="object-fit:cover;" height="150" alt="User"></div>
+                        <div class="profile-info">
+                           <h2 class="profile-title">{{user.display_name}}</h2>
+                           <p class="profile-position">{{user.title|default_if_none:'Outstanding'}}</p>
+                           <ul style="list-style: none;">
+                              <li><img src="{% static 'assets/flag/' %}{{user.country}}.svg"  alt="" height="16"> 
+                                 {{user.country.name}}
+                              </li>
+                              {% if user.role == "Freelancer" %}							
+                              {% if user.get_rating %}
+                              <li class='d-flex align-items-center ml-3'>
+                                 <div data-score="{{user.get_rating_floor}}" class="mt-2 rating">							
+                                 </div>
+                                 ({{user.get_rating|floatformat:1}})
+                              </li>
+                              {% endif %}
+                              {% endif %}
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="pro-info-right profile-inf r-0">
+                        {% if user.role == "Freelancer" and request.user.role == "Employer" %}							
+                        <ul class="profile-right">
+                           <li>
+                              <div>
+                                 <h3 class="amt-hr">${{user.hourly_rate|default_if_none:'0'}}</h3>
+                                 <p>( Per Hour )</p>
+                              </div>
+                           </li>
+                        </ul>
+                        <a class="btn bid-btn" href="{% url 'invite_user_page' %}?invite_user={{user.id}}">Invite For Project <i class="fas fa-long-arrow-alt-right"></i></a>
+                        {% endif %}
+                        <div class="d-flex align-items-center justify-content-md-end justify-content-center">
+                           {% if request.user == user or request.user.role == "Admin" %}
+                           <a class="btn bid-btn" href="{% url 'profile_settings' %}">Edit Profile<i class="fas fa-edit mx-2"></i></a>
+                           {% else %}
+                           {% endif %}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               {% if user.role == "Freelancer" %}							
+               <div class="profile-list">
+                  <ul>
+                     <li>
+                        <span class="cont bg-blue">{{com_projects}}</span>
+                        <strong class="proj-title"> Completed Projects</strong>
+                     </li>
+                     <li>
+                        <span class="cont bg-red">{{on_projects}}</span>
+                        <strong class="proj-title"> Ongoing Projects</strong>
+                     </li>
+                     <li>
+                        <span class="cont bg-pink">{{no_of_clients}}</span>
+                        <strong class="proj-title"> Clients</strong>
+                     </li>
+                     <li>
+                        <span class="cont bg-navy">{{reviews_count}}</span>
+                        <strong class="proj-title"> Feedbacks</strong>
+                     </li>
+                  </ul>
+               </div>
+               {% endif %}
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-8 col-md-12">
+            <div class="pro-view">
+               <!-- Tab Detail -->
+               {% if user.role == "Freelancer" %}							
+               <nav class="provider-tabs mb-4">
+                  <ul class="nav nav-tabs nav-tabs-solid nav-justified">
+                     <li class="nav-item">
+                        <a class="nav-link" href="#overview">
+                           <img src="{% static 'assets/img/icon/tab-icon-01.png' %}" height="25" alt="User Image">
+                           <p class="bg-red">Overview</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#experience">
+                           <img src="{% static 'assets/img/icon/tab-icon-03.png' %}" height="25" alt="User Image">
+                           <p class="bg-violet">Experience</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#education">
+                           <img src="{% static 'assets/img/icon/tab-icon-04.png' %}" height="25" alt="User Image">
+                           <p class="bg-yellow">Education</p>
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#skill">
+                           <img src="{% static 'assets/img/icon/tab-icon-05.png' %}" height="25" alt="User Image">
+                           <p class="bg-pink">Skills</p>
+                        </a>
+                     </li>
+                  </ul>
+               </nav>
+               {% endif %}
+               <!-- /Tab Detail -->
+               <!-- Overview Tab Content -->
+               <div class="pro-post widget-box" id="overview">
+                  <h3 class="pro-title">Overview</h3>
+                  <div class="pro-content">
+                     <p>{{user.overview|safe}}</p>
+                  </div>
+               </div>
+               <!-- /Overview Tab Content -->
+
+               <!-- Experience Tab Content -->
+               <div class="pro-post project-widget widget-box" id="experience">
+                  <h3 class="pro-title">Experience</h3>
+                  <div class="pro-content">
+                     <div class="widget-list mb-0">
+                        <ul class="clearfix">
+                           {%for exp in user.experiences.all%}
+                           <li>
+                              <h4>{{exp.title|title}}</h4>
+                              <h5>{{exp.start_date}} - {{exp.end_date}} {%if not exp.end_date and exp.currently_working%}Currently working here{%endif%}</h5>
+                              <p>{{exp.summary}}</p>
+                           </li>
+                           {%endfor%}
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Experience Tab Content -->
+               <!-- Educational Tab Content -->
+               <div class="pro-post project-widget widget-box" id="education">
+                  <h3 class="pro-title">Educational Details</h3>
+                  <div class="pro-content">
+                     <div class="widget-list mb-0">
+                        <ul class="clearfix">
+                           {%for edu in user.education.all%}
+                           <li>
+                              <h4>{{edu.degree_title|title}}</h4>
+                              <h5>{{edu.uni_name|title}}  {{edu.start_year}} - {{edu.end_year}} {%if not edu.end_year and edu.currently_working%}Currently study here{%endif%}</h5>
+                              <p>{{edu.summary}}</p>
+                           </li>
+                           {%endfor%}
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+               <!-- Technical Tab Content -->
+               <div class="pro-post project-widget widget-box" id="skill">
+                  <h3 class="pro-title">Soft Skills</h3>
+                  <div class="pro-content">
+                     <div class="tags">
+                        {% for li in user.get_skills %}
+                        <span class="badge badge-pill badge-skills">{{li.skill_name}}</span>
+                        {% endfor %}
+                     </div>
+                  </div>
+               </div>
+               <!-- /Technical Tab Content -->
+
+               <!-- LInk Widget -->	
+               <div class="pro-post widget-box post-widget">
+                  <div class="pro-post widget-box post-widget pb-0">
+                     <h3 class="pro-title">Project Overview</h3>
+                     <div class="pro-content">
+                        <div class="row">
+                           <div class="col-6">
+                              <div class="pro-post client-list">
+                                 <p>Jobs Posted</p>
+                                 <h6 class="bg-red">{{user.get_project_posted}}</h6>
+                              </div>
+                           </div>
+                           <div class="col-6">
+                              <div class="pro-post client-list">
+                                 <p>Hire rate</p>
+                                 <h6 class="bg-blue">{{user.get_hired_rate}}</h6>
+                              </div>
+                           </div>
+                           <div class="col-6">
+                              <div class="pro-post client-list">
+                                 <p>open jobs</p>
+                                 <h6 class="bg-violet">{{user.get_open_job}}</h6>
+                              </div>
+                           </div>
+                           <div class="col-6">
+                              <div class="pro-post client-list">
+                                 <p>Hires</p>
+                                 <h6 class="bg-pink">{{user.get_project_hired}}</h6>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>		
+               <!-- /Feedback Tab Content -->
+            </div>
+         </div>
+         <!-- Blog Sidebar -->
+         <div class="col-lg-4 col-md-12 sidebar-right theiaStickySidebar">
+            <div class="pro-post widget-box follow-widget">
+               {%if follow_status%}
+               <a href="#" class="btn follow-btn">Following</a>
+               {%else%}
+               <a type="button" class="btn follow-btn" onclick="follow_now('{{user.id}}')"><span id="following">+ Follow</span></a>
+               {%endif%}
+               <ul class="follow-posts pro-post">
+                  <li>
+                     <p>Following</p>
+                     <h6 id="follow-count">{{user.following_count}}</h6>
+                  </li>
+                  <li>
+                     <p>Followers</p>
+                     <h6 id="followers_count">{{user.follower_count}}</h6>
+                  </li>
+               </ul>
+            </div>
+            <div class="pro-post widget-box about-widget">
+               <h4 class="pro-title mb-0">About {{user.display_name}}</h4>
+               <ul class="latest-posts pro-content">
+                  <li>
+                     <p>Gender</p>
+                     <h6>{{user.gender}}</h6>
+                  </li>
+                  <li>
+                     <p>State</p>
+                     <h6>{{user.state}}</h6>
+                  </li>
+                  <li>
+                     <p>Location</p>
+                     <h6>{{user.address}}</h6>
+                  </li>
+               </ul>
+            </div>
+            {% if user.role == "Freelancer" %}							
+            <div class="pro-post widget-box language-widget">
+               <h4 class="pro-title mb-0">Language Skills</h4>
+               <ul class="latest-posts pro-content">
+                  {% for lang  in user.get_langs %}
+                  <li>
+                     <p>{{lang.name}}</p>
+                     <div class="progress progress-md mb-0">
+                        <div class="progress-bar" role="progressbar" style="width: {{lang.fluency}}%" aria-valuenow="{{lang.fluency}}" aria-valuemin="0" aria-valuemax="100"></div>
+                     </div>
+                  </li>
+                  {% endfor %}
+               </ul>
+            </div>
+            {% endif %}
+            {%if social_links%}
+            <!-- Categories -->
+            <div class="pro-post category-widget">
+               <div class="widget-title-box">
+                  <h4 class="pro-title">Social Links</h4>
+               </div>
+               <ul class="latest-posts pro-content mb-3">
+                  <li><a href="{{social_links.facebook}}">{{social_links.facebook}}</a></li>
+                  <li><a href="{{social_links.twitter}}">{{social_links.twitter}}</a></li>
+                  <li><a href="{{social_links.linkedin}}">{{social_links.linkedin}} </a></li>
+               </ul>
+            </div>
+            <!-- /Categories --> 
+            {%endif%}
+            <!-- Link Widget -->    
+            <div class="">
+               <h3 class="pro-title">Profile Link</h3>
+               <div class="pro-content">
+                  <div class="form-group profile-group mb-0">
+                     <div class="input-group">
+                        <input type="text" class="form-control" value="{{request.get_host}}{{ request.get_full_path }}  ">
+                        <div class="input-group-append">
+                           <button class="btn btn-success sub-btn" onclick="copyContent()" type="button"><i class="fa fa-clone"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- /Blog Sidebar -->
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+<script type="text/javascript">
+   function copyContent(){
+       let urlTo_copy = "{{request.get_host}}{{ request.get_full_path }}"
+       navigator.clipboard.writeText(urlTo_copy);
+   }
+</script>
+<script type="text/javascript">
+   function follow_now(follow_to){
+       $.ajax({
+       url: '/user/follow/now/'+parseInt(follow_to),
+       method:'GET',
+       dataType: 'json',
+       success: function (data) {
+           if(data['status'] === 201){
+           let count = document.getElementById('followers_count').innerHTML
+           count = parseInt(count) + 1
+           $('#followers_count').text(count)
+           $('#following').text('Following')
+       }else{
+           console.log('error')
+       }
+       }
+     });
+   }
+</script>
+{% endblock content %}

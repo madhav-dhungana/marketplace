@@ -1,0 +1,961 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+		<title>Batuwa - {% block title %}{% endblock title %}</title>
+		
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}" type="image/x-icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+				
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+		
+		<!-- Owl Carousel CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
+		
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+	</head>		
+	<body class="home-page">
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+					
+			<!-- Start Navigation -->
+		
+			{% include 'components/navbar.html' %}
+
+			<!-- Home Banner -->
+			<section class="section home-banner row-middle">
+				<div class="container">
+					<div class="row align-items-center">
+						<div class="col-md-8 col-lg-7">
+							<div class="banner-content">
+								<div class="rating d-flex">
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<h5>Trused by over 2M+ users</h5> 
+								</div>
+								<h1>Get the perfect <span class="orange-text">Batuwassss & Gigs</span></h1>
+								<p>With the world's #1 Travellers Gig marketplace</p>
+								<form class="form"  name="store" id="store" method="post" action="{% url 'project_proposal' %}">
+									<div class="form-inner">
+										<div class="input-group">
+											<span class="drop-detail">
+												<select class="form-control select" name="storeID">
+													<option value="{% url 'project_proposal' %}">Batuwa</option>
+													<option value="developer.html">Travellers</option>
+												</select>
+											</span>
+											<input type="email" class="form-control" placeholder="Search here">
+											<button class="btn btn-primary sub-btn" type="submit">Search Now</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="col-md-4 col-lg-5">
+							<div class="banner-img">
+								<img src="{% static 'assets/img/banner-img.png' %}" class="img-fluid" alt="banner">
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- /Home Banner -->
+	
+			<!-- Our Feature -->
+			<section class="section feature">
+				<div class="container">
+					<div class="row">					
+								
+						<!-- Feature Item -->
+						<div class="col-md-4">
+							<div class="feature-item freelance-count">
+								<div class="feature-icon">
+									<img src="{% static 'assets/img/icon/icon-01.png' %}" class="img-fluid" alt="">
+								</div>
+								<div class="feature-content">
+									<h3>919,207</h3>
+									<p>Batuwa Available</p>
+								</div>
+							</div>
+						</div>
+						<!-- /Feature Item -->
+						
+						<!-- Feature Item -->
+						<div class="col-md-4">
+							<div class="feature-item">
+								<div class="feature-icon">
+									<img src="{% static 'assets/img/icon/icon-02.png' %}" class="img-fluid" alt="">
+								</div>
+								<div class="feature-content">
+									<h3>25 - 100+</h3>
+									<p>Batuwa  per project</p>
+								</div>
+							</div>
+						</div>
+						<!-- /Feature Item -->
+						
+						<!-- Feature Item -->
+						<div class="col-md-4">
+							<div class="feature-item comp-project">
+								<div class="feature-icon">
+									<img src="{% static 'assets/img/icon/icon-03.png' %}" class="img-fluid" alt="">
+								</div>
+								<div class="feature-content">
+									<h3>8848,615</h3>
+									<p>completed Tasks</p>
+								</div>
+							</div>
+						</div>
+						<!-- /Feature Item -->									
+												
+					</div>
+				</div>
+			</section>	
+			<!-- /Our Feature -->			
+			
+			<!--- Developed Project  -->
+			<section class="section work">
+				<div class="container-fluid">
+					<div class="row">					
+								
+						<!-- Feature Item -->
+						<div class="col-md-6 work-box bg1">
+							<div class="work-content">
+								<h2>I need Someones <span>Company</span></h2>
+								<p>Get the perfect Batwua available for your budget from our top-notch community.</p>
+								<a href="{% url 'project_proposal' %}"><i class="fas fa-long-arrow-alt-right long-arrow"></i></a>
+							</div>
+						</div>
+						<!-- /Feature Item -->
+						
+						<div class="col-md-6 work-box bg2">
+							<div class="work-content">
+								<h2>I want to <span>work</span></h2>
+								<p>Do you want to earn money, find unlimited travellers and build your Travelers Network?</p>
+								<a href="developer.html"><i class="fas fa-long-arrow-alt-right long-arrow"></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!--- /Developed Project  -->
+			
+			<!-- Projects -->
+			<section class="section projects">
+				<div class="container">
+				<div class="row">
+					<div class="col-12 col-md-12 mx-auto">
+						<div class="section-header text-center">	
+							<div class="section-line"></div>
+							<h2 class="header-title">Get Inspired<br> By Travel Projects</h2>
+							<p>High Performing Company and Guide To Your Journey</p>
+						</div>
+					</div>
+				</div>
+					
+				<div class="row">
+					
+					<!--- Project Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-01' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Spritual Tour</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Bautwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+					<!--- Project Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-02' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Adventure</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Bautwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+					<!--- Project-Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-03' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Booholic</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Bautwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+					<!--- Project Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-04' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Party Mate</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Bautwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+					<!--- Project Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-01.jpg' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Any Company</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Bautwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+					<!--- Project Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-04.jpg' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Techie</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Bautwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+					<!--- Project Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-03.jpg' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Blogging Mad</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Bautwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+					<!--- Project-Item  -->
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="project-item">
+							<div class="project-img">
+								<a href="{% url 'project_proposal' %}"><img src="{% static 'assets/img/project/project-01.jpg' %}" alt="" class="img-fluid"></a>
+							</div>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="project-content">
+									<h4>45</h4>
+									<h5>Couch Surfer</h5>
+								</div>
+								<div class="pro-icon">
+									<div class="project-icon">
+									</div>
+								</div>
+								<div class="project-content">
+									<h4>20</h4>
+									<h5>Batuwa</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--- /Project Item  -->
+					
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<div class="see-all"> 
+							<a href="{% url 'project_proposal' %}" class="btn all-btn">SEE ALL PROJECT</a>
+						</div>
+					</div>
+				</div>
+				</div>
+			</section>
+			<!-- /Projects -->
+		
+			<!-- Subscribe -->
+			<section class="section subscribe">
+				<div class="container">
+					<div class="row align-items-center">					
+						<div class="col-md-4"> 
+							<img src="{% static 'assets/img/subscribe.png' %}" class="img-fluid" alt="subscribe">
+						</div>
+						<div class="col-md-6"> 
+							<h3>Subscribe To Get Guides, Updates & More</h3>
+							<p>Monthly product guides, industry news and more!</p>
+							<form action="#" method="POST">
+								<div class="form-inner">
+									<div class="input-group">
+										<input type="email" class="form-control" placeholder="Enter Email Address">
+										<button class="btn btn-primary sub-btn" type="submit">Submit</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End Subscribe -->	
+		
+			<!-- Top Instructor -->
+			<section class="section developer">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-7 col-sm-12 col-12 mx-auto">
+							<div class="section-header text-center">
+								<div class="section-line"></div>
+								<h2 class="header-title">Most Hired Batuwa</h2>
+								<p>Work with loving people at the most affordable price</p>
+							</div>
+						</div>
+					</div>
+					
+				<div id="developers-slider" class="owl-carousel owl-theme developers-slider">
+					<div class="freelance-widget">
+						<div class="freelance-content">
+							<a data-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+							<div class="freelance-img">
+								<a href="#">
+									<img src="{% static 'assets/img/user/avatar-1' %}" alt="User Image">
+									<span class="verified"><i class="fas fa-check-circle"></i></span>
+								</a>
+							</div>
+							<div class="freelance-info">
+								<h3><a href="#">Roshan Pathak</a></h3>
+								<div class="freelance-specific">Any Company</div>
+								<div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>Perth, Australia</div>
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">4.7 (32)</span>
+								</div>
+								<div class="freelance-tags">
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Vlogging</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Gossips</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Random Talks</span></a>
+								</div>
+								<div class="freelancers-price">$25 Hourly</div>
+							</div>
+						</div>
+						<div class="cart-hover">
+							<a href="developer-details.html" class="btn-cart" tabindex="-1">View Profile</a>
+						</div>
+					</div>
+					<div class="freelance-widget">
+						<div class="freelance-content">
+							<a data-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+							<div class="freelance-img">
+								<a href="#">
+									<img src="{% static 'assets/img/user/avatar-2' %}" alt="User Image">
+									<span class="verified"><i class="fas fa-check-circle"></i></span>
+								</a>
+							</div>
+							<div class="freelance-info">
+								<h3><a href="#">Sudin Bastola</a></h3>
+								<div class="freelance-specific">Free Style Travel</div>
+								<div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>Baneshwor, USA</div>
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">3.5 (25)</span>
+								</div>
+								<div class="freelance-tags">
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Random Talks</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Travel Company</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Soul Mate</span></a>
+								</div>
+								<div class="freelancers-price">Free</div>
+							</div>
+						</div>
+						<div class="cart-hover">
+							<a href="developer-details.html" class="btn-cart" tabindex="-1">View Profile</a>
+						</div>
+					</div>
+					<div class="freelance-widget">
+						<div class="freelance-content">
+							<a data-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+							<div class="freelance-img">
+								<a href="#">
+									<img src="{% static 'assets/img/user/avatar-3' %}" alt="User Image">
+									<span class="verified"><i class="fas fa-check-circle"></i></span>
+								</a>
+							</div>
+							<div class="freelance-info">
+								<h3><a href="#">Bishal Biden</a></h3>
+								<div class="freelance-specific">Couch Surfer</div>
+								<div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>Pasupati, USA</div>
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">4.1 (30)</span>
+								</div>
+								<div class="freelance-tags">
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Techie</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Crypto talks</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Any Talks</span></a>
+								</div>
+								<div class="freelancers-price">$27 Hourly</div>
+							</div>
+						</div>
+						<div class="cart-hover">
+							<a href="developer-details.html" class="btn-cart" tabindex="-1">View Profile</a>
+						</div>
+					</div>
+					<div class="freelance-widget">
+						<div class="freelance-content">
+							<a data-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+							<div class="freelance-img">
+								<a href="#">
+									<img src="{% static 'assets/img/img-03' %}" alt="User Image">
+									<span class="verified"><i class="fas fa-check-circle"></i></span>
+								</a>
+							</div>
+							<div class="freelance-info">
+								<h3><a href="#">James Douglas</a></h3>
+								<div class="freelance-specific">iOS Developer</div>
+								<div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>Florida, USA</div>
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">4.3 (31)</span>
+								</div>
+								<div class="freelance-tags">
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Web Design</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">UI Design</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Node Js</span></a>
+								</div>
+								<div class="freelancers-price">$23 Hourly</div>
+							</div>
+						</div>
+						<div class="cart-hover">
+							<a href="developer-details.html" class="btn-cart" tabindex="-1">View Profile</a>
+						</div>
+					</div>
+					<div class="freelance-widget">
+						<div class="freelance-content">
+							<a data-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+							<div class="freelance-img">
+								<a href="#">
+									<img src="{% static 'assets/img/img-03' %}" alt="User Image">
+									<span class="verified"><i class="fas fa-check-circle"></i></span>
+								</a>
+							</div>
+							<div class="freelance-info">
+								<h3><a href="#">Richard Wilson</a></h3>
+								<div class="freelance-specific">UI/UX Designer</div>
+								<div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>Alabama, USA</div>
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">4.7 (32)</span>
+								</div>
+								<div class="freelance-tags">
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Web Design</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">UI Design</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Node Js</span></a>
+								</div>
+								<div class="freelancers-price">$25 Hourly</div>
+							</div>
+						</div>
+						<div class="cart-hover">
+							<a href="developer-details.html" class="btn-cart" tabindex="-1">View Profile</a>
+						</div>
+					</div>
+					
+					
+					
+					<div class="freelance-widget">
+						<div class="freelance-content">
+							<a data-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+							<div class="freelance-img">
+								<a href="#">
+									<img src="{% static 'assets/img/img-03' %}" alt="User Image">
+									<span class="verified"><i class="fas fa-check-circle"></i></span>
+								</a>
+							</div>
+							<div class="freelance-info">
+								<h3><a href="#">Richard Wilson</a></h3>
+								<div class="freelance-specific">VIVID</div>
+								<div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>Pokhara, USA</div>
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">5.0 (4)</span>
+								</div>
+								<div class="freelance-tags">
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Mountaineering</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Cycling</span></a>
+									<a href="javascript:void(0);"><span class="badge badge-pill badge-design">Skydiving</span></a>
+								</div>
+								<div class="freelancers-price">Free</div>
+							</div>
+						</div>
+						<div class="cart-hover">
+							<a href="developer-details.html" class="btn-cart" tabindex="-1">View Profile</a>
+						</div>
+					</div>
+				</div>
+				
+				</div>
+			</section>
+			<!-- End Developer -->
+		
+			<!-- Review -->
+			<section class="section testimonial-section review">
+				<div class="container">
+					<div class="row">
+						<div class="col-12">
+							<div class="section-header text-center">
+								<div class="section-line"></div>
+								<h2 class="header-title">Top Reviews</h2>
+								<p>High Performing Batuwas To Your</p>
+							</div>
+						</div>
+					</div>
+				<div id="testimonial-slider" class="owl-carousel owl-theme testimonial-slider">
+							
+					<!-- Review Widget -->
+					<div class="review-blog">
+						<div class="review-top d-flex align-items-center">
+							<div class="review-img">
+								<a href="review.html"><img class="img-fluid" src="{% static 'assets/img/review/review-01' %}" alt="Post Image"></a>
+							</div>
+							<div class="review-info">
+								<h3>Davis Payerf</h3>
+								<h5>CEO</h5>								
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">4.7</span>
+								</div>
+							</div>
+						</div>
+						<div class="review-content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat orci enim, mattis nibh aliquam dui, nibh faucibus aenean.</p>
+						</div>
+					</div>
+					<!-- / Review Widget -->
+					
+					<!-- Review Widget -->
+					<div class="review-blog">
+						<div class="review-top d-flex align-items-center">
+							<div class="review-img">
+								<a href="review.html"><img class="img-fluid" src="{% static 'assets/img/review/review-02' %}" alt="Post Image"></a>
+							</div>
+							<div class="review-info">
+								<h3>Davis Payerf</h3>
+								<h5>PROJECT LEAD</h5>								
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">4.8</span>
+								</div>
+							</div>
+						</div>
+						<div class="review-content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat orci enim, mattis nibh aliquam dui, nibh faucibus aenean.</p>
+						</div>
+					</div>
+					<!-- /Review Widget -->
+					
+					<!-- Review Widget -->
+					<div class="review-blog">
+						<div class="review-top d-flex align-items-center">
+							<div class="review-img">
+								<a href="review.html"><img class="img-fluid" src="{% static 'assets/img/review/review-03' %}" alt="Post Image"></a>
+							</div>
+							<div class="review-info">
+								<h3>Davis Payerf</h3>
+								<h5>TEAM LEAD</h5>								
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">5.0</span>
+								</div>
+							</div>
+						</div>
+						<div class="review-content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat orci enim, mattis nibh aliquam dui, nibh faucibus aenean.</p>
+						</div>
+					</div>
+					<!-- /Review Widget -->
+					
+					<!-- Review Widget -->
+					<div class="review-blog">
+						<div class="review-top d-flex align-items-center">
+							<div class="review-img">
+								<a href="review.html"><img class="img-fluid" src="{% static 'assets/img/review/review-02' %}" alt="Post Image"></a>
+							</div>
+							<div class="review-info">
+								<h3>Davis Payerf</h3>
+								<h5>PROJECT LEAD</h5>								
+								<div class="rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+									<span class="average-rating">3.2</span>
+								</div>
+							</div>
+						</div>
+						<div class="review-content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat orci enim, mattis nibh aliquam dui, nibh faucibus aenean.</p>
+						</div>
+					</div>
+					<!-- /Review Widget -->
+				</div>
+				
+				</div>
+			</section>
+			<!-- / Review -->
+		
+			<!-- News -->
+			<section class="section news">
+				<div class="container">				
+					<div class="row">
+						<div class="col-12">
+							<div class="section-header text-center">
+								<div class="section-line"></div>
+								<h2 class="header-title">Feature Blog</h2>
+								<p>High Performing Travellers To Your</p>
+							</div>
+						</div>
+					</div>
+					
+					<div>	
+						<div class="row blog-grid-row">
+							<div class="col-md-4">
+							
+								<!-- Blog Post -->
+								<div class="blog grid-blog">
+									<div class="blog-image">
+										<a href="blog-details.html"><img class="img-fluid" src="{% static 'assets/img/blog/blog-01' %}" alt="Post Image"></a>
+									</div>
+									<div class="blog-content">
+										<ul class="entry-meta meta-item">
+											<li>
+												<div class="post-author">
+													<a href="developer-details.html"><img src="{% static 'assets/img/img-02' %}" alt="Post Author"> <span> David Lee</span></a>
+												</div>
+											</li>
+											<li><i class="far fa-clock"></i> 4 Oct 2021</li>
+										</ul>
+										<h3 class="blog-title"><a href="blog-details.html">Your next job starts right here</a></h3>
+										<p class="mb-0">Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.</p>
+									</div>
+								</div>
+								<!-- /Blog Post -->
+								
+							</div>
+							<div class="col-md-4">
+							
+								<!-- Blog Post -->
+								<div class="blog grid-blog">
+									<div class="blog-image">
+										<a href="blog-details.html"><img class="img-fluid" src="{% static 'assets/img/blog/blog-02' %}" alt="Post Image"></a>
+									</div>
+									<div class="blog-content">
+										<ul class="entry-meta meta-item">
+											<li>
+												<div class="post-author">
+													<a href="developer-details.html"><img src="{% static 'assets/img/img-03' %}" alt="Post Author"> <span> Deborah Angel</span></a>
+												</div>
+											</li>
+											<li><i class="far fa-clock"></i> 10 Oct 2021</li>
+										</ul>
+										<h3 class="blog-title"><a href="blog-details.html">People who completed NAND?</a></h3>
+										<p class="mb-0">Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.</p>
+									</div>
+								</div>
+								<!-- /Blog Post -->
+								
+							</div>
+							<div class="col-md-4">
+							
+								<!-- Blog Post -->
+								<div class="blog grid-blog">
+									<div class="blog-image">
+										<a href="blog-details.html"><img class="img-fluid" src="{% static 'assets/img/blog/blog-03' %}" alt="Post Image"></a>
+									</div>
+									<div class="blog-content">
+										<ul class="entry-meta meta-item">
+											<li>
+												<div class="post-author">
+													<a href="developer-details.html"><img src="{% static 'assets/img/img-04' %}" alt="Post Author"> <span>Darren Elder</span></a>
+												</div>
+											</li>
+											<li><i class="far fa-clock"></i> 3 Nov 2021</li>
+										</ul>
+										<h3 class="blog-title"><a href="blog-details.html">Batuwa - How to get job through online?</a></h3>
+										<p class="mb-0">Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.</p>
+									</div>
+								</div>
+								<!-- /Blog Post -->
+								
+							</div>					
+						</div>			
+					</div>
+				</div>
+			</section>
+			<!-- / News -->
+			
+			<!-- Footer -->	
+			<footer class="footer">
+				<div class="footer-top">
+					<div class="container">
+
+						<div class="row">
+							<div class="col-md-3">
+								<h2 class="footer-title">Office Address</h2>
+								<div class="footer-address">
+									<div class="off-address">
+										<p class="mb-2">New Baneshwor, Kathmandu(HQ)</p>
+										<address class="mb-0">750 Rama Sing Sing Rd, MaharajJung, KTM, 14845</address>
+										<p>Call: <a href="#"><u>469-537-2410</u> (Toll-free)</a> </p>
+									</div>
+									<div class="off-address">
+										<p class="mb-2">Sydney, Australia </p>
+										<address class="mb-0">24 Farrar Parade COOROW WA 6515</address>
+										<p>Call: <a href="#"><u>(08) 9064 9807</u> (Toll-free)</a> </p>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">Useful Links</h2>
+									<ul>
+										<li><a href="about.html">About Us</a></li>
+										<li><a href="blog-list.html">Blog</a></li>
+										<li><a href="login.html">Login</a></li>
+										<li><a href="register.html">Register</a></li>
+										<li><a href="forgot-password.html">Forgot Password</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">Help & Support</h2>
+									<ul>
+										<li><a href="chats.html">Chat</a></li>
+										<li><a href="faq.html">Faq</a></li>
+										<li><a href="review.html">Reviews</a></li>
+										<li><a href="privacy-policy.html">Privacy Policy</a></li>
+										<li><a href="term-condition.html">Terms of use</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">Other Links</h2>
+									<ul>
+										<li><a href="freelancer-dashboard.html">Batuwa</a></li>
+										<li><a href="freelancer-portfolio.html">Batuwa Details</a></li>
+										<li><a href="{% url 'project_proposal' %}">Gigs</a></li>
+										<li><a href="project-details.html">Gigs Details</a></li>
+										<li><a href="post-project.html">Post Gigs</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">Mobile Application</h2>
+									<p>Download our App and get the latest find Batuwa justa click away</p>
+									<div class="row g-2">
+										<div class="col">
+											<a href="#"><img class="img-fluid" src="{% static 'assets/img/app-store' %}" alt="app-store"></a>
+										</div>
+										<div class="col">
+											<a href="#"><img class="img-fluid" src="{% static 'assets/img/google-play' %}" alt="google-play"></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Footer Top -->
+				
+				<!-- Footer Bottom -->
+                <div class="footer-bottom">
+					<div class="container">
+					
+						<!-- Copyright -->
+						<div class="copyright">
+							<div class="row">
+								<div class="col-md-6 col-lg-6">
+									<div class="copyright-text">
+										<p class="mb-0">&copy; 2022 All Rights Reserved - Batuwa LLC</p>
+									</div>
+								</div>
+								<div class="col-md-6 col-lg-6 right-text">
+									<div class="social-icon">
+										<ul>
+											<li><a href="#" class="icon" target="_blank"><i class="fab fa-instagram"></i> </a></li>
+											<li><a href="#" class="icon" target="_blank"><i class="fab fa-linkedin-in"></i> </a></li>
+											<li><a href="#" class="icon" target="_blank"><i class="fab fa-twitter"></i> </a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Copyright -->						
+					</div>
+				</div>
+				<!-- /Footer Bottom -->				
+			</footer>
+			<!-- /Footer -->
+		
+		</div>		
+		<!-- /Main Wrapper -->
+	
+		<!-- jQuery -->
+		<script src="{% static 'assets/js/jquery-3.6.0.min' %}"></script>
+		
+		<!-- Bootstrap Bundle JS -->
+		<script src="{% static 'assets/js/bootstrap.bundle.min' %}"></script>
+		
+		<!-- Owl Carousel -->
+		<script src="{% static 'assets/js/owl.carousel.min' %}"></script>	
+		
+		<!-- Select2 JS -->
+		<script src="{% static 'assets/plugins/select2/js/select2.min' %}"></script>
+		
+		<!-- Slick JS -->
+		<script src="{% static 'assets/js/slick' %}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'assets/js/script' %}"></script>
+	
+	</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends 'admin/adminbase.html' %}
+{% load extras %}
+{% load static %}
+{% block title %}Category{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        {% include 'components/message.html' %}
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Add Plans</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">Membership</li>
+                    </ul>
+                </div>
+                <div class="col-auto">
+                    <a href="#" class="btn add-button me-2" data-bs-toggle="modal" data-bs-target="#add-category">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <a class="btn filter-btn" href="javascript:void(0);" id="filter_search">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-header pt-0 mb-4">
+                            <h5 class="card-title">Add Membership</h5>
+                        </div>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                            <div class="form-group row">
+                                    {{ field.errors }}
+                                    {% if not field.label == 'Is active' %}
+                                        <label class="col-form-label col-md-2" for="{{field.auto_id}}">{{field.label}}</label>
+                                        <div class="col-md-10">
+                                            {{field}}
+                                        </div>
+                                    {% else %}
+                                        <label class="col-form-label col-md-2">{{field.label}}</label>
+                                            {{field}}
+                                        <label class="col-form-label col-md-2 checktoggle" for="{{field.auto_id}}">{{field.label}}</label>
+                                    {% endif %}
+                                    {% if field.help_text %}
+                                        <p class="help">{{ field.help_text|safe }}</p>
+                                    {% endif %}
+                            </div>
+                            {% endfor %}
+                            <input type="submit" name="add_membership" class="btn btn-primary btn-block" value="Submit"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}

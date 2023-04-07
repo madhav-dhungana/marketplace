@@ -1,0 +1,269 @@
+{% extends 'admin/adminbase.html' %}
+{% load extras %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Edit User{% endblock title %}
+{% block content %}
+<div class="page-wrapper">
+   <div class="content">
+      <div class="row">
+         <div class="col-12">
+            <div class="pro-pos">
+               <nav class="user-tabs mb-4">
+                  <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                     <li class="nav-item">
+                        <a class="nav-link active" href="#">Basic Settings</a>
+                     </li>
+                     <li class="nav-item">
+                        <a role="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#change_password">Change Password</a>
+                     </li>
+                     <li class="nav-item">
+                        <a role="button" 
+                           class="nav-link" 
+                           data-bs-toggle="modal" data-bs-target="#delete_user"
+                           >
+                        Delete Account</a>
+                     </li>
+                  </ul>
+               </nav>
+               <!-- Change Password Model-->
+               <div class="modal custom-modal fade" id="change_password" role="dialog">
+                  <div class="modal-dialog modal-dialog-centered">
+                     <div class="modal-content">
+                        <div class="modal-body">
+                           <div class="form-header">
+                              <p>Change {{user.display_name}}'s Password?</p>
+                           </div>
+                           <div class="modal-btn delete-action">
+                              <form hx-put="{% url 'password_change_api' user.id %}" hx-trigger="submit" hx-swap="none" >
+                                 <input type="password" name="new_password" class="form-control my-2" placeholder="New Password" required>
+                                 <input type="password" name="password_confirm" class="form-control" placeholder="Confirm Password" required/>
+                                 <div class="row my-2">
+                                    <div class="col-6 ">
+                                       <input type="submit" name="delete_user" class="btn btn-primary continue-btn w-100" value="Change Password" />
+                                    </div>
+                                    <div class="col-6">
+                                       <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                    </div>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Change Password Model-->
+               <!-- Delete Modal -->
+               <div class="modal custom-modal fade" id="delete_user" role="dialog">
+                  <div class="modal-dialog modal-dialog-centered">
+                     <div class="modal-content">
+                        <div class="modal-body">
+                           <div class="form-header">
+                              <h3>Delete User</h3>
+                              <p>Are you sure want to delete {{user.display_name}}?</p>
+                           </div>
+                           <div class="modal-btn delete-action">
+                              <form method="POST"  action="{% url 'admin_delete_user' user.id %}">
+                                 {% csrf_token %}
+                                 <div class="row">
+                                    <div class="col-6">
+                                       <input type="submit" name="delete_user" class="btn btn-primary continue-btn w-100" value="Delete" />
+                                    </div>
+                                    <div class="col-6">
+                                       <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                    </div>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Delete Modal -->
+               {% include 'components/message.html' %}
+               <form method="post" class="setting-content" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="pro-head">
+                           <h3 class="pro-title without-border mb-0">Profile Basics </h3>
+                        </div>
+                        <div class="pro-body p-0">
+                           <div class="row pro-pad">
+                              <div class="form-group col-md-6">
+                                 {{form.username|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.email|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.display_name|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.title|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.contact|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.gender|as_crispy_field}}
+                              </div>
+                              {% if request.user.role == "Employer" %}
+                              <div class="form-group col-md-6">
+                                 {{form.language_one|as_crispy_field}}
+                              </div>
+                              {% else %}
+                              <div class="form-group col-md-6">
+                                 {{form.hourly_rate|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.verified|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.is_active|as_crispy_field}}
+                              </div>
+                              {% endif %}
+                           </div>
+                           <div class="form-row pro-pad pt-0">
+                              <div class="form-group col-md-6 pro-pic">
+                                 <label>Profile Picture</label>
+                                 <div class="d-flex align-items-center">		
+                                    <input type="file" id="input_file" name="profile_img" class="dropify" style="object-fit:contain;" data-default-file="{{user.avatar.url}}"/>		
+                                 </div>
+                              </div>
+                              {% if request.user.role == "Freelancer" %}
+                              <div class="form-group col-md-6 pro-pic">
+                                 <label>Cover Picture</label>
+                                 <div class="d-flex align-items-center">		
+                                    <input type="file" name="banner_img" class="dropify" data-default-file="{{user.banner_image.url}}"/>		
+                                 </div>
+                              </div>
+                              {% endif %}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="pro-head">
+                           <h3 class="pro-title without-border mb-0">Location</h3>
+                        </div>
+                        <div class="pro-body">
+                           <div class="row">
+                              <div class="form-group col-md-12">
+                                 {{form.address|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.state|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.zipcode|as_crispy_field}}
+                              </div>
+                              <div class="form-group col-md-6">
+                                 {{form.country|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="pro-head">
+                        </div>
+                        <div class="pro-body">
+                           <div class="row">
+                              <div class="form-group col-md-12">
+                                 {% comment %} <textarea class="form-control" rows="5"></textarea> {% endcomment %}
+                                 {{form.overview|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% if request.user.role == "Freelancer" %}
+                  <div class="form-row">
+                     <div class="col-md-12 col-xl-4 d-flex">
+                        <div class="pro-card flex-fill mb-3">
+                           <div class="pro-head">
+                              <h3 class="pro-title without-border mb-0">Skills</h3>
+                              <a href="#" class="btn fund-btn skill-add">Add More</a>
+                           </div>
+                           <div class="pro-body skill-info">
+                              {% for i in user.get_skills %}
+                              <div class="form-row align-items-center skill-cont">
+                                 <div class="form-group col-md-10">
+                                    <input type="text" name="user_skills[]" class="form-control" value="{{i.skill_name}}">
+                                 </div>
+                                 <div class="form-group col-md-2">
+                                    <a href="#" class="btn trash-icon"><i class="far fa-trash-alt"></i></a>
+                                 </div>
+                              </div>
+                              {% endfor %}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="card">
+                        <div class="card-body">
+                           <div class="pro-head">
+                              <h3 class="pro-title without-border mb-0">Languages</h3>
+                              <a href="#" class="btn fund-btn add-lang">Add More</a>
+                           </div>
+                           <div class="pro-body  lang-info">
+                              {% for li in user.get_langs %}
+                              <div class="form-row align-items-center lang-cont">
+                                 <div class="form-group col-md-7">
+                                    <input placeholder="language name" type="text" name="lang[]"class="form-control" value="{{li.name}}">
+                                 </div>
+                                 <div class="form-group col-md-3">
+                                    <input placeholder="fluency"  type="number" max="100" min="1" name="fluency[]" class="form-control" value="{{li.fluency}}">
+                                 </div>
+                                 <div class="form-group col-md-2">
+                                    <a href="#" class="btn trash-icon"><i class="far fa-trash-alt"></i></a>
+                                 </div>
+                              </div>
+                              {% endfor %}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+            </div>
+            {% endif %}
+            <div class="card">
+            <div class="card-body">
+            <div class="text-end">
+            <div class="pro-body">
+            <a href="{% url 'project_list' 'all' %}" class="btn btn-secondary click-btn btn-plan" type="button">Cancel</a>
+            <button class="btn btn-primary click-btn btn-plan" type="submit">Update</button>
+            </div>
+            </div>
+            </div>
+            </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block js %}
+<script src="{% static 'assets/js/profile-settings.js' %}"></script>
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify();
+   
+          
+   htmx.on("htmx:afterRequest", (e) => {
+       console.log(e)
+       let data = JSON.parse(e.detail.xhr.response)
+       if(e.detail.successful){
+           $(`#change_password`).modal('hide')
+           toastr.success(data.msg)
+   
+       }else{
+   
+           toastr.error(data.msg)
+       }
+   
+    });
+</script>
+{% endblock js %}

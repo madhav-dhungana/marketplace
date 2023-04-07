@@ -1,0 +1,150 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+
+{% block title %}
+Ongoing Projects
+{% endblock title %}
+
+{% block content %}
+		<!-- Page Content -->			
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    
+                    <!-- sidebar -->
+                    {% include 'components/sidebar.html' %}
+
+                    <!-- /sidebar -->
+                    
+                    <div class="col-xl-9 col-md-8">
+                        <div class="page-title">
+                            <h3>Manage Projects</h3>
+                        </div>
+                      <!--TabNav-->
+                      <nav class="user-tabs project-tabs">
+                        <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'all_projects' %}">All Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="{% url 'pending_projects' %}">Pending Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active"  href="{% url 'ongoing_projects' %}">Ongoing Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link "  href="{% url 'completed_projects' %}">Completed Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="{% url 'cancelled_projects' %}">Cancelled Projects</a>
+                            </li>
+                        </ul>
+                    </nav> 
+                    
+                  <!--TabNav-->
+                        
+                        <!-- project list -->
+                        {% for list in project_list %}
+                        <div class="my-projects-list">
+                            <div class="row">
+                                <div class="col-lg-10 flex-wrap">
+                                    <div class="projects-card flex-fill">
+                                        <div class="card-body">
+                                            <div class="projects-details align-items-center">
+                                                <div class="project-info">
+                                                    <span
+                                                     class="badge badge-primary text-white">
+                                                        {{list.get_status_display}}</span>
+                                                    <h2>{{list.title}}</h2>
+                                                    <div class="customer-info">
+                                                        <ul class="list-details">
+                                                            <li>
+                                                                <div class="slot">
+                                                                    <p>Price type</p>
+                                                                    <h5>{{list.get_pricing_type_display}}</h5>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="slot">
+                                                                    <p>Location</p>
+                                                                    <h5>{{list.location}}</h5>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="slot">
+                                                                    <p>Expiry</p>
+                                                                    {% if list.get_expiry_days < 0 %}
+                                                                    <h5>Project Expired</h5>
+                                                                    {% else %}
+                                                                    <h5>{{list.get_expiry_days}} Days Left</h5>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="project-hire-info">
+                                                    <div class="content-divider"></div>
+                                                    <div class="projects-amount">
+                                                        <h3>${{list.price}}</h3>
+                                                        <h5>in 12 Days</h5>
+                                                    </div>
+                                                    <div class="content-divider"></div>
+                                                    <div class="projects-action text-center">
+                                                        <a href="{% url 'project_detail' list.id %}" class="projects-btn">View Details </a>
+                                                        {% comment %} <a href="{% url 'edit_project' list.id %}" class="projects-btn bg-secondary">Edit Project </a> {% endcomment %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 d-flex flex-wrap">
+                                    {% if project.has_hired %}
+                                    <div class="projects-card flex-fill">
+                                        <div class="card-body">
+                                            <div class="prj-proposal-count text-center hired">
+                                                <img src="{{list.hired.avatar.url}}" alt="" class="img-fluid"> 
+                                                <p class="mb-2">{{list.hired.display_name}}</p>
+                                                <a href="{% url 'list_chat' request.user.username list.hired.username %}" class="btn btn-chat">Chat Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="projects-card flex-fill">
+                                        <div class="card-body">
+                                            <div class="prj-proposal-count text-center hired">
+                                                {% comment %} <img src="{{project.hired.avatar.url}}" alt="" class="img-fluid">  {% endcomment %}
+                                                <h2 class="mb-2">{{list.no_of_proposals}}</h2>
+                                                <a href="#" class="btn btn-primary"> Proposal</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+
+                        <h4 class="text-center">No Ongoing Projectsdfs !</h4>
+                        {% endfor %}
+                        <!-- /project list -->
+                        
+                        <!-- pagination -->
+                        <!-- pagination -->
+<div class="row">
+    <div class="pagination mt-3">
+        {% include 'components/pagination.html' %}
+    </div>
+      
+</div>
+<!-- /pagination -->
+                        <!-- /pagination -->
+                        
+                    </div>
+                </div>
+            </div>
+        </div>	
+        
+        <!-- /Page Content -->
+{% endblock content %}

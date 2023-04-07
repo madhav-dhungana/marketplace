@@ -1,0 +1,138 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load extras %}
+{% load crispy_forms_tags %}
+
+{% block title %}Transaction List{% endblock title %}
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="content container-fluid">
+    
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Transactions List</h3>
+                    {% comment %} <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        
+                        <li class="breadcrumb-item active">Users</li>
+                    </ul> {% endcomment %}
+                </div>
+                <div class="col-auto">
+                    <a href="#" class="btn add-button me-2" data-bs-toggle="modal" data-bs-target="#add-category">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <a class="btn filter-btn" href="javascript:void(0);" id="filter_search">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        {% include 'components/message.html' %}
+
+
+        <!-- Search Filter -->
+        <div class="card filter-card" id="filter_inputs">
+            <div class="card-body pb-0">
+                <form method="get" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;" class="">
+                    {{searchForm.form|crispy}}
+                    <button type="submit" class="btn btn-primary mb-4">Search</button>
+              </form> 
+            </div>
+        </div>
+        <!-- /Search Filter -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-center table-hover mb-0 ">
+                                <thead>
+                                    <tr>
+                                        <th> Id</th>
+                                        <th>Transaction By</th>
+                                        <th>Type</th>	
+                                        <th>Status</th>	
+                                        <th>Amount</th>
+                                        <th>Date Created</th>	
+                                        <th class="text-end"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablediv">
+                               {% for list in page_obj %}
+                                    <tr id="user-{{list.id}}">
+                                        <td>
+                                              {{list.id}}
+                                        </td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="{% url 'admin_user_detail' list.transaction_by.id %}"><img class="me-2 rounded-circle object-cover" src="{{list.transaction_by.avatar.url}}"  alt="User Image">{{list.transaction_by.display_name}}</a>
+                                            </h2>
+                                        </td>
+                                        <td>{{list.type}}</td>
+                                        <td>
+                                             {{list.status}}
+                                        </td>
+                                        <td>
+                                        ${{list.price}}
+                                        </td>
+                                      
+                                        <td>{{list.created_at}}</td>
+                                        <td class="text-end">
+
+                                            {% comment %} <a href="javascript:void(0);" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_user_{{list.id}}"><i class="far fa-trash-alt"></i></a> {% endcomment %}
+                                        </td>
+                                    </tr>
+
+                                    <!-- Delete Modal -->
+                                    {% comment %} <div class="modal custom-modal fade" id="delete_user_{{list.id}}" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div class="form-header">
+                                                        <h3>Delete</h3>
+                                                        <p>Are you sure want to delete?</p>
+                                                    </div>
+                                                    <div class="modal-btn delete-action">
+                                                        <form method="POST"  hx-post="{% url 'user_list' %}" hx-trigger="submit" hx-swap="none" >
+                                                           
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <input type="hidden" name="u_id" value="{{list.id}}"/>
+                                                                    <input type="hidden" name="delete_user" value="{{list.id}}"/>
+                                                                    <input type="submit" name="delete_user" class="btn btn-primary continue-btn w-100" value="Delete" />
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                                </div>
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> {% endcomment %}
+                                    <!-- /Delete Modal -->
+                                    {% empty %}
+                                    <tr><td>Not Found Any User</td></tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>			
+        </div>
+        <div class="float-right mt-3">
+            {% include 'components/pagination.html' %}
+        </div>
+          
+    </div>			
+</div>
+{% endblock content %}

@@ -1,0 +1,194 @@
+{% extends 'nonadmin/base_nofooter.html' %} {% load static %} {% block title %}Chat About Project {% endblock title %} {% block content %}
+<!-- Content -->
+<audio id="popSound">
+   <source src="{% static 'assets/pop.mp3' %}" type="audio/mpeg" />
+</audio>
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12 back-text">
+            <a href="{% url 'home_chat' %}" class="btn btn-primary back-btn mt-3"
+               ><i class="fa fa-chevron-left"></i> Back
+            </a>
+         </div>
+         <div class="col-md-12">
+            <div class="chat-window">
+               {% include 'chat/chat_sidebar.html' %}
+               <!-- Chat Right -->
+               <div class="chat-cont-right">
+                  <div class="chat-header d-flex">
+                     <div class="media d-flex">
+                        <a href="{% url 'home_chat' %}" class="">
+                        <i class="material-icons">chevron_left</i>
+                        </a>
+                        <div class="media-img-wrap flex-shrink-0">
+                           <div class="avatar avatar-online">
+                              <img
+                                 src="{{chatting_with.avatar.url}}"
+                                 alt="User Image"
+                                 class="avatar-img rounded-circle"
+                                 />
+                           </div>
+                        </div>
+                        <div class="media-body flex-grow-1">
+                           <div class="user-name">{{chatting_with.display_name}}</div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="chat-body">
+                     <div class="chat-scroll" id="infodiv">
+                        <ul id="ul_list" class="list-unstyled">
+                           <div class="d-flex justify-content-center">
+                              {% if has_second_page %}
+                              <div
+                                 id="load_more"
+                                 data-url="{% url 'c_project_chat' chatting_with.username %}"
+                                 role="button"
+                                 class="badge badge-warning"
+                                 >
+                                 Load more
+                              </div>
+                              {% endif %}
+                           </div>
+                           <div id="msgdiv">
+                              {% for list in messages %}
+                              <!--chart component-->
+                              <li
+                                 class="media {% if list.sender == request.user %}sent {% else %}received{% endif %} d-flex"
+                                 >
+                                 <div class="avatar flex-shrink-0">
+                                    <img
+                                       src="{{list.sender.avatar.url}}"
+                                       alt="User Image"
+                                       class="avatar-img rounded-circle"
+                                       />
+                                 </div>
+                                 <div class="media-body flex-grow-1">
+                                    <div class="msg-box">
+                                       <div>
+                                          <p>{{list.text}}</p>
+                                          <ul class="chat-msg-info">
+                                             <li>
+                                                <div class="chat-time">
+                                                   <span>{{list.created_at|date:"H:i A"}}</span>
+                                                </div>
+                                             </li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <!--chart component-->
+                              {% endfor %}
+                           </div>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="chat-footer">
+                     <form
+                        data-username="{{request.user.username}}"
+                        id="send_msg_form"
+                        class="input-group"
+                        >
+                        <div class="avatar">
+                           <img
+                              src="{{me.avatar.url}}"
+                              alt="User Image"
+                              class="avatar-img rounded-circle"
+                              />
+                        </div>
+                        <input
+                           id="chat_input"
+                           type="text"
+                           class="input-msg-send form-control"
+                           placeholder="Reply..."
+                           />
+                        <button
+                           id="send_btn"
+                           type="submit"
+                           class="btn btn-primary msg-send-btn rounded-pill"
+                           >
+                        <i class="fab fa-telegram-plane"></i>
+                        </button>
+                     </form>
+                  </div>
+               </div>
+               <!-- /Chat Right -->
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %} {% block js %}
+<style>
+   @media only screen and (max-width: 992px) {
+      .chat-cont-left{
+         display: none !important;
+      }
+      .chat-cont-right{
+         display: block !important;
+      }
+      .back-btn{
+         display: none !important;
+      }
+      .chat-body{
+      }
+      .chat-footer {
+         margin-top: 10px;
+      }
+   }
+</style>
+<script src="{% static 'assets/js/custom/chat_socket.js' %}"></script>
+<script>
+   var url = $("#load_more").attr("data-url") + "?page=2";
+   const username = "{{request.user.username}}";
+   $("#load_more").on("click", clickme);
+   
+   function clickme() {
+     $.ajax({
+       url: url,
+       type: "get",
+       success: function (response) {
+         const res = response.data;
+         url = response.meta.next;
+         if(url===null){
+           $("#load_more").hide()
+         }
+         for (let list of response.data) {
+           $("#msgdiv").prepend(`
+                 <li class="media ${
+                   list.sender === username ? "sent" : "received"
+                 } d-flex">
+                     <div class="avatar flex-shrink-0">
+                         <img src="${domain}${
+             list.sender_img
+           }" alt="User Image" class="avatar-img rounded-circle">
+                     </div>
+   
+                     <div class="media-body flex-grow-1">
+                         <div class="msg-box">
+                             <div>
+                                 <p>${list.text}</p>
+                                 <ul class="chat-msg-info">
+                                     <li>
+                                         <div class="chat-time">
+                                             <span>${list.created_at}</span>
+                                         </div>
+                                     </li>
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+                 </li>
+                 `);
+         }
+       },
+       error: function () {
+       },
+     });
+     const selectedElement = document.querySelector('#infodiv');
+     selectedElement.scrollTop = 45;
+   }
+</script>
+{% endblock js %}

@@ -1,0 +1,76 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Delete Account{% endblock title %}
+{% block content %}
+<!-- Page Content -->			
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <!-- sidebar -->
+         {% if request.user.role == "Manager" %}
+         {% include 'components/sidebar.html' %}
+         {% else %}
+         {% include 'components/freelancer_sidebar.html' %}
+         {% endif %}
+         <!-- /sidebar -->
+         <div class="col-xl-9 col-md-8">
+            <nav class="user-tabs mb-4">
+               <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'profile_settings' %}">kus-Basic Settings</a>
+                  </li>
+                  {% if not is_social_account %}
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'change_password' %}">Change Password</a>
+                  </li>
+                  {% endif %}
+                  <li class="nav-item">
+                     <a class="nav-link active" href="{% url 'delete_account' %}">Delete Account</a>
+                  </li>
+               </ul>
+            </nav>
+            <div class="setting-content">
+               <div class="card">
+                  <div class="pro-head">
+                     <h3 class="pro-title without-border mb-0">Delete Account</h3>
+                  </div>
+                  <div class="pro-body">
+                     {% include 'components/message.html' %}
+                     <form method="post">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <div class="row">
+                           <div class="col-md-12">
+                              <a class="btn btn-primary click-btn btn-plan" data-bs-toggle="modal" href="#delete-acc">Delete Account</a>
+                           </div>
+                        </div>
+                        <!-- The Modal -->
+                        <div class="modal fade custom-modal" id="delete-acc">
+                           <div class="modal-dialog modal-dialog-centered modal-md">
+                              <div class="modal-content">
+                                 <div class="modal-body del-modal">
+                                    <div class="text-center pt-0 mb-3">
+                                       <i class="fas fa-exclamation-triangle fa-3x"></i>
+                                       <h3>Are you sure you want to delete your account?</h3>
+                                    </div>
+                                    <div class="submit-section text-center">
+                                       <p style="color:red;">This is permanent and cannot be revoked !</p>
+                                       <button type="button" data-bs-dismiss="modal" class="btn btn-primary black-btn click-btn btn-plan">Cancel</button>
+                                       <button type="submit" class="btn btn-primary click-btn btn-plan">Submit</button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /The Modal -->
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}

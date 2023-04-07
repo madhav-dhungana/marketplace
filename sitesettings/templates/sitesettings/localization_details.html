@@ -1,0 +1,156 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Site Settings{% endblock title %}
+{% block content %}
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+   <div class="content container-fluid">
+      <div class="page-header">
+         <div class="row">
+            <div class="col-sm-6">
+               <h3 class="page-title">Settings</h3>
+               <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'site_settings' %}">Settings</a></li>
+                  <li class="breadcrumb-item active">General Settings</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-12">
+            {% include 'components/message.html' %}
+            <!-- Settings Menu -->
+            <div class="settings-menu-links">
+               <ul class="nav nav-tabs menu-tabs">
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'site_settings' %}">General Settings</a>
+                  </li>
+                  <li class="nav-item active">
+                     <a class="nav-link" href="{% url 'localizations' %}">Localization</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'payment_settings' %}">Payment Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'email_settings' %}">Email Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_settings' %}">Socail Media Login</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'social_links' %}">Social Links</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'seo_settings' %}">SEO Settings</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'other_settings' %}">Others</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- Settings Menu -->
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="card">
+                     <div class="card-body pt-0">
+                        <div class="card-header">
+                            <h5 class="card-title">Localization Details</h5>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label>Time Zone</label>
+                                    
+                                    <!-- <input id="search_input" placeholder="Type to filter"> -->
+                                    
+                                    <select class="select form-control time-zone" value="{{localization.time_zone}}" name="time_zone" value="{{localization.time_zone}}">
+                                       {% if localization.time_zone is not None %}
+                                       <option selected> {{localization.time_zone}} </option>
+                                       {% endif %}
+                                       {% for timezone in timezones %}
+                                          <option>{{ timezone }}</option>
+                                       {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date Format</label>
+                                    <select class="select form-control" value="{{localization.date_format}}" name="date_format">
+                                       {% if localization.date_format == 'None' or localization.date_format is None %}
+                                       <option selected="selected">15 September 2022</option>
+                                       <option>15/09/2022</option>
+                                       <option>15.09.2022</option>
+                                       <option>15-09-2022</option>
+                                       <option>09/15/2022</option>
+                                       <option>2022/09/15</option>
+                                       <option>2022-09-15</option>
+                                       {% else %}
+                                       {% if "15 September 2022" in localization.date_format %} <option selected="selected">15 September 2022</option>{% else %} <option>15 September 2022</option> {% endif %}
+                                       {% if "15/09/2022" in localization.date_format %} <option selected="selected">15/09/2022</option>{% else %} <option>15/09/2022</option> {% endif %}
+                                       {% if "15.09.2022" in localization.date_format %} <option selected="selected">15.09.2022</option>{% else %} <option>15.09.2022</option> {% endif %}
+                                       {% if "15-09-2022" in localization.date_format %} <option selected="selected">15-09-2022</option>{% else %} <option>15-09-2022</option> {% endif %}
+                                       {% if "09/15/2022" in localization.date_format %} <option selected="selected">09/15/2022</option>{% else %} <option>09/15/2022</option> {% endif %}
+                                       {% if "2022/09/15" in localization.date_format %} <option selected="selected">2022/09/15</option>{% else %} <option>2022/09/15</option> {% endif %}
+                                       {% if "2022-09-15" in localization.date_format %} <option selected="selected">2022-09-15</option>{% else %} <option>2022-09-15</option> {% endif %}
+                                       {% endif %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Time Format</label>
+                                    <select class="select form-control" value="{{localization.time_format}}" name="time_format">
+                                       {% if localization.time_format == 'None' or localization.time_format is None %}
+                                       <option>12 Hours</option>
+                                       <option>24 Hours</option>
+                                       {% else %}
+                                       {% if "12 Hours" in localization.time_format %}<option selected="selected"> 12 Hours</option>{% else %} <option> 12 Hours</option> {% endif %}
+                                       {% if "24 Hours" in localization.time_format %}<option selected="selected"> 24 Hours</option>{% else %} <option> 24 Hours</option> {% endif %}
+                                       {% endif %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Currency Symbol</label>
+                                    <select class="select form-control" value="{{localization.symbol}}" name="symbol">
+                                        <option selected="selected">{{localization.symbol}}</option>
+                                        {% if localization.symbol == 'None' or localization.symbol is None %}
+                                        <option selected="selected">$</option>
+                                        <option>₹</option>
+                                        <option>£</option>
+                                        <option>€</option> 
+                                        {% else %}
+                                        {% if "$" in localization.symbol %} <option selected="selected">$</option> {% else %} <option>$</option> {% endif %}
+                                        {% if "₹" in localization.symbol %} <option selected="selected">₹</option> {% else %} <option>₹</option> {% endif %}
+                                        {% if "£" in localization.symbol %} <option selected="selected">£</option> {% else %} <option>£</option> {% endif %}
+                                        {% if "€" in localization.symbol %} <option selected="selected">€</option> {% else %} <option>€</option> {% endif %}
+                                        {% endif %}
+
+                                    </select>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <div class="settings-btns">
+                                        <button type="submit" class="btn btn-orange" value="Update">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Wrapper -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet"  href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css" />
+<script src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script>
+   $('.dropify').dropify();
+   $("select.time-zone").change(updateStudents);
+   $("#myInput").on("keyup", updateStudents);
+</script>
+{% endblock js %}

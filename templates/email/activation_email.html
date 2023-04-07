@@ -1,0 +1,17 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Account activation on {{ site_name }}{% endblocktrans %}
+{% endblock subject %}
+
+{% block text_body %}
+<p>{% blocktrans %}You're receiving this email because you need to finish activation process on {{ site_name }}.{% endblocktrans %}</p>
+
+<p><a href="http{% if request.is_secure %}s{% endif %}://{{ domain }}{% url 'activate_email' uidb64=uid token=token %}" target="_blank"
+                              style="text-decoration: none;">Click Here to Activate Your Email  </a></p>    
+<p>{% trans "Thanks for using our site!" %}</p>
+
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+{% endblock text_body %}
+
+

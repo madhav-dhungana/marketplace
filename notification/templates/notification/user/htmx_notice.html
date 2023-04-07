@@ -1,0 +1,43 @@
+{% load temp_utils %}
+{% for list in notification %}
+<ul class="notification-list">
+   <li class="notification-message">
+      <div class="media d-flex">
+         {% if list.action_by %}
+         <span class="avatar avatar-sm flex-shrink-0">
+         <img
+            class="avatar-img rounded-circle"
+            alt=""
+            src="{{list.action_by.avatar.url}}"
+            />
+         </span>
+         {% endif %}
+         <div class="media-body flex-grow-1">
+            <span class="noti-title">
+            {% if list.content_object|to_class_name in check_arrs %} 
+            {% if request.user.role == "Employer" %}
+            <a href="{{ list.content_object.get_absolute_url }}">
+            {{list.title}}
+            </a>
+            {% else %}
+            <a href="{{ list.content_object.get_absolute_for_freelancer }}">
+            {{list.title}}
+            </a>
+            {% endif %} {% else %}
+            <a href="{{ list.content_object.get_absolute_url }}">
+            {{list.title}}
+            </a>
+            {% endif %}
+            </span>
+            <small style="margin-left: 20px" class="notification-time"
+               >{{list.date_created|timesince}}</small
+               >
+         </div>
+      </div>
+   </li>
+</ul>
+{% empty %}
+<div class="text-center mt-3">
+   <small>No new notification</small>
+</div>
+{% endfor %}

@@ -1,0 +1,53 @@
+	{% load static %}
+    <!-- Proposals -->
+	{% for list in my_proposals %}
+	<div class="freelancer-proposals">
+		<div class="project-proposals align-items-center freelancer">
+			<div class="proposals-info">
+				<div class="proposals-detail">
+					<h3 class="proposals-title">{{list.project.title}}</h3>
+					<div class="proposals-content">
+						<div class="proposal-img">
+							<div class="text-md-center">
+								<img src="{{list.project.posted_by.avatar.url}}" alt="" class="img-fluid">
+								<h4>{{list.project.posted_by.display_name}}</h4>
+								<span class="info-btn">client</span>
+							</div>
+						</div>
+						<div class="proposal-client">
+							<h4 class="title-info">Client Price</h4>
+							<h2 class="client-price">${{list.project.price}}</h2>
+							<span class="price-type">(FIXED)</span>
+						</div>
+						<div class="proposal-type">
+							<h4 class="title-info">Job Type</h4>
+							<h3>{{list.project.get_pricing_type_display}} </h3>
+						</div>
+					</div>
+				</div>
+				<div class="project-hire-info">
+					<div class="content-divider-1"></div>
+					<div class="projects-amount">
+						<p>Your Price</p>
+						<h3>${{list.price}}</h3>
+						<h5>in 12 Days</h5>
+					</div>
+					<div class="content-divider-1"></div>
+					<div class="projects-action text-center">
+						{% comment %} <a data-bs-toggle="modal" href="#file" class="projects-btn">Edit Proposals </a> {% endcomment %}
+						<a href="{% url 'free_project_detail' list.project.id %}" class="projects-btn">View Project</a>
+						<a href="#" class="proposal-delete">Delete Proposal</a>
+					</div>
+				</div> 
+			</div>
+			<div class="description-proposal">
+				<h5 class="desc-title">Description</h5>
+				<p>{{list.detail|safe}}</p>
+			</div>
+		</div>
+	</div>
+	{% empty %}
+
+	<h4 class="text-center">No Proposal Yet!</h4>
+	{% endfor %}
+	<!-- Proposals --> 

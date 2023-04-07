@@ -1,0 +1,90 @@
+{% extends 'nonadmin/base_nofooter.html' %} 
+{% load socialaccount %}
+{% load static %}
+{% block title %}Login{% endblock title %} {% block content %}
+<!-- Page Content -->
+<br>
+<br>
+<br>
+<div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <!-- Login Content -->
+        <div class="account-content">
+          <div class="align-items-center justify-content-center">
+            <div class="login-right">
+              <div class="login-header text-center">
+                <a href="index.html"><img src="{% static 'assets/img/logo-01.png' %}" alt="logo" class="img-fluid" /></a>
+                <h3>Welcome Back</h3>
+                <p>Don't miss your next opportunity. Sign in to stay updated on your professional world.</p>
+              </div>
+              {% if messages %} {% for message in messages%}
+              <div class="mt-3 alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                <strong></strong> {{message}}
+              </div>
+              {% endfor %} {% endif %}
+              <form method="post">
+                {% csrf_token %}
+                <div class="form-group form-focus">
+                  <input type="email" name="email" class="form-control floating" />
+                  <label class="focus-label">Email</label>
+                </div>
+                <div class="form-group form-focus">
+                  <input name="password" type="password" class="form-control floating" />
+                  <label class="focus-label">Password</label>
+                </div>
+                <div class="form-group">
+                  <label class="custom_check">
+                    <input type="checkbox" name="remember_me" />
+                    <span class="checkmark"></span> Remember Password
+                  </label>
+                </div>
+                <div id="captcha-div" class="g-recaptcha" data-sitekey="6LeOXXIiAAAAAIPCk17NIXC1qvluFPKvJ-0XxUM1" required></div>
+                <button class="mt-3 btn btn-primary btn-block btn-lg login-btn" type="submit" >Login</button>
+                <div class="login-or">
+                  <p>Or login with</p>
+                </div>
+                <div class="row social-login">
+                  <div class="col-4">
+                    <form action="{% provider_login_url 'facebook' %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-facebook btn-block {% if not facebookData or facebookData.is_active is False %} disabled {% endif %} ">Facebook</button>
+                    </form>
+                  </div>
+                  <div class="col-4">
+                    <form action="{% provider_login_url 'google' %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-google btn-block {% if not googleData or googleData.is_active is False %} disabled {% endif %} ">Google</button>
+                    </form>
+                  </div>
+                  <div class="col-4">
+                    <form action="{% provider_login_url 'google' %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-twitter btn-block {% if not twitterData or twitterData.is_active is False %} disabled {% endif %}">Twitter</button>
+                    </form>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6 text-start">
+                    <a class="forgot-link" href="{% url 'forgot_password_page' %}">Forgot Password ?</a>
+                  </div>
+                  <div class="col-6 text-end dont-have">
+                    New to Batuwa? <a href="{% url 'register' %}">Click here</a>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+        <!-- /Login Content -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<script src="https://www.google.com/recaptcha/api.js"></script>
+{% endblock js %}

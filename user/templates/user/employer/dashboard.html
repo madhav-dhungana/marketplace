@@ -1,0 +1,239 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% block title %}Batuwa Dashboard{% endblock title %}
+{% block content %}
+<!-- Page Content -->			
+<div class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <!-- sidebar -->
+         {% include 'components/sidebar.html' %}
+         <!-- /sidebar -->
+         <div class="col-xl-9 col-md-8">
+            {% include 'components/message.html' %}
+            <div class="dashboard-sec">
+               <div class="row">
+                  <div class="col-md-6 col-lg-4">
+                     <div class="dash-widget">
+                        <div class="dash-info">
+                           <div class="dash-widget-info">Projects Posted</div>
+                           <div class="dash-widget-count">{{posted_projects}}</div>
+                        </div>
+                        <div class="dash-widget-more">
+                           <a href="{% url 'all_projects' 'all' %}" class="d-flex">View Details <i class="fas fa-arrow-right ms-auto"></i></a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-6 col-lg-4">
+                     <div class="dash-widget">
+                        <div class="dash-info">
+                           <div class="dash-widget-info">Ongoing Projects</div>
+                           <div class="dash-widget-count">{{ongoing_projects}}</div>
+                        </div>
+                        <div class="dash-widget-more">
+                           <a href="{% url 'all_projects' 'ongoing' %}" class="d-flex">View Details <i class="fas fa-arrow-right ms-auto"></i></a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-6 col-lg-4">
+                     <div class="dash-widget">
+                        <div class="dash-info">
+                           <div class="dash-widget-info">Completed Projects</div>
+                           <div class="dash-widget-count">{{completed_projects}}</div>
+                        </div>
+                        <div class="dash-widget-more">
+                           <a href="{% url 'all_projects' 'completed' %}" class="d-flex">View Details <i class="fas fa-arrow-right ms-auto"></i></a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- Chart Content -->
+               <div class="row">
+                  <div class="col-xl-8 d-flex">
+                     <div class="card flex-fill">
+                        <div class="card-header">
+                           <div class="d-flex justify-content-between align-items-center">
+                              <h5 class="card-title">Project Analytics</h5>
+                           </div>
+                        </div>
+                        <div class="card-body">
+                           <div id="chartprofile"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xl-4 d-flex">
+                     <div class="card flex-fill">
+                        <div class="card-header">
+                           <div class="d-flex justify-content-between align-items-center">
+                              <h5 class="card-title">Static Analytics</h5>
+                           </div>
+                        </div>
+                        <div class="card-body">
+                           <div id="chartradial" data-chart-data="{{project_chart_data}}"></div>
+                           <ul class="static-list">
+                              <li><span><i class="fas fa-circle text-violet me-1"></i> Applied Jobs</span> <span class="sta-count">{{request.user.hired_jobs}}</span></li>
+                              <li><span><i class="fas fa-circle text-pink me-1"></i> Active Proposals</span> <span class="sta-count">{{request.user.active_proposal}}</span></li>
+                              <li><span><i class="fas fa-circle text-yellow me-1"></i> Applied Proposals</span> <span class="sta-count">{{request.user.applied_proposal}}</span></li>
+                              <li><span><i class="fas fa-circle text-blue me-1"></i> Bookmarked Projects</span> <span class="sta-count">{{request.user.get_bookmarked_projects.count}}</span></li>
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Chart Content -->
+               <!-- Past Earnings -->
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="card card-table">
+                        <div class="card-header">
+                           <div class="row">
+                              <div class="col">
+                                 <h4 class="card-title">Recently Posted Jobs</h4>
+                              </div>
+                              <div class="col-auto">
+                                 <a href="{% url 'all_projects' 'all' %}" class="btn-right btn btn-sm fund-btn">
+                                 View All 
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="card-body">
+                           <div class="table-responsive table-job">
+                              <table class="table table-hover table-center mb-0">
+                                 <thead class="thead-pink">
+                                    <tr>
+                                       <th>Details</th>
+                                       <th>Job Type</th>
+                                       <th>Budget</th>
+                                       <th>Created on</th>
+                                       <th>Proposals</th>
+                                       <th class="text-end">Action</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    {% for list in recent_projects %}
+                                    <tr>
+                                       <td>
+                                          <span class="detail-text">{{list.title}}</span>
+                                          <span class="d-block text-expiry">Expiring on : {{list.expires_on}}</span>
+                                       </td>
+                                       <td>{{list.get_pricing_type_display}}</td>
+                                       <td><span class="table-budget">BUDGET</span> <span class="d-block text-danger">${{list.price}}</span></td>
+                                       <td>{{list.posted_on}}</td>
+                                       <td>{{list.no_of_proposals}}</td>
+                                       <td class="text-end"><a href="{% url 'project_detail' list.id %}" class="text-success">View</a>
+                                       </td>
+                                    </tr>
+                                    {% empty %}
+                                    <td>No Posted Jobs</td>
+                                    {% endfor %}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- /Past Earnings -->
+               <div class="row">
+                  <!-- Plan  Details-->
+                  <div class="col-xl-6 d-flex">
+                     <div class="card flex-fill">
+                        <div class="card-header">
+                           <div class="row justify-content-between align-items-center">
+                              <div class="col">
+                                 <h5 class="card-title">Membership Plan Details</h5>
+                              </div>
+                              <div class="col-auto">
+                                 <a href="javascript:void(0);" class="btn-right btn btn-sm fund-btn">
+                                 View 
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="card-body">
+                           <div class="row">
+                              <div class="col-md-6 col-sm-6">
+                                 <div class="plan-details">
+                                    <h4>The Ultima</h4>
+                                    <div class="yr-amt">Anually Price</div>
+                                    <h4>$1200</h4>
+                                    <div class="yr-duration">Duration: One Year</div>
+                                    <div class="expiry">Expiry: 24 JAN 2022</div>
+                                    <a href="membership-plans.html" class="btn btn-primary btn-plan">Change Plan</a>
+                                 </div>
+                              </div>
+                              <div class="col-md-6 col-sm-6">
+                                 <div class="plan-feature">
+                                    <ul>
+                                       <li>12 Project Credits</li>
+                                       <li>10 Allowed Services</li>
+                                       <li>20 Days visibility</li>
+                                       <li>5 Featured Services</li>
+                                       <li>20 Days visibility</li>
+                                       <li>30 Days Package Expiry</li>
+                                       <li>Profile Featured</li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /Plan  Details -->
+                  <!-- Notifications -->
+                  <div class="col-xl-6 d-flex">
+                     <div class="card flex-fill">
+                        <div class="card-header">
+                           <div class="row justify-content-between align-items-center">
+                              <div class="col">
+                                 <h5 class="card-title">Notifications</h5>
+                              </div>
+                              <div class="col-auto">
+                                 <a href="freelancer-ongoing-projects.html" class="btn-right btn btn-sm fund-btn">
+                                 View All 
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="pro-body p-0">
+                           <div class="news-feature">
+                              <img class="avatar-sm rounded-circle" src="assets/img/img-02.jpg" alt="User Image">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At diam sit erat et eros. </p>
+                           </div>
+                           <div class="news-feature">
+                              <img class="avatar-sm rounded-circle" src="assets/img/img-03.jpg" alt="User Image">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At diam sit erat et eros. </p>
+                           </div>
+                           <div class="news-feature">
+                              <img class="avatar-sm rounded-circle" src="assets/img/img-04.jpg" alt="User Image">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At diam sit erat et eros. </p>
+                           </div>
+                           <div class="news-feature">
+                              <img class="avatar-sm rounded-circle" src="assets/img/img-05.jpg" alt="User Image">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At diam sit erat et eros. </p>
+                           </div>
+                           <div class="news-feature">
+                              <img class="avatar-sm rounded-circle" src="assets/img/img-01.png" alt="User Image">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At diam sit erat et eros. </p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /Notifications -->
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<!-- Chart JS -->
+<script src="{% static 'assets/plugins/apexchart/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/plugins/apexchart/chart-data.js' %}"></script>
+<!-- Sticky Sidebar JS -->
+<script src="{% static 'assets/plugins/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+<script src="{% static 'assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+{% endblock js %}

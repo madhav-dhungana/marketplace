@@ -1,0 +1,22 @@
+<tr id="user-{{list.id}}">
+    <td>
+        <div class="form-check custom-checkbox">
+            <input type="checkbox" class="form-check-input" id="customCheck10">
+            <label class="form-check-label" for="customCheck10"></label>
+        </div>
+    </td>
+    <td>
+        <h2 class="table-avatar">
+            <a href="profile.html"><img class="me-2 rounded-circle object-cover" src="{{list.avatar.url}}"  alt="User Image">{{list.display_name}}</a>
+        </h2>
+    </td>
+    <td>{{list.email}}</td>
+    <td>
+        <button class="btn table-btn">{{list.role}}</button>
+    </td>
+    <td>{{list.date_joined}}</td>
+    <td class="text-end">
+        <a href="javascript:void(0);" class="btn btn-sm btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#edit-category"><i class="far fa-edit"></i></a> 
+        <a href="javascript:void(0);" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_user_{{list.id}}"><i class="far fa-trash-alt"></i></a>
+    </td>
+</tr> 

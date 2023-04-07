@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+      <title>{{site.site_name}} - {% block title %}{% endblock title %}</title>
+      <!-- Favicon -->
+      <link rel="icon" href="{% if site.favicon %} {{site.favicon.url}} {% else %}{% static 'assets/img/favicon.png' %} {% endif %}" type="image/x-icon"/>
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+      <!-- Fontawesome CSS -->
+      <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+      <!-- Feather CSS -->
+      <link rel="stylesheet" href="{% static 'assets/css/feather.css' %}">
+      <!-- Select2 CSS -->
+      <link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+      <!-- Date Tine Picker  CSS -->
+      <link rel="stylesheet" href="{% static 'assets/css/bootstrap-datetimepicker.min.css' %}">
+      <!-- Datatables CSS -->
+      <link rel="stylesheet" href="{% static 'assets/plugins/datatables/datatables.min.css' %}">
+      <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <!-- CK editor -->
+      <link rel="stylesheet" href="{% static 'assets/css/ckeditor.css' %}">
+      <!-- Main CSS -->
+      <link rel="stylesheet" href="{% static 'assets/css/adminstyle.css' %}">
+      <style>
+         .alert-error{
+         background-color: #f06060;
+         color:white;
+         }
+         p strong{
+         color:red !important;
+         }
+      </style>
+      {% block css %} {% endblock css %}
+   </head>
+   <body>
+      <div class="main-wrapper">
+         <!-- Header -->
+         <div class="header">
+            
+            <!-- Logo -->
+            <div class="header-left">
+               <a href="{% url 'dashboard' %}" class="logo">
+               {% if site.logo_image %}
+               <img src="{{site.logo_image.url}}" alt="Logo">
+               {% else %}
+               <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+               {% endif %}
+               </a>
+               <a href="{% url 'dashboard' %}" class="logo logo-small">
+               {% if site.favicon %}
+               <img src="{{site.favicon.url}}" alt="Logo">
+               {% else %}
+               <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+               {% endif %}
+               </a>
+               <!-- Sidebar Toggle -->
+               <a href="javascript:void(0);" id="toggle_btn">
+               <i class="fa fa-circle-chevron-left"></i>
+               </a>
+               <!-- /Sidebar Toggle -->
+               <!-- Mobile Menu Toggle -->
+               <a class="mobile_btn" id="mobile_btn">
+               <i class="fa-solid fa-circle-chevron-right"></i>
+               </a>
+               <!-- /Mobile Menu Toggle -->
+            </div>
+            <!-- /Logo -->
+
+            <!-- Header Menu -->
+            <ul class="nav user-menu">
+               <!-- Notifications -->
+               <li class="nav-item dropdown">
+                  <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                  <i class="fa fa-bell"></i> <span class="badge badge-pill">5</span>
+                  </a>
+                  <div class="dropdown-menu notifications">
+                     <div class="topnav-dropdown-header">
+                        <span class="notification-title">Notifications</span>
+                        <a href="javascript:void(0)" class="clear-noti"> Clear All</a>
+                     </div>
+                     <div class="noti-content">
+                        <ul class="notification-list">
+                           <li class="notification-message">
+                              <a href="#">
+                                 <div class="media d-flex">
+                                    <span class="avatar avatar-sm flex-shrink-0">
+                                    <img class="avatar-img rounded-circle" alt="" src="{% static 'assets/img/profiles/avatar-02.jpg' %}">
+                                    </span>
+                                    <div class="media-body flex-grow-1">
+                                       <p class="noti-details"><span class="noti-title">Brian Johnson</span> paid the invoice <span class="noti-title">#DF65485</span></p>
+                                       <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
+                                    </div>
+                                 </div>
+                              </a>
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="topnav-dropdown-footer">
+                        <a href="#">View all Notifications</a>
+                     </div>
+                  </div>
+               </li>
+               <!-- /Notifications -->
+               <!-- User Menu -->
+               <li class="nav-item dropdown has-arrow main-drop">
+                  <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                  <span class="user-img">
+                  <img class="object-cover" height='35' src="{% if 'default.png' in request.user.avatar.url %}{% static 'assets/img/user-default.png' %}{% else %}{{request.user.avatar.url}}{% endif %}" alt="">
+                  <span class="status online"></span>
+                  </span>
+                  </a>
+                  <div class="dropdown-menu">
+                     <a class="dropdown-item" href="{% url 'admin_user_detail' request.user.id %}"><i data-feather="user" class="me-1"></i> Profile</a>
+                     <a class="dropdown-item" href="{% url 'site_settings' %}"><i data-feather="settings" class="me-1"></i> Settings</a>
+                     <a class="dropdown-item" href="{% url 'logout' %}"><i data-feather="log-out" class="me-1"></i> Logout</a>
+                  </div>
+               </li>
+               <!-- /User Menu -->
+            </ul>
+            <!-- /Header Menu -->
+            
+         </div>
+         <!-- /Header -->
+         {% include 'admin/sidebar.html' %}
+         {% block content %}
+         {% endblock content %}
+         <!-- /Main Wrapper -->
+      </div>
+      <!-- jQuery -->
+      <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+      <!-- Bootstrap Core JS -->
+      <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+      <!-- Feather Icon JS -->
+      <script src="{% static 'assets/js/feather.min.js' %}"></script>
+      <!-- Slimscroll JS -->
+      <script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+      <!-- Select2 JS -->
+      <script src="{% static 'assets/plugins/select2/js/select2.min.js' %}"></script>
+      <!-- Datatables JS -->
+      <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+      <script src="{% static 'assets/plugins/datatables/datatables.min.js' %}"></script>
+      <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+      <script src="{% static 'assets/js/ckeditor.js' %}"></script>
+      <!-- Custom JS -->
+      <script src="{% static 'assets/js/adminscript.js' %}"></script>
+      <script>
+         document.body.addEventListener('htmx:configRequest', (event) => {
+           event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+         })
+          
+      </script>
+      {% block js %}{% endblock js %}	  
+   </body>
+</html>

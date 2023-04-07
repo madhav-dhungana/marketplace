@@ -1,0 +1,20 @@
+ <nav class="user-tabs project-tabs">
+    <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'all_projects' %}">All Projects</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"  href="{% url 'pending_projects' %}">Pending Projects</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"  href="{% url 'ongoing_projects' %}">Ongoing Projects</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active"  href="{% url 'completed_projects' %}">Completed Projects</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"  href="{% url 'cancelled_projects' %}">Cancelled Projects</a>
+        </li>
+    </ul>
+</nav> 
+

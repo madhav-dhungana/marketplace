@@ -1,0 +1,230 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% include 'components/navbar.html' %}
+{% block content %}
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container">
+					<div class="row align-items-center inner-banner">
+						<div class="col-md-12 col-12 text-center">
+							<h2 class="breadcrumb-title">Blog Details</h2>
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="#">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Blog</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">				
+					<div class="row">
+						<div class="col-lg-8 col-md-12">
+							{% for item in blogData %}
+							<div class="blog-view">
+								<div class="blog-single-post pro-post widget-box">
+									<div class="blog-image">
+										<a href="javascript:void(0);"><img alt="" src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/project/project-04.jpg' %}{% endif %}" class="img-fluid"></a>
+									</div>
+									<h3 class="blog-title">{{item.title}}</h3>
+									<div class="blog-info clearfix">
+										<div class="post-left">
+											<ul>
+												<li> 
+													<div class="post-author">
+														<a href="developer-details.html"><img src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/project/project-04.jpg' %}{% endif %}" alt="Post Author"><span>{{item.author}}</span></a>
+													</div>
+												</li>
+												<li><a href="#"><i class="far fa-calendar"></i>{{item.created_at| date:"d M Y"}}</a></li>
+												<li><a href="#"><i class="far fa-comments"></i>{{item.review_set.all.count}}</a></li>
+												<li><i class="fas fa-tags"></i>{{item.category}}</li>
+											</ul>
+										</div>
+									</div>
+									<div class="blog-content">
+										{{item.description}}
+									</div>
+								</div>
+									
+								<div class="pro-post author-widget clearfix">
+									<div class="widget-title-box clearfix">
+										<h3 class="pro-title">About Author</h3>
+									</div>
+									<div class="about-author">
+										<div class="about-author-img">
+											<div class="author-img-wrap">
+												<a href="developer-details.html"><img class="img-fluid" alt="" src="{% if item.thumbnail %}{{item.thumbnail.url}}{% else %}{% static 'assets/img/project/project-04.jpg' %}{% endif %}"></a>
+											</div>
+										</div>
+										<div class="author-details">
+											<a href="developer-details.html" class="blog-author-name">Traveller</a>
+											<p>{{item.author}}</p>
+											<div class="social-links">
+												<ul>
+													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
+													<li><a href="#"><i class="fab fa-instagram"></i></a></li>
+													<li><a href="#"><i class="fab fa-behance"></i></a></li>
+													<li><a href="#"><i class="fab fa-dribbble"></i></a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="blog-comments pro-post widget-box clearfix pb-0">
+									<h3 class="pro-title">Comments ({{item.review_set.all.count}})</h3>
+									<div class="pro-content pb-0">
+									<ul class="comments-list">
+										{% for comment in item.review_set.all %}
+										<li>
+											<div class="comment">
+												<div class="comment-author">
+													<img class="avatar" alt="" src="assets/img/img-02.jpg">
+												</div>
+												<div class="comment-block">
+													<span class="comment-by">
+														<span class="blog-author-name">{{comment.user.display_name}} <span class="date">{{comment.created_at}}</span></span>
+													</span>
+													<p>{{comment.description}}</p>
+													<a class="comment-btn" href="#">
+														<i class="fas fa-reply"></i> Reply
+													</a>
+												</div>
+											</div>
+											<ul class="comments-list reply">
+												{% for reply in comment.reply.all %}
+												<li>
+													<div class="comment">
+														<div class="comment-author">
+															<img class="avatar" alt="" src="{{reply.user.avtar}}">
+														</div>
+														<div class="comment-block">
+															<span class="comment-by">
+																<span class="blog-author-name">{{reply.user.display_name}}<span class="date">{{reply.created_at}}</span></span>
+															</span>
+															<p>{{reply.description}}</p>
+															<a class="comment-btn" href="#">
+																<i class="fas fa-reply"></i> Reply
+															</a>
+														</div>
+													</div>
+												</li>
+												{% endfor %}
+											</ul>
+										</li>
+										{% endfor %}
+									</ul>
+								</div>
+								</div>
+								
+								<div class=" pro-post widget-box  new-comment clearfix">
+									<h4 class="pro-title">Leave Comment</h4>
+									<div class="pro-content">
+										<form>
+											<div class="form-group">
+												<label>Name <span class="text-danger">*</span></label>
+												<input type="text" class="form-control">
+											</div>
+											<div class="form-group">
+												<label>Your Email Address <span class="text-danger">*</span></label>
+												<input type="email" class="form-control">
+											</div>
+											<div class="form-group">
+												<label>Comments</label>
+												<textarea rows="4" class="form-control"></textarea>
+											</div>
+											<div class="submit-section">
+												<button class="btn btn-primary submit-btn" type="submit">Submit</button>
+											</div>
+										</form>
+									</div>
+								</div>
+								
+							</div>
+							{% endfor %}
+						</div>
+					
+						<!-- Blog Sidebar -->
+						<div class="col-lg-4 col-md-12 sidebar-right theiaStickySidebar">
+
+							<div class=" pro-post widget-box post-widget">
+								<h4 class="pro-title">Latest Posts</h4>
+								<div class="pro-content pt-0">
+									<ul class="latest-posts">
+										{% for item in latestPost %}
+										<li>
+											<div class="post-thumb">
+												<a href="{% url 'blog_detail' slug=item.slug  %}">
+													{% if item.thumbnail %}
+														<img class="img-fluid" src="{{item.thumbnail.url}}" alt="">
+													{% else %}
+													{% endif %}
+												</a>
+											</div>
+											<div class="post-info">
+												<h4>
+													<a href="{% url 'blog_detail' slug=item.slug  %}">{{item.title}}</a>
+												</h4>
+												<a href="#" class="posts-date"><i class="far fa-calendar-alt"></i>{{item.created_at| date:"d M Y"}}</a>
+											</div>
+										</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<!-- /Latest Posts -->
+
+							<!-- Categories -->
+							<div class=" pro-post widget-box category-widget">
+								<h4 class="pro-title">Blog Categories</h4>
+								<div class="pro-content">
+									<ul class="category-link">
+										{% for item in categoryData %}
+										<li><a href="#">{{item.title}}</a></li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<!-- /Categories -->
+
+							<!-- Tags -->
+							<div class=" pro-post widget-box tags-widget">
+								<h4 class="pro-title">Tags</h4>
+								<div class="pro-content">
+									<ul class="tags">
+										{% for item in tagData %}
+										<li><a href="#" class="tag">{{item.title}}</a></li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<!-- /Tags -->
+							
+							<!-- Share Widget -->	
+							<div class="pro-post widget-box post-widget">
+								<h3 class="pro-title">Share</h3>
+								<div class="pro-content">
+									<a href="#" class="share-icon"><i class="fas fa-share-alt"></i> Share</a>
+								</div>
+							</div>
+							<!-- /Share Widget -->
+							
+						</div>
+						<!-- /Blog Sidebar -->
+						
+					</div>
+				</div>
+			</div>		
+			<!-- /Page Content -->
+   
+			
+			<!-- Footer -->	
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends 'admin/adminbase.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Post Project{% endblock title %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css' %}">
+{% endblock css %}
+{% block content %}
+<!-- Page Content -->
+<div class="page-wrapper">
+   <div class="content">
+      <h1 class="text-center">Edit Project</h1>
+      {% include 'components/message.html' %}
+      <!-- /Breadcrumb -->
+      <div class="row">
+         <div class="col-md-12">
+            <div class="select-project mb-4">
+               <form method="post" action=""  enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="container title-box widget-box">
+                     <!-- Project Title -->
+                     <div class="title-content">
+                        <div class="title-detail">
+                           <h3>Project Name</h3>
+                           <div class="form-group mb-0">
+                              {{form.title|as_crispy_field}}
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /Project Title -->
+                     <!-- Category Content -->
+                     <div class="row">
+                        <div class="col-lg-6 title-content">
+                           <div class="title-detail">
+                              <div class="form-group mb-0">
+                                 {{form.category|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 title-content">
+                           <div class="title-detail">
+                              <div class="form-group mb-0">
+                                 {{form.status|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /Category Content -->
+                        <!-- Price Content -->
+                        <div class="col-lg-6 title-content">
+                           <div class="title-detail">
+                              <div class="form-group price-cont mb-0" id="price_type">
+                                 {{form.pricing_type|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /Price Content -->
+                     <!-- Skills Content -->
+                     <div class="row title-content">
+                        <div class="title-detail">
+                           <h3>Desired areas of expertise
+                           </h3>
+                           <div class="form-group mb-0">
+                              <input type="text" data-role="tagsinput" class="input-tags form-control" value="{{project.get_skills_in_comma}}" name="desired_skills" id="services" placeholder="English,Travelling">
+                              <p class="text-muted mb-0">Enter skills needed for project</p>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /Skills Content -->
+                     <!-- Project Period Content -->
+                     <div class="row">
+                        <div class="col-lg-6 title-content">
+                           <div class="title-detail">
+                              <div class="filter-widget mb-0" id="period_date">
+                                 <div class="">
+                                    {{form.start_date|as_crispy_field}}
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 title-detail">
+                           <div class="filter-widget mb-0" id="period_date">
+                              <div class="">
+                                 {{form.end_date|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-lg-6 title-content">
+                           <div class="title-detail">
+                              <div class="filter-widget mb-0" id="period_date">
+                                 <div class="">
+                                    {{form.start_time|as_crispy_field}}
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 title-detail">
+                           <div class="filter-widget mb-0" id="period_date">
+                              <div class="">
+                                 {{form.end_time|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-lg-6 title-content">
+                           <div class="title-detail">
+                              <div class="filter-widget mb-0" id="period_date">
+                                 <div class="">
+                                    {{form.expires_on|as_crispy_field}}
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 title-content ml-1">
+                           <div class="title-detail" >
+                              <div class="custom-file">
+                                 {{form.experience_needed|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /Add Document -->
+                     <div class="row">
+                        <div class="col-lg-6 title-content">
+                           <div class="title-detail">
+                              <div class="filter-widget mb-0" id="period_date">
+                                 <div class="">
+                                    {{form.location|as_crispy_field}}
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 title-detail">
+                           <div class="filter-widget mb-0" id="period_date">
+                              <div class="">
+                                 {{form.address|as_crispy_field}}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-6 title-content ml-1">
+                        <div class="title-detail" >
+                           <div class="custom-file">
+                              {{form.price|as_crispy_field}}
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /Add Document -->
+                     {% comment %} 
+                     <div class="title-content">
+                        <div class="title-detail">
+                           <h3>Add Documents</h3>
+                           <div class="">
+                              <input name="project_files" class="form-control" multiple type="file">
+                              <label class="custom-file-label"></label>
+                           </div>
+                           <p class="mb-0">Size of the Document should be Below 2MB</p>
+                        </div>
+                     </div>
+                     {% endcomment %}
+                     <div class="title-content pb-0">
+                        <div class="title-detail">
+                           <h3>Write Description of Projects </h3>
+                           <div class="form-group mb-0">
+                              {{form.detail}}
+                              {{ form.media }}
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /Project Title -->
+                     <div class="row">
+                        <div class="col-md-12 text-end">
+                           <div class="btn-item">
+                              <button type="submit" class="btn btn-primary">Update</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+            </div>
+            <!-- Project Title -->
+            </form>					
+         </div>
+      </div>
+   </div>
+</div>
+</div>					
+<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<script src="{% static 'assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js' %}"></script>
+<script src="{% static 'assets/js/profile-settings.js' %}"></script>
+{% endblock js %}

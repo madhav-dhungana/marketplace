@@ -1,0 +1,80 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% block title %}Membership Plans{% endblock title %}
+{% block content %}
+<!-- Page Content -->
+ <div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'components/freelancer_sidebar.html' %}
+            <div class="col-xl-9 col-md-8 mx-auto">
+                <div class="freelance-title" id="plan">
+                    <h3>Employer Packages</h3>
+                    <p> Choose the best pricing that suites your requirements</p>
+                </div>
+                <div class="row">
+                    {% for item in membership %}
+                    <div class="col-lg-4">
+                        <div class="package-detail">
+                            <h4>{{item.title}}</h4>
+                            <p>{{item.slogan}}</p>
+                            <h3 class="package-price">${{item.price}}</h3>
+                            <div class="package-feature">
+                                {% for plan in item.plans.all %}
+                                <ul>
+                                    {% if plan.is_available %}
+                                        <li>{{plan.title}}</li>
+                                    {% else %}
+                                    <li class="non-check">{{plan.title}}</li>
+                                    {% endif %}
+                                </ul>
+                                {% endfor %}
+                            </div>
+                            <a href="{% url 'membership_plans' %}?membership={{item.slug}}" class="btn btn-primary price-btn btn-block">Select Plan</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="member-plan pro-box">
+                            <div class="pro-head">
+                                <h2><i class="fa fa-check-circle orange-text" aria-hidden="true"></i> Plan Details</h2>
+                            </div>
+                            {% if request.user.is_authenticated %}
+                                {% if userMembership is not None %}
+                                    <div class="pro-body member-detail">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h4 class="mb-0">{{userMembership.membership.title}}</h4>
+                                                <div class="yr-amt">{{userMembership.membership.duration}} {{userMembership.membership.duration_period}}</div>
+                                                <div class="expiry-on">Expiry On</div>
+                                                {% for subscription in userMembership.subscription.all %}
+                                                <div class="expiry">{{subscription.expires_in}}</div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="col-6 change-plan">
+                                                <h3>${{userMembership.membership.price}}</h3>
+                                                <div class="yr-duration">Duration: {{userMembership.membership.duration}} {{userMembership.membership.duration_period}}</div>
+                                                <a href="#" class="btn btn-primary btn-plan black-btn">Change Plan</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h4 class="mb-0">Not Subscribed</h4>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</div>
+    <!-- /Page Content -->
+    {% endblock content %}

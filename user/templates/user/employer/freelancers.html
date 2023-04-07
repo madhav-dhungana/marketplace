@@ -1,0 +1,212 @@
+{% extends 'nonadmin/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+Freelancers
+{% endblock title %}
+{% block content %}
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+   <div class="container">
+      <div class="row align-items-center inner-banner">
+         <div class="col-md-12 col-12 text-center">
+            <h2 class="breadcrumb-title">Batuwas</h2>
+            <nav aria-label="breadcrumb" class="page-breadcrumb">
+               <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Find Freelancers</li>
+               </ol>
+            </nav>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Breadcrumb -->
+<!-- Page Content -->			
+<div class="">
+   <div class="container">
+      <div class="row">
+         <div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+            <!-- Search Filter -->
+            <div class=" search-filter">
+               <div class="card-header d-flex justify-content-between">
+                  <h4 class="card-title mb-0">FILTERS</h4>
+                  <form method="post">
+                     {% csrf_token %}
+                     <input type="submit" name="clear_all" class="btn btn-small btn-primary" value="Clear All"/>
+                  </form>
+               </div>
+               <form  method="get" class="card-body">
+                  <div class="filter-widget">
+                     <h4>Username</h4>
+                     <div class="form-group">
+                        <input type="text" name="username" value="{{search_q.username}}" class="form-control" placeholder="Enter username">
+                     </div>
+                  </div>
+                  <div class="filter-widget">
+                     <h4>Location</h4>
+                     <div class="form-group">
+                        <input type="text" name="location"  value="{{search_q.location}}"class="form-control" placeholder="Enter Location">
+                     </div>
+                  </div>
+                  <div class="filter-widget">
+                     <h4>Hourly Rate</h4>
+                     <div class="row">
+                        <div class="col-6">
+                           <input type="number" value="{{search_q.hourly_min}}" name="hourly_min" placeholder="Min" class="form-control">
+                        </div>
+                        <div class="col-6"><input  value="{{search_q.hourly_max}}" name="hourly_max" type="number" placeholder="Max" class="form-control"></div>
+                     </div>
+                  </div>
+                  <div class="filter-widget">
+                     <div class="form-group mb-0">
+                        <input type="text" value="{{search_q.desired_skills}}" data-role="tagsinput" class="input-tags form-control" name="desired_skills" name="skills" placeholder="English,Travelling">
+                     </div>
+                  </div>
+                  <div class="filter-widget">
+                     <h4>Reviews</h4>
+                     <div>
+                        <label class="custom_check">
+                        <input {% if '5' in ratings %}checked{% endif %} type="checkbox" name="rating" value="5">
+                        <span class="checkmark"></span>
+                        <span data-score="5" class="rating">
+                        </span> (5)
+                        </label>
+                     </div>
+                     <div>
+                        <label class="custom_check">
+                        <input {% if '4' in ratings %}checked{% endif %} type="checkbox" name="rating" value="4">
+                        <span class="checkmark"></span>
+                        <span data-score="4" class="rating">
+                        </span>
+                        <span class="average-rating">(4)</span>
+                        </label>
+                     </div>
+                     <div>
+                        <label class="custom_check">
+                        <input {% if '3' in ratings %}checked{% endif %} type="checkbox" name="rating" value="3">
+                        <span class="checkmark"></span>
+                        <span data-score="3" class="rating">
+                        </span>
+                        <span class="average-rating">(3)</span>
+                        </label>
+                     </div>
+                     <div>
+                        <label class="custom_check">
+                        <input {% if '2' in ratings %}checked{% endif %} type="checkbox" name="rating" value="2">
+                        <span class="checkmark"></span>
+                        <span data-score="2" class="rating">
+                        </span>
+                        <span class="average-rating">(2)</span>
+                        </label>
+                     </div>
+                     <div>
+                        <label class="custom_check">
+                        <input {% if '1' in ratings %}checked{% endif %} type="checkbox" name="rating" value="1">
+                        <span class="checkmark"></span>
+                        <span data-score="1" class="rating">
+                        </span>
+                        <span class="average-rating">(1)</span>
+                        </label>
+                     </div>
+                  </div>
+                  <div class="btn-search">
+                     <button type="submit" class="btn btn-block">Search</button>
+                  </div>
+               </form>
+            </div>
+            <!-- /Search Filter -->
+         </div>
+         <div class="col-md-12 col-lg-8 col-xl-9">
+            <div class="row">
+               {% for list in page_obj %}
+               <div class="col-md-6 col-lg-6 col-xl-4" >
+                  <div class="freelance-widget">
+                     <div class="freelance-content" style="min-height:380px !important;">
+                        {% if not request.user.is_authenticated %}
+                        <a data-bs-toggle="modal" href="#rating" class="favourite"><i class="fas fa-star"></i></a>
+                        {% else %}
+                        {% if list in request.user.get_bookmarked_users %}
+                        <a role="button" id="{{list.id}}-user" hx-post="{% url 'fav_freelancer' list.id %}"  hx-swap="none" onclick="toggleId({{list.id}})" class="favourite favourite-add"><i class="fas fa-star"></i></a>
+                        {% else %}
+                        <a  role="button"  id="{{list.id}}-user" hx-post="{% url 'fav_freelancer' list.id %}" hx-swap="none" onclick="toggleId({{list.id}})"  class="favourite "><i class="fas fa-star"></i></a>
+                        {% endif %}
+                        {% endif %}
+                        <div class="freelance-img">
+                           <a href="#">
+                           <img style="object-fit:cover;" src="{% if 'default.png' in list.avatar.url or list.avatar.url is None %}{% static 'assets/img/user-default.png' %}{% else %}{{list.avatar.url}}{% endif %}" alt="User Image">
+                           <span class="verified"><i class="fas fa-check-circle"></i></span>
+                           </a>
+                        </div>
+                        <div class="freelance-info">
+                           <h3><a href="#">{{list.display_name}}</a></h3>
+                           <div class="freelance-specific">{{list.title|default_if_none:'Outstanding'}}</div>
+                           <div class="freelance-location"><i class="fas fa-map-marker-alt me-1"></i>{{list.location}}</div>
+                           <div class="d-flex justify-content-center">
+                              <div data-score="{{list.get_rating_floor}}" class="rating">
+                              </div>
+                              <div style="margin-left:3px;">{{list.get_rating|default_if_none:'0'}} ({{list.no_of_reviews_got}})</div>
+                           </div>
+                           <div class="freelance-tags">
+                              {% for li in list.get_skills %}
+                              <a href="javascript:void(0);"><span class="badge badge-pill badge-design">{{li.skill_name}}</span></a>
+                              {% endfor %}
+                           </div>
+                           <div class="freelancers-price">${{list.hourly_rate|default_if_none:'0'}} Hourly</div>
+                        </div>
+                     </div>
+                     <div class="cart-hover">
+                        <a href="{% url 'user_detail' list.id %}" class="btn-cart" tabindex="-1">View Profile</a>
+                     </div>
+                  </div>
+               </div>
+               {% empty%}
+               <div class="d-flex justify-content-center mt-3">
+                  No User Found
+               </div>
+               {% endfor %}
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- /Page Content -->
+{% endblock content %}
+{% block js %}
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css' %}">
+<script src="{% static 'assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js' %}"></script>
+<style>
+   .favourite-add{
+   color: #fff;
+   background: #ff5b37;
+   border: 1px solid #ff5b37;
+   }
+   .first-div{
+   padding: 5px;
+   height:300px;
+   overflow:auto;
+   border: 1px solid #eee;
+   }
+</style>
+<script>
+   $( document ).ready(function() {
+       let b =$("#div_id_skills").children()[1]
+       b.setAttribute('class','first-div')
+       console.log(b)
+      // $("#div_id_skills:first-child").attr('class','first-div')
+   });
+   function toggleId(id){
+   const b = $(`#${id}-user`)
+   b.toggleClass('favourite-add')
+   }
+   htmx.on("htmx:afterSwap", (e) => {
+       const bookmarkAdded =e.target.classList.contains('favourite-add')
+       if(bookmarkAdded){
+           toastr.success('Added User To Bookmark !')
+       }else{
+           toastr.success('Removed User From Bookmark !')
+   
+       }
+    });
+</script>
+{% endblock js %}
